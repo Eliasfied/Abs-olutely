@@ -27,7 +27,7 @@
             ><ion-card>
               <ion-card-header>
                 <ion-card-title>Advanced</ion-card-title>
-                <ion-card-subtitle>you do sports</ion-card-subtitle>
+                <ion-card-subtitle>you are fit mate</ion-card-subtitle>
               </ion-card-header>
 
               <ion-card-content>
