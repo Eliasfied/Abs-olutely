@@ -9,45 +9,41 @@
     <ion-content :fullscreen="true">
       <ion-grid>
         <ion-row>
-          <ion-col>
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>Beginner</ion-card-title>
-                <ion-card-subtitle>out of form?</ion-card-subtitle>
-              </ion-card-header>
-
-              <ion-card-content>
-               
-              </ion-card-content>
-            </ion-card>
+          <ion-col
+            ><router-link class="routerLink" :to="'/preview/' + courses[0].name">
+              <ion-card>
+                <ion-card-header>
+                  <ion-card-title>Beginner</ion-card-title>
+                  <ion-card-subtitle>out of form?</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content> </ion-card-content>
+              </ion-card>
+            </router-link>
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col
-            ><ion-card>
-              <ion-card-header>
-                <ion-card-title>Advanced</ion-card-title>
-                <ion-card-subtitle>you are fit mate</ion-card-subtitle>
-              </ion-card-header>
+          <ion-col>
+            <router-link class="routerLink" :to="'/preview/' + courses[1].name">
+              <ion-card>
+                <ion-card-header>
+                  <ion-card-title>Advanced</ion-card-title>
+                  <ion-card-subtitle>you are fit mate</ion-card-subtitle>
+                </ion-card-header>
 
-              <ion-card-content>
-                
-              </ion-card-content>
-            </ion-card></ion-col
-          >
+                <ion-card-content> </ion-card-content>
+              </ion-card> </router-link
+          ></ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>Champ</ion-card-title>
-                <ion-card-subtitle>name says it all</ion-card-subtitle>
-              </ion-card-header>
-
-              <ion-card-content>
-                
-              </ion-card-content>
-            </ion-card>
+            <router-link class="routerLink" :to="'/preview/' + courses[2].name">
+              <ion-card>
+                <ion-card-header>
+                  <ion-card-title>Champ</ion-card-title>
+                  <ion-card-subtitle>name says it all</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content> </ion-card-content> </ion-card
+            ></router-link>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -90,6 +86,49 @@ export default defineComponent({
     IonCardSubtitle,
     IonCardContent,
   },
+
+  setup() {
+    //dummy data
+    const courses = [
+      {
+        name: "beginner",
+        exercises: [
+          "plank",
+          "russian",
+          "crunch",
+          "reverse-crunch",
+          "mountain",
+          "stretch",
+        ],
+      },
+      {
+        name: "advanced",
+        exercises: [
+          "plank",
+          "russian",
+          "crunch",
+          "reverse-crunch",
+          "mountain",
+          "hold",
+        ],
+      },
+      {
+        name: "champ",
+        exercises: [
+          "plank",
+          "russian",
+          "crunch",
+          "reverse-crunch",
+          "mountain",
+          "biycyle",
+          "hold",
+          "stretch",
+        ],
+      },
+    ];
+
+    return { courses };
+  },
 });
 </script>
 
@@ -97,5 +136,9 @@ export default defineComponent({
 ion-card {
   height: 200px;
   margin: 0;
+}
+
+.routerLink {
+  text-decoration: none;
 }
 </style>
