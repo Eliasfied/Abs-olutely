@@ -14,13 +14,15 @@
           </ion-col>
         </ion-row>
         <ion-row class="lineNoRow">
-          <ion-col> <div class="timeAndCountDiv">6 Minuten</div></ion-col>
-          <ion-col> <div class="timeAndCountDiv">8 Übungen</div> </ion-col>
+          <ion-col>
+            <div class="timeAndCountDiv">{{ totalTime }}</div></ion-col
+          >
+          <ion-col> <div class="timeAndCountDiv">{{quantityExercises + ' Exercises'}}</div> </ion-col>
         </ion-row>
         <ion-row class="lineRow">
           <ion-col
             ><div class="timeAndCountDiv">
-              <ion-select placeholder="Break Time:">
+              <ion-select v-model="selectedValue" :placeholder="'' + breakTime" @ionChange="updateExerciseTime">
                 <ion-select-option value="0">0 sec</ion-select-option>
                 <ion-select-option value="5">5 sec</ion-select-option>
                 <ion-select-option value="10">10 sec</ion-select-option>
@@ -29,7 +31,7 @@
           >
           <ion-col
             ><div class="timeAndCountDiv">
-              <ion-select placeholder="Exercise Time:">
+              <ion-select v-model="selectedValue" :placeholder="'' + breakTime" @ionChange="updateExerciseTime">
                 <ion-select-option value="20">20 sec</ion-select-option>
                 <ion-select-option value="30">30 sec</ion-select-option>
                 <ion-select-option value="49">40 sec</ion-select-option>
@@ -40,7 +42,7 @@
         <ion-row>
           <ion-col>
             <ul>
-              <li v-for="exercise in list" :key="exercise">
+              <li v-for="exercise in list?.exercises" :key="exercise">
                 <ion-card>
                   <ion-card-content> {{ exercise }} </ion-card-content>
                 </ion-card>
@@ -75,7 +77,9 @@ import {
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
-import {useWorkoutsStore} from '../store/workouts';
+import { useWorkoutsStore } from "../store/workouts";
+import { computed } from "vue";
+import { ref } from "vue";
 export default defineComponent({
   name: "HomePage",
   components: {
@@ -92,28 +96,46 @@ export default defineComponent({
   },
 
   setup() {
+    //Router
     // const router = useRouter();
     const route = useRoute();
-
-    const store = useWorkoutsStore();
-    console.log(store.workoutList);
-
-    const list = store.workoutList.exercises;
-
-   const exercises = [
-      "plank",
-      "russian",
-      "crunch",
-      "reverse-crunch",
-      "mountain",
-      "hold",
-    ];
-
-
     const page = route.params.course;
-    console.log(route.params.course);
 
-    return { page, exercises, list };
+    //Store from /store/workouts.ts
+    const store = useWorkoutsStore();
+    const list = store.workoutList.find((element) => element.name == page);
+
+    //UI DATA
+    let exerciseTime = ref(list?.exerciseTime);
+    let breakTime = ref(list?.breakTime);
+    let quantityExercises = ref(list?.exercises?.length);
+    let totalTime = computed(() => {
+      return breakTime.value != undefined &&
+        exerciseTime.value != undefined &&
+        quantityExercises.value != undefined
+        ? Math.round((exerciseTime.value * quantityExercises.value +
+            (breakTime.value * quantityExercises.value - breakTime.value)) / 60) + ' Minutes'
+        : undefined;
+    });
+
+
+    const selectedValue = ref(1);
+
+
+    function updateExerciseTime() {
+      exerciseTime.value = selectedValue.value;
+    }
+
+    return {
+      page,
+      list,
+      exerciseTime,
+      breakTime,
+      totalTime,
+      quantityExercises,
+      updateExerciseTime,
+      selectedValue,
+    };
   },
 });
 </script>

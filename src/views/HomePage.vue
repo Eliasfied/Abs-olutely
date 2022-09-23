@@ -10,7 +10,7 @@
       <ion-grid>
         <ion-row>
           <ion-col
-            ><router-link class="routerLink" :to="'/preview/' + courses[0].name">
+            ><router-link class="routerLink" :to="'/preview/' + beginnerWorkoutName">
               <ion-card>
                 <ion-card-header>
                   <ion-card-title>Beginner</ion-card-title>
@@ -23,7 +23,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <router-link class="routerLink" :to="'/preview/' + courses[1].name">
+            <router-link class="routerLink" :to="'/preview/' + advancedWorkoutName">
               <ion-card>
                 <ion-card-header>
                   <ion-card-title>Advanced</ion-card-title>
@@ -36,7 +36,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <router-link class="routerLink" :to="'/preview/' + courses[2].name">
+            <router-link class="routerLink" :to="'/preview/' + champWorkoutName">
               <ion-card>
                 <ion-card-header>
                   <ion-card-title>Champ</ion-card-title>
@@ -68,6 +68,7 @@ import {
   IonCardContent,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
+import {useWorkoutsStore} from '../store/workouts';
 
 export default defineComponent({
   name: "HomePage",
@@ -88,46 +89,19 @@ export default defineComponent({
   },
 
   setup() {
-    //dummy data
-    const courses = [
-      {
-        name: "beginner",
-        exercises: [
-          "plank",
-          "russian",
-          "crunch",
-          "reverse-crunch",
-          "mountain",
-          "stretch",
-        ],
-      },
-      {
-        name: "advanced",
-        exercises: [
-          "plank",
-          "russian",
-          "crunch",
-          "reverse-crunch",
-          "mountain",
-          "hold",
-        ],
-      },
-      {
-        name: "champ",
-        exercises: [
-          "plank",
-          "russian",
-          "crunch",
-          "reverse-crunch",
-          "mountain",
-          "biycyle",
-          "hold",
-          "stretch",
-        ],
-      },
-    ];
 
-    return { courses };
+    const store = useWorkoutsStore();
+    const list = store.workoutList;
+    
+
+    let beginnerWorkoutName = list[0].name;
+    let advancedWorkoutName = list[1].name;
+    let champWorkoutName = list[2].name;
+
+
+    
+
+    return { beginnerWorkoutName, advancedWorkoutName, champWorkoutName };
   },
 });
 </script>
