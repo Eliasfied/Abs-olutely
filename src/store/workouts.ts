@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
 
 export const useWorkoutsStore = defineStore("workouts", () => {
-  const workoutList = ref([
+  const workoutList = [
     {
       name: "beginner",
       breakTime: 30,
@@ -53,7 +52,7 @@ export const useWorkoutsStore = defineStore("workouts", () => {
         "side-plank",
       ],
     },
-  ]);
+  ];
 
   return { workoutList };
 });

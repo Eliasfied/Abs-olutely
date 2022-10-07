@@ -1,11 +1,5 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Blank</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
     <ion-content :fullscreen="true">
       <ion-grid>
         <ion-row>
@@ -17,24 +11,37 @@
           <ion-col>
             <div class="timeAndCountDiv">{{ totalTime }}</div></ion-col
           >
-          <ion-col> <div class="timeAndCountDiv">{{quantityExercises + ' Exercises'}}</div> </ion-col>
+          <ion-col>
+            <div class="timeAndCountDiv">
+              {{ quantityExercises + " Exercises" }}
+            </div>
+          </ion-col>
         </ion-row>
         <ion-row class="lineRow">
           <ion-col
             ><div class="timeAndCountDiv">
-              <ion-select v-model="selectedValue" :placeholder="'' + breakTime" @ionChange="updateExerciseTime">
+              <ion-select
+                v-model="breakSelected"
+                :placeholder="'' + breakTime"
+                @ionChange="updateBreakTime"
+              >
                 <ion-select-option value="0">0 sec</ion-select-option>
-                <ion-select-option value="5">5 sec</ion-select-option>
                 <ion-select-option value="10">10 sec</ion-select-option>
+                <ion-select-option value="20">20 sec</ion-select-option>
+                <ion-select-option value="30">30 sec</ion-select-option>
               </ion-select>
             </div></ion-col
           >
           <ion-col
             ><div class="timeAndCountDiv">
-              <ion-select v-model="selectedValue" :placeholder="'' + breakTime" @ionChange="updateExerciseTime">
+              <ion-select
+                v-model="exerciseSelected"
+                :placeholder="'' + exerciseTime"
+                @ionChange="updateExerciseTime"
+              >
                 <ion-select-option value="20">20 sec</ion-select-option>
                 <ion-select-option value="30">30 sec</ion-select-option>
-                <ion-select-option value="49">40 sec</ion-select-option>
+                <ion-select-option value="40">40 sec</ion-select-option>
               </ion-select>
             </div></ion-col
           >
@@ -51,11 +58,13 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col
-            ><div class="startWorkoutDiv">
-              <ion-button>Start Workout</ion-button>
-            </div></ion-col
-          >
+          <ion-col>
+            <router-link class="routerLink" :to="'/workout/' + page"
+              ><div class="startWorkoutDiv">
+                <ion-button>Start Workout</ion-button>
+              </div>
+            </router-link>
+          </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
@@ -65,7 +74,6 @@
 <script lang="ts">
 import {
   IonContent,
-  IonHeader,
   IonPage,
   IonRow,
   IonCol,
@@ -80,11 +88,11 @@ import { useRoute } from "vue-router";
 import { useWorkoutsStore } from "../store/workouts";
 import { computed } from "vue";
 import { ref } from "vue";
+
 export default defineComponent({
-  name: "HomePage",
+  name: "ExercisePreview",
   components: {
     IonContent,
-    IonHeader,
     IonPage,
     IonRow,
     IonCol,
@@ -104,6 +112,7 @@ export default defineComponent({
     //Store from /store/workouts.ts
     const store = useWorkoutsStore();
     const list = store.workoutList.find((element) => element.name == page);
+    
 
     //UI DATA
     let exerciseTime = ref(list?.exerciseTime);
@@ -113,17 +122,28 @@ export default defineComponent({
       return breakTime.value != undefined &&
         exerciseTime.value != undefined &&
         quantityExercises.value != undefined
-        ? Math.round((exerciseTime.value * quantityExercises.value +
-            (breakTime.value * quantityExercises.value - breakTime.value)) / 60) + ' Minutes'
+        ? Math.round(
+            (exerciseTime.value * quantityExercises.value +
+              (breakTime.value * quantityExercises.value - breakTime.value)) /
+              60
+          ) + " Minutes"
         : undefined;
     });
 
-
-    const selectedValue = ref(1);
-
-
+    // ion-select break and exerise length options
+    const exerciseSelected = ref(1);
     function updateExerciseTime() {
-      exerciseTime.value = selectedValue.value;
+      exerciseTime.value = exerciseSelected.value;
+      if (list?.exerciseTime != undefined) {
+        list.exerciseTime = exerciseTime.value;
+      }
+    }
+    const breakSelected = ref(1);
+    function updateBreakTime() {
+      breakTime.value = breakSelected.value;
+      if (list?.breakTime != undefined) {
+        list.breakTime = breakTime.value;
+      }
     }
 
     return {
@@ -134,7 +154,9 @@ export default defineComponent({
       totalTime,
       quantityExercises,
       updateExerciseTime,
-      selectedValue,
+      updateBreakTime,
+      exerciseSelected,
+      breakSelected,
     };
   },
 });

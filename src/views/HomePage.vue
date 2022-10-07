@@ -1,16 +1,13 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Blank</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
     <ion-content :fullscreen="true">
       <ion-grid>
         <ion-row>
           <ion-col
-            ><router-link class="routerLink" :to="'/preview/' + beginnerWorkoutName">
+            ><router-link
+              class="routerLink"
+              :to="'/preview/' + beginnerWorkoutName"
+            >
               <ion-card>
                 <ion-card-header>
                   <ion-card-title>Beginner</ion-card-title>
@@ -23,7 +20,10 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <router-link class="routerLink" :to="'/preview/' + advancedWorkoutName">
+            <router-link
+              class="routerLink"
+              :to="'/preview/' + advancedWorkoutName"
+            >
               <ion-card>
                 <ion-card-header>
                   <ion-card-title>Advanced</ion-card-title>
@@ -36,7 +36,10 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <router-link class="routerLink" :to="'/preview/' + champWorkoutName">
+            <router-link
+              class="routerLink"
+              :to="'/preview/' + champWorkoutName"
+            >
               <ion-card>
                 <ion-card-header>
                   <ion-card-title>Champ</ion-card-title>
@@ -48,16 +51,14 @@
         </ion-row>
       </ion-grid>
     </ion-content>
+    <the-footer></the-footer>
   </ion-page>
 </template>
 
 <script lang="ts">
 import {
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
   IonGrid,
   IonCol,
   IonRow,
@@ -68,16 +69,14 @@ import {
   IonCardContent,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
-import {useWorkoutsStore} from '../store/workouts';
+import { useWorkoutsStore } from "../store/workouts";
+import TheFooter from "../components/TheFooter.vue";
 
 export default defineComponent({
   name: "HomePage",
   components: {
     IonContent,
-    IonHeader,
     IonPage,
-    IonTitle,
-    IonToolbar,
     IonCol,
     IonGrid,
     IonRow,
@@ -86,20 +85,17 @@ export default defineComponent({
     IonCardHeader,
     IonCardSubtitle,
     IonCardContent,
+    TheFooter,
   },
 
   setup() {
-
+    //get the workouts that are saved in the store
     const store = useWorkoutsStore();
     const list = store.workoutList;
-    
 
     let beginnerWorkoutName = list[0].name;
     let advancedWorkoutName = list[1].name;
     let champWorkoutName = list[2].name;
-
-
-    
 
     return { beginnerWorkoutName, advancedWorkoutName, champWorkoutName };
   },
