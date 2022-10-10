@@ -1,21 +1,26 @@
 <template>
   <ion-footer :translucent="true">
     <ion-toolbar>
-      <ion-title>EasyAbs</ion-title>
+      <ion-icon :icon="settings"></ion-icon>
     </ion-toolbar>
   </ion-footer>
 </template>
 
 <script lang="ts">
-import { IonFooter, IonTitle, IonToolbar } from "@ionic/vue";
+import {settings} from "ionicons/icons";
+import { IonFooter, IonIcon, IonToolbar } from "@ionic/vue";
 import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "TheFooter",
   components: {
     IonFooter,
-    IonTitle,
+    IonIcon,
     IonToolbar,
+    
+  },
+  setup() {
+    return { settings };
   },
 });
 </script>

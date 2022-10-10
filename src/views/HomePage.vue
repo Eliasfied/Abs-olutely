@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="true" color="primary">
       <ion-grid>
         <ion-row>
           <ion-col
@@ -8,10 +8,9 @@
               class="routerLink"
               :to="'/preview/' + beginnerWorkoutName"
             >
-              <ion-card>
+              <ion-card class="beginnerCardImage">
                 <ion-card-header>
                   <ion-card-title>Beginner</ion-card-title>
-                  <ion-card-subtitle>out of form?</ion-card-subtitle>
                 </ion-card-header>
                 <ion-card-content> </ion-card-content>
               </ion-card>
@@ -24,10 +23,9 @@
               class="routerLink"
               :to="'/preview/' + advancedWorkoutName"
             >
-              <ion-card>
+              <ion-card class="advancedCardImage">
                 <ion-card-header>
                   <ion-card-title>Advanced</ion-card-title>
-                  <ion-card-subtitle>you are fit mate</ion-card-subtitle>
                 </ion-card-header>
 
                 <ion-card-content> </ion-card-content>
@@ -40,10 +38,9 @@
               class="routerLink"
               :to="'/preview/' + champWorkoutName"
             >
-              <ion-card>
+              <ion-card class="champCardImage">
                 <ion-card-header>
                   <ion-card-title>Champ</ion-card-title>
-                  <ion-card-subtitle>name says it all</ion-card-subtitle>
                 </ion-card-header>
                 <ion-card-content> </ion-card-content> </ion-card
             ></router-link>
@@ -65,7 +62,6 @@ import {
   IonCard,
   IonCardTitle,
   IonCardHeader,
-  IonCardSubtitle,
   IonCardContent,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
@@ -83,7 +79,6 @@ export default defineComponent({
     IonCard,
     IonCardTitle,
     IonCardHeader,
-    IonCardSubtitle,
     IonCardContent,
     TheFooter,
   },
@@ -103,11 +98,31 @@ export default defineComponent({
 </script>
 
 <style scoped>
-ion-card {
-  height: 200px;
-  margin: 0;
-}
 
+
+ion-card-title {
+  font-size: 40px;
+  color: #DEC1FF;
+}
+  .beginnerCardImage {
+    height: 210px;
+    margin: 0;
+    background-image: url("../assets/HomePageWorkoutImages/beginner.jfif");
+    background-size: cover;
+  }
+  .advancedCardImage {
+    height: 210px;
+    margin: 0;
+    background-image: url("../assets/HomePageWorkoutImages/advanced.jfif");
+    background-size: cover;
+  }
+  .champCardImage {
+    height: 210px;
+    margin: 0;
+    background-image: url("../assets/HomePageWorkoutImages/champ.jfif");
+    background-size: cover;
+  }
+  
 .routerLink {
   text-decoration: none;
 }

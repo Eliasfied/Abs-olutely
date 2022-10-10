@@ -34,6 +34,7 @@ export default defineComponent({
 
     // import store
     const store = useWorkoutsStore();
+    console.log(store);
     const list = store.workoutList.find((element) => element.name == page);
     
 

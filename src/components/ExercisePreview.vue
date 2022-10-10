@@ -112,7 +112,8 @@ export default defineComponent({
     //Store from /store/workouts.ts
     const store = useWorkoutsStore();
     const list = store.workoutList.find((element) => element.name == page);
-    
+    console.log(list);
+
 
     //UI DATA
     let exerciseTime = ref(list?.exerciseTime);
