@@ -10,7 +10,7 @@
             >
               <ion-card class="beginnerCardImage">
                 <ion-card-header>
-                  <ion-card-title>Beginner</ion-card-title>
+                  <ion-card-title color="primary">Beginner</ion-card-title>
                 </ion-card-header>
                 <ion-card-content> </ion-card-content>
               </ion-card>
@@ -25,7 +25,7 @@
             >
               <ion-card class="advancedCardImage">
                 <ion-card-header>
-                  <ion-card-title>Advanced</ion-card-title>
+                  <ion-card-title color="primary">Advanced</ion-card-title>
                 </ion-card-header>
 
                 <ion-card-content> </ion-card-content>
@@ -40,7 +40,7 @@
             >
               <ion-card class="champCardImage">
                 <ion-card-header>
-                  <ion-card-title>Champ</ion-card-title>
+                  <ion-card-title color="primary">Champ</ion-card-title>
                 </ion-card-header>
                 <ion-card-content> </ion-card-content> </ion-card
             ></router-link>
@@ -102,24 +102,23 @@ export default defineComponent({
 
 ion-card-title {
   font-size: 40px;
-  color: #DEC1FF;
 }
   .beginnerCardImage {
     height: 210px;
     margin: 0;
-    background-image: url("../assets/HomePageWorkoutImages/beginner.jfif");
+    background-image: url("../assets/HomePageWorkoutImages/beginner.png");
     background-size: cover;
   }
   .advancedCardImage {
     height: 210px;
     margin: 0;
-    background-image: url("../assets/HomePageWorkoutImages/advanced.jfif");
+    background-image: url("../assets/HomePageWorkoutImages/advanced.png");
     background-size: cover;
   }
   .champCardImage {
     height: 210px;
     margin: 0;
-    background-image: url("../assets/HomePageWorkoutImages/champ.jfif");
+    background-image: url("../assets/HomePageWorkoutImages/champ.png");
     background-size: cover;
   }
   

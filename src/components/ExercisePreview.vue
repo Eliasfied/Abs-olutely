@@ -4,7 +4,7 @@
       <ion-grid>
         <ion-row>
           <ion-col
-            ><div class="courseNameDiv">{{ page }}</div>
+            ><div class="courseNameDiv"><img :src="getImgUrl()" /></div>
           </ion-col>
         </ion-row>
         <ion-row class="lineNoRow">
@@ -114,6 +114,11 @@ export default defineComponent({
     const list = store.workoutList.find((element) => element.name == page);
     console.log(list);
 
+    //onMounted (image workout show)
+    function getImgUrl() {
+      console.log("klicki");
+      return require("../assets/HomePageWorkoutImages/"+ page + ".png");
+    }
 
     //UI DATA
     let exerciseTime = ref(list?.exerciseTime);
@@ -158,6 +163,7 @@ export default defineComponent({
       updateBreakTime,
       exerciseSelected,
       breakSelected,
+      getImgUrl,
     };
   },
 });
@@ -179,6 +185,12 @@ ul {
   padding: 0;
   overflow-y: auto;
   height: 275px;
+}
+
+img {
+  height: 100%;
+  width: 100%;
+  background-size: cover;
 }
 
 .courseNameDiv {
