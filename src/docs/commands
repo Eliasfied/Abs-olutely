@@ -1,0 +1,2 @@
+ionic capacitor run
+npm run serve

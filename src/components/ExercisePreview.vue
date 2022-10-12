@@ -1,70 +1,81 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="true" color="primary">
       <ion-grid>
-        <ion-row>
-          <ion-col
-            ><div class="courseNameDiv"><img :src="getImgUrl()" /></div>
-          </ion-col>
-        </ion-row>
-        <ion-row class="lineNoRow">
-          <ion-col>
-            <div class="timeAndCountDiv">{{ totalTime }}</div></ion-col
-          >
-          <ion-col>
-            <div class="timeAndCountDiv">
-              {{ quantityExercises + " Exercises" }}
-            </div>
-          </ion-col>
-        </ion-row>
+        <div
+          color="primary"
+          class="courseNameDiv"
+          :style="{ 'background-image': 'url(' + getImgUrl() + ')' }"
+        >
+          <div class="displayDiv">
+          <ion-row>
+            <ion-col>
+              <div class="timeAndCountDiv">
+                <p>{{ totalTime }}</p>
+                <p>Minutes</p>
+              </div></ion-col
+            >
+            <ion-col>
+              <div class="timeAndCountDiv">
+                <p>{{ quantityExercises }}</p>
+                <p>Exercises</p>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+        </div>
+
         <ion-row class="lineRow">
-          <ion-col
-            ><div class="timeAndCountDiv">
-              <ion-select
-                v-model="breakSelected"
-                :placeholder="'' + breakTime"
-                @ionChange="updateBreakTime"
-              >
-                <ion-select-option value="0">0 sec</ion-select-option>
-                <ion-select-option value="10">10 sec</ion-select-option>
-                <ion-select-option value="20">20 sec</ion-select-option>
-                <ion-select-option value="30">30 sec</ion-select-option>
-              </ion-select>
-            </div></ion-col
-          >
-          <ion-col
-            ><div class="timeAndCountDiv">
-              <ion-select
-                v-model="exerciseSelected"
-                :placeholder="'' + exerciseTime"
-                @ionChange="updateExerciseTime"
-              >
-                <ion-select-option value="20">20 sec</ion-select-option>
-                <ion-select-option value="30">30 sec</ion-select-option>
-                <ion-select-option value="40">40 sec</ion-select-option>
-              </ion-select>
-            </div></ion-col
-          >
+          <ion-col>
+            <ion-card color="secondary">
+              <div class="timeAndCountDiv">
+                <p class="timeLabel">Break Time:</p>
+                <ion-select
+                  v-model="breakSelected"
+                  :placeholder="'' + breakTime"
+                  @ionChange="updateBreakTime"
+                >
+                  <ion-select-option value="0">0 sec</ion-select-option>
+                  <ion-select-option value="10">10 sec</ion-select-option>
+                  <ion-select-option value="20">20 sec</ion-select-option>
+                  <ion-select-option value="30">30 sec</ion-select-option>
+                </ion-select>
+              </div>
+            </ion-card>
+          </ion-col>
+          <ion-col>
+            <ion-card color="secondary">
+              <div class="timeAndCountDiv">
+                <p class="timeLabel">Exercise Time:</p>
+                <ion-select
+                  v-model="exerciseSelected"
+                  :placeholder="'' + exerciseTime"
+                  @ionChange="updateExerciseTime"
+                >
+                  <ion-select-option value="20">20 sec</ion-select-option>
+                  <ion-select-option value="30">30 sec</ion-select-option>
+                  <ion-select-option value="40">40 sec</ion-select-option>
+                </ion-select>
+              </div>
+            </ion-card>
+          </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
             <ul>
               <li v-for="exercise in list?.exercises" :key="exercise">
-                <ion-card>
+                <ion-card color="secondary">
                   <ion-card-content> {{ exercise }} </ion-card-content>
                 </ion-card>
               </li>
             </ul>
           </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <router-link class="routerLink" :to="'/workout/' + page"
-              ><div class="startWorkoutDiv">
-                <ion-button>Start Workout</ion-button>
-              </div>
-            </router-link>
-          </ion-col>
+          <router-link class="routerLink" :to="'/workout/' + page">
+            <ion-button shape="round" color="danger"
+              ><ion-icon slot="start" color="secondary" :icon="play"></ion-icon
+              >Start Workout</ion-button
+            >
+          </router-link>
         </ion-row>
       </ion-grid>
     </ion-content>
@@ -82,12 +93,14 @@ import {
   IonCardContent,
   IonSelect,
   IonSelectOption,
+  IonIcon,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
 import { useWorkoutsStore } from "../store/workouts";
 import { computed } from "vue";
 import { ref } from "vue";
+import { play } from "ionicons/icons";
 
 export default defineComponent({
   name: "ExercisePreview",
@@ -101,6 +114,7 @@ export default defineComponent({
     IonCardContent,
     IonSelect,
     IonSelectOption,
+    IonIcon,
   },
 
   setup() {
@@ -117,7 +131,7 @@ export default defineComponent({
     //onMounted (image workout show)
     function getImgUrl() {
       console.log("klicki");
-      return require("../assets/HomePageWorkoutImages/"+ page + ".png");
+      return require("../assets/HomePageWorkoutImages/" + page + ".png");
     }
 
     //UI DATA
@@ -132,7 +146,7 @@ export default defineComponent({
             (exerciseTime.value * quantityExercises.value +
               (breakTime.value * quantityExercises.value - breakTime.value)) /
               60
-          ) + " Minutes"
+          )
         : undefined;
     });
 
@@ -164,6 +178,7 @@ export default defineComponent({
       exerciseSelected,
       breakSelected,
       getImgUrl,
+      play,
     };
   },
 });
@@ -184,7 +199,7 @@ ul {
   list-style: none;
   padding: 0;
   overflow-y: auto;
-  height: 275px;
+  height: 400px;
 }
 
 img {
@@ -194,16 +209,35 @@ img {
 }
 
 .courseNameDiv {
-  height: 140px;
+  height: 200px;
+  position: relative;
   text-align: center;
-  border-bottom: 2px solid black;
   margin: 0 0 0 0;
   padding: 0;
+  background-size: cover;
+}
+
+.courseNameDiv p {
+  margin: 0;
+  font-size: 20px;
+  color: var(--ion-color-primary);
 }
 
 .timeAndCountDiv {
   margin: 10px;
   text-align: center;
+  color: var(--ion-color-primary);
+}
+
+.displayDiv {
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+}
+
+
+.timeLabel {
+  margin: 0;
 }
 
 .lineRow {
@@ -230,5 +264,13 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.routerLink {
+  position: fixed;
+  bottom: 1%;
+  left: 20%;
+  right: 20%;
+  text-decoration: none;
 }
 </style>
