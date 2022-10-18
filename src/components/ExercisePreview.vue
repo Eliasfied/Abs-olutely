@@ -72,7 +72,7 @@
           </ion-col>
           <router-link class="routerLink" :to="'/workout/' + page">
             <ion-button shape="round" color="danger"
-              ><ion-icon slot="start" color="secondary" :icon="play"></ion-icon
+              ><ion-icon slot="start" color="tertiary" :icon="play"></ion-icon
               >Start Workout</ion-button
             >
           </router-link>

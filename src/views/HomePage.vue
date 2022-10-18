@@ -99,29 +99,36 @@ export default defineComponent({
 
 <style scoped>
 
+ion-grid {
+  height: 100%;
+}
+
+ion-row {
+  height: 33.33%;
+}
 
 ion-card-title {
   font-size: 40px;
 }
-  .beginnerCardImage {
-    height: 210px;
-    margin: 0;
-    background-image: url("../assets/HomePageWorkoutImages/beginner.png");
-    background-size: cover;
-  }
-  .advancedCardImage {
-    height: 210px;
-    margin: 0;
-    background-image: url("../assets/HomePageWorkoutImages/advanced.png");
-    background-size: cover;
-  }
-  .champCardImage {
-    height: 210px;
-    margin: 0;
-    background-image: url("../assets/HomePageWorkoutImages/champ.png");
-    background-size: cover;
-  }
-  
+.beginnerCardImage {
+  height: 100%;
+  margin: 0;
+  background-image: url("../assets/HomePageWorkoutImages/beginner.png");
+  background-size: cover;
+}
+.advancedCardImage {
+  height: 100%;
+  margin: 0;
+  background-image: url("../assets/HomePageWorkoutImages/advanced.png");
+  background-size: cover;
+}
+.champCardImage {
+  height: 100%;
+  margin: 0;
+  background-image: url("../assets/HomePageWorkoutImages/champ.png");
+  background-size: cover;
+}
+
 .routerLink {
   text-decoration: none;
 }

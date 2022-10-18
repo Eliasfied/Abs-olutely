@@ -1,1 +1,56 @@
 -composables instead of computed property (or a mix) for computed property totalTime???
+
+---------------------------------------
+
+WorkoutLive.vue 
+
+-start when "startWorkoutButton" is pressed so stuff needs to be executed in when page initially loads (timer begins etc.)
+-forward, back, stop will be added later
+-for schleife where we iterate through the list and do stuff all "exerciseLength" seconds (setTimeout)
+-dont forget pauses after every exercise (not the last one)
+
+
+EVENTUELL MIT WHILE SCHLEIFE
+
+// startet sobald page geöffnet wird
+async function startWorkout() {
+
+for (i = 0; i < exercises.length; i++) {
+if (i == 0) {
+await showWorkoutItem(i);
+}
+else {
+await setTimeOut(showWorkoutItem(i, 30000));
+}
+await startBreakTimer();
+
+}
+}
+
+async function showWorkoutItem(index) {
+
+   currentExercise = exerciseArray[index];
+   currentExerciseNumber = index + "/" + exerciseArray.length;
+   await startExerciseTimer();
+   
+
+
+}
+
+function startExerciseTimer() {
+ counter = exerciseTime;
+    while (counter > 0) {
+    setInterval(counter--, 1000);
+
+    }
+}
+
+
+function startBreakTimer() {
+ counter = breakTime;
+    while (counter > 0) {
+    setInterval(counter--, 1000);
+
+    }
+}
+

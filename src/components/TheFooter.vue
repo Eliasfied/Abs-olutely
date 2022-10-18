@@ -45,7 +45,7 @@ export default defineComponent({
 
 ion-icon {
   font-size: 36px;
-  color: var(--ion-color-primary);
+  color: var(--ion-color-tertiary);
   margin: 12px;
 }
 </style>
