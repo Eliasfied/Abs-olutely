@@ -7,7 +7,6 @@ export const useWorkoutsStore = defineStore("workouts", () => {
       breakTime: 30,
       exerciseTime: 30,
       exercises: [
-        "beginner",
         "plank",
         "russian",
         "crunch",
@@ -23,7 +22,6 @@ export const useWorkoutsStore = defineStore("workouts", () => {
       breakTime: 20,
       exerciseTime: 30,
       exercises: [
-        "advanced",
         "grab-toe",
         "liegestütze",
         "plank",
@@ -41,7 +39,6 @@ export const useWorkoutsStore = defineStore("workouts", () => {
       breakTime: 10,
       exerciseTime: 30,
       exercises: [
-        "champ",
         "plank",
         "russian",
         "crunch",

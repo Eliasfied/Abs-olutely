@@ -11,6 +11,15 @@ WorkoutLive.vue
 
 
 EVENTUELL MIT WHILE SCHLEIFE
+async function startWorkout() {
+i = 0;
+while (i < exercise.length) {
+await setTimeOut(showWorkoutItem(i, 30000));
+await startBreakTimer();
+i++;
+}
+}
+
 
 // startet sobald page geöffnet wird
 async function startWorkout() {
