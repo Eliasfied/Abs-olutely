@@ -220,13 +220,13 @@ img {
 .courseNameDiv p {
   margin: 0;
   font-size: 20px;
-  color: var(--ion-color-primary);
+  color: var(--ion-color-tertiary);
 }
 
 .timeAndCountDiv {
   margin: 10px;
   text-align: center;
-  color: var(--ion-color-primary);
+  color: var(--ion-color-tertiary);
 }
 
 .displayDiv {

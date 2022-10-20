@@ -10,7 +10,7 @@
             >
               <ion-card class="beginnerCardImage">
                 <ion-card-header>
-                  <ion-card-title color="primary">Beginner</ion-card-title>
+                  <ion-card-title color="tertiary">Beginner</ion-card-title>
                 </ion-card-header>
                 <ion-card-content> </ion-card-content>
               </ion-card>
@@ -25,7 +25,7 @@
             >
               <ion-card class="advancedCardImage">
                 <ion-card-header>
-                  <ion-card-title color="primary">Advanced</ion-card-title>
+                  <ion-card-title color="tertiary">Advanced</ion-card-title>
                 </ion-card-header>
 
                 <ion-card-content> </ion-card-content>
@@ -40,7 +40,7 @@
             >
               <ion-card class="champCardImage">
                 <ion-card-header>
-                  <ion-card-title color="primary">Champ</ion-card-title>
+                  <ion-card-title color="tertiary">Champ</ion-card-title>
                 </ion-card-header>
                 <ion-card-content> </ion-card-content> </ion-card
             ></router-link>
