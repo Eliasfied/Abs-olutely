@@ -128,7 +128,7 @@ export default defineComponent({
     const list = store.workoutList.find((element) => element.name == page);
     console.log(list);
 
-    //onMounted (image workout show)
+    // (image workout show)
     function getImgUrl() {
       console.log("klicki");
       return require("../assets/HomePageWorkoutImages/" + page + ".png");
