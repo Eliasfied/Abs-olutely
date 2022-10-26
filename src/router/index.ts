@@ -3,6 +3,7 @@ import { RouteRecordRaw } from "vue-router";
 import HomePage from "../views/HomePage.vue";
 import ExercisePreview from "../components/ExercisePreview.vue";
 import WorkoutLive from "../components/WorkoutLive.vue";
+import WorkoutPreview from "../components/WorkoutPreview.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,8 +13,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/preview/:course",
-    name: "ExercisePreview",
-    component: ExercisePreview,
+    name: "WorkoutPreview",
+    component: WorkoutPreview,
   },
   {
     path: "/workout/:course",

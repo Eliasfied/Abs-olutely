@@ -4,62 +4,27 @@
 
 WorkoutLive.vue 
 
--start when "startWorkoutButton" is pressed so stuff needs to be executed in when page initially loads (timer begins etc.)
--forward, back, stop will be added later
--for schleife where we iterate through the list and do stuff all "exerciseLength" seconds (setTimeout)
--dont forget pauses after every exercise (not the last one)
+-sound for timer
+-remaining timer bar top left
+-good background GIFs or Videos
+-back to menü button
+-get ready text and timer before workout starts 
+-workout done text + statistics and option to safe this workout  
+
+WorkoutPreview:
+
+TO do
+
+-possible to delete exercises and to add exercises
+-possible to klick on exercises in list and new small window in card style opens which explains the exercise
+-possible to safe exercise
 
 
-EVENTUELL MIT WHILE SCHLEIFE
-async function startWorkout() {
-i = 0;
-while (i < exercise.length) {
-await setTimeOut(showWorkoutItem(i, 30000));
-await startBreakTimer();
-i++;
-}
-}
+GENERAL TO do
 
+-login/Accounts
+-store exercises/workouts/images in DB?
 
-// startet sobald page geöffnet wird
-async function startWorkout() {
-
-for (i = 0; i < exercises.length; i++) {
-if (i == 0) {
-await showWorkoutItem(i);
-}
-else {
-await setTimeOut(showWorkoutItem(i, 30000));
-}
-await startBreakTimer();
-
-}
-}
-
-async function showWorkoutItem(index) {
-
-   currentExercise = exerciseArray[index];
-   currentExerciseNumber = index + "/" + exerciseArray.length;
-   await startExerciseTimer();
-   
-
-
-}
-
-function startExerciseTimer() {
- counter = exerciseTime;
-    while (counter > 0) {
-    setInterval(counter--, 1000);
-
-    }
-}
-
-
-function startBreakTimer() {
- counter = breakTime;
-    while (counter > 0) {
-    setInterval(counter--, 1000);
-
-    }
-}
-
+-able to create and safe own exercises
+-track finished exercises in calendar
+-set reminder

@@ -7,7 +7,7 @@
         <div class="item-exerciseNumber">{{ currentExerciseNumber }}</div>
         <div class="item-exerciseName">{{ currentExercise }}</div>
         <div class="item-arrowLeft">
-          <ion-button>
+          <ion-button :disabled="disabled" @click="backToLastExercise">
             <ion-icon color="tertiary" :icon="playBack"></ion-icon
           ></ion-button>
         </div>
@@ -15,13 +15,13 @@
           <img :src="getImgUrl()" alt="" />
         </div>
         <div class="item-arrowRight">
-          <ion-button>
+          <ion-button :disabled="disabled" @click="forwardToNextExercise">
             <ion-icon color="tertiary" :icon="playForward"></ion-icon
           ></ion-button>
         </div>
         <div class="item-pauseButton">
-          <ion-button>
-            <ion-icon color="tertiary" :icon="pauseOutline"></ion-icon
+          <ion-button :disabled="disabled" @click="pauseWorkout">
+            <ion-icon color="tertiary" :icon="togglePauseButton"></ion-icon
           ></ion-button>
         </div>
       </div>
@@ -35,12 +35,14 @@ import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
 import { useWorkoutsStore } from "../store/workouts";
 import { ref, onMounted } from "vue";
+import { computed } from "vue";
 import TheTimer from "../components/TheTimer.vue";
 import {
   playBack,
   playForward,
   pauseCircleOutline,
   pauseOutline,
+  playOutline,
 } from "ionicons/icons";
 
 export default defineComponent({
@@ -53,7 +55,7 @@ export default defineComponent({
 
   setup() {
     //onMounted
-  
+
     onMounted(() => startWorkout());
 
     // only in landscape mode (plugin)
@@ -80,6 +82,8 @@ export default defineComponent({
     let currentExercise = ref(list?.exercises[0]);
     let counter = ref(30);
     let currentExerciseNumber = ref("");
+    //exerciseIndex:
+    let i = 0;
     //image url
     function getImgUrl() {
       return require("../assets/exercises/" + currentExercise.value + ".png");
@@ -88,7 +92,7 @@ export default defineComponent({
     //triggers when page loads
     async function startWorkout() {
       console.log("funktion gestartet!");
-      let i = 0;
+
       if (list?.exercises.length != undefined) {
         while (i < list.exercises.length) {
           await showWorkoutItem(i);
@@ -119,6 +123,9 @@ export default defineComponent({
         counter.value = list?.exerciseTime;
         console.log("counter before loop: " + counter.value);
         while (counter.value > 0) {
+          while (pauseStartToggle.value == true) {
+            await asyncTimeout(500);
+          }
           await asyncTimeout(1000);
           counter.value = counter.value - 1;
           console.log(counter.value);
@@ -132,29 +139,66 @@ export default defineComponent({
         currentExercise.value = "Break";
         counter.value = list?.breakTime;
         while (counter.value > 0) {
+          while (pauseStartToggle.value == true) {
+            await asyncTimeout(500);
+          }
           await asyncTimeout(1000);
           counter.value = counter.value - 1;
         }
       }
     }
 
-    // SVG TIMER COLOR METHODS/VARIABLES
+    //Buttons
 
-    // Divides time left by the defined time limit.
-    function calculateTimeFraction() {
-      if (list?.exerciseTime != undefined) {
-        return counter.value / list?.exerciseTime;
+    //jump to last/next exercise (BACK)
+
+    let disabled = ref(false);
+    let pauseStartToggle = ref(false);
+    let disableDelay = 1000;
+
+    const togglePauseButton = computed(() => {
+      return pauseStartToggle.value == true ? playOutline : pauseOutline;
+    });
+
+    async function backToLastExercise() {
+      console.log("BackButton clicked");
+      if (i != 0) {
+        pauseStartToggle.value = false;
+        counter.value = 0;
+        i = i - 2; //going to be +1 in the next step so its actually -1 only
+        disabled.value = true;
+        console.log("diable anfang" + disabled.value);
+        await asyncTimeout(disableDelay);
+        console.log("disable vorbei" + disabled.value);
+        disabled.value = false;
       }
     }
 
-    const COLOR_CODES = {
-      info: {
-        color: "green",
-      },
-    };
+    async function forwardToNextExercise() {
+      console.log("ForwardButton clicked");
+      if (list?.exercises.length != undefined) {
+        if (i < list?.exercises.length - 1) {
+          pauseStartToggle.value = false;
+          counter.value = 0;
+          disabled.value = true;
+          console.log("diable anfang" + disabled.value);
+          await asyncTimeout(disableDelay);
+          disabled.value = false;
+          console.log("disable vorbei" + disabled.value);
+        }
+      }
+      return;
+    }
 
-    let remainingPathColor =
-      "base-timer__path-remaining " + COLOR_CODES.info.color;
+    async function pauseWorkout() {
+      console.log("Pause clicked");
+      pauseStartToggle.value = !pauseStartToggle.value;
+      disabled.value = true;
+      console.log("diable anfang" + disabled.value);
+      await asyncTimeout(disableDelay);
+      disabled.value = false;
+      console.log("disable vorbei" + disabled.value);
+    }
 
     return {
       route,
@@ -170,14 +214,19 @@ export default defineComponent({
       currentExercise,
       currentExerciseNumber,
       asyncTimeout,
-      remainingPathColor,
-      COLOR_CODES,
-      calculateTimeFraction,
       playBack,
       playForward,
       pauseCircleOutline,
       pauseOutline,
+      playOutline,
       getImgUrl,
+      backToLastExercise,
+      forwardToNextExercise,
+      pauseWorkout,
+      disabled,
+      pauseStartToggle,
+      disableDelay,
+      togglePauseButton,
     };
   },
 });
