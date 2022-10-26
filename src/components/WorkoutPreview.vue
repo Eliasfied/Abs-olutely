@@ -54,27 +54,35 @@
       </div>
       <div class="grid-style-bottom">
         <div class="exerciseListDiv">
-            <ul>
-              <li v-for="exercise in list?.exercises" :key="exercise">
-                <ion-card class="li-card" color="secondary">
-                  <ion-card-content> {{ exercise }} </ion-card-content>
-                </ion-card>
-              </li>
-            </ul>
+          <ul>
+            <li v-for="exercise in list?.exercises" :key="exercise">
+              <ion-card class="li-card" color="secondary">
+                <ion-card-content> {{ exercise }} </ion-card-content>
+              </ion-card>
+            </li>
+          </ul>
         </div>
-      </div>
-      <router-link class="routerLink" :to="'/workout/' + page">
+        <div class="buttonDiv">
+          <router-link class="routerLink" :to="'/workout/' + page">
             <ion-button shape="round" color="danger"
               ><ion-icon slot="start" color="tertiary" :icon="play"></ion-icon
               >Start Workout</ion-button
             >
           </router-link>
+        </div>
+      </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage, IonCard, IonSelect, IonSelectOption } from "@ionic/vue";
+import {
+  IonContent,
+  IonPage,
+  IonCard,
+  IonSelect,
+  IonSelectOption,
+} from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
@@ -89,7 +97,7 @@ export default defineComponent({
     IonPage,
     IonCard,
     IonSelect,
-    IonSelectOption
+    IonSelectOption,
   },
   setup() {
     const route = useRoute();
@@ -156,12 +164,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
 .grid-style-top {
   height: 40%;
   background-size: cover;
   display: grid;
   grid-template-rows: [row1-start] 30% [row1-end] 30% [row2-start] 40% [row2-end];
   grid-template-columns: [line1] 50% [line2] 50% [line3];
+  
 }
 
 .grid-style-bottom {
@@ -171,14 +181,22 @@ export default defineComponent({
   grid-template-columns: [line1-1] 100% [line2-1];
 }
 
+.exerciseListDiv {
+  border-top: 2px solid black;
+}
+
 .display-card {
-    border: 1px solid grey;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  border: 1px solid grey;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 .li-card {
-    border: 2px solid black;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  border: 2px solid black;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 .timeDiv {
@@ -230,18 +248,14 @@ export default defineComponent({
   margin: 0px;
   text-align: center;
   color: var(--ion-color-tertiary);
-
 }
 
-
-
 p {
-    margin: 0px;
-    
+  margin: 0px;
 }
 
 .bigger-p {
-    font-size: 28px;
+  font-size: 28px;
 }
 
 .timeLabel {
@@ -259,8 +273,8 @@ ul {
 .routerLink {
   position: fixed;
   bottom: 1%;
-  left: 20%;
-  right: 20%;
   text-decoration: none;
+  width: 100%;
+  text-align: center;
 }
 </style>

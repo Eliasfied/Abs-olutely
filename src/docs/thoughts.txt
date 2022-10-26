@@ -15,6 +15,7 @@ WorkoutPreview:
 
 TO do
 
+-color from second to first div maybe get brighter on the edge?
 -possible to delete exercises and to add exercises
 -possible to klick on exercises in list and new small window in card style opens which explains the exercise
 -possible to safe exercise
