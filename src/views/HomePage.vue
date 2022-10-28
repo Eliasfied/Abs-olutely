@@ -67,6 +67,7 @@ import {
 import { defineComponent } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
 import TheFooter from "../components/TheFooter.vue";
+import { ref } from "vue";
 
 export default defineComponent({
   name: "HomePage",
@@ -85,20 +86,37 @@ export default defineComponent({
 
   setup() {
     //get the workouts that are saved in the store
-    const store = useWorkoutsStore();
-    const list = store.workoutList;
+    let list;
+    let beginnerWorkoutName = ref("");
+    let advancedWorkoutName = ref("");
+    let champWorkoutName = ref("");
+    async function loadStore() {
+      const store = useWorkoutsStore();
+      await store.loadWorkoutsFromStore();
+      list = store.workoutList;
+      console.log("STORE: ");
+      console.log(store);
+      console.log(list);
 
-    let beginnerWorkoutName = list[0].name;
-    let advancedWorkoutName = list[1].name;
-    let champWorkoutName = list[2].name;
+      // beginnerWorkoutName = "beginner";
+      beginnerWorkoutName.value = list[0].name;
+      // advancedWorkoutName = "advanced";
+      advancedWorkoutName.value = list[1].name;
+      // champWorkoutName = "champ";
+      champWorkoutName.value = list[2].name;
+    }
 
-    return { beginnerWorkoutName, advancedWorkoutName, champWorkoutName };
+    loadStore();
+
+    console.log("zweite list");
+    console.log(list);
+
+    return { beginnerWorkoutName, advancedWorkoutName, champWorkoutName, loadStore };
   },
 });
 </script>
 
 <style scoped>
-
 ion-grid {
   height: 100%;
 }

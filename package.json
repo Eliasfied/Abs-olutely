@@ -17,12 +17,14 @@
     "@capacitor/haptics": "4.0.1",
     "@capacitor/keyboard": "4.0.1",
     "@capacitor/status-bar": "4.0.1",
+    "@ionic/storage": "^3.0.6",
     "@ionic/vue": "^6.0.0",
     "@ionic/vue-router": "^6.0.0",
     "cordova-plugin-screen-orientation": "^3.0.2",
     "core-js": "^3.6.5",
     "ionicons": "^6.0.3",
     "pinia": "^2.0.22",
+    "usemodal-vue3": "^0.3.7",
     "vue": "^3.2.21",
     "vue-router": "^4.0.12"
   },
@@ -47,7 +49,8 @@
     "eslint-plugin-vue": "^8.2.0",
     "jest": "^27.3.1",
     "ts-jest": "^27.0.7",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "webpack-cli": "^4.10.0"
   },
   "description": "An Ionic project"
 }

@@ -1,0 +1,100 @@
+<template>
+  <ion-card>
+    <div class="grid-style">
+      <div class="ionImage">
+        <img alt="" :src="getImgUrl()" />
+      </div>
+      <div>
+        <ion-card-header class="header">
+          <ion-card-title color="primary">{{
+            props.proplist[props.index].name
+          }}</ion-card-title>
+          <ion-card-subtitle class="subtitle"
+            >Difficulty: {{ props.proplist[props.index].difficulty }}
+          </ion-card-subtitle>
+        </ion-card-header>
+      </div>
+      <div>
+        <ion-card-content>
+          {{ props.proplist[props.index].description }}
+        </ion-card-content>
+      </div>
+    </div>
+  </ion-card>
+
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import { ref } from "vue";
+import {
+  IonContent,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonModal,
+} from "@ionic/vue";
+
+export default defineComponent({
+  name: "ExerciseDetail",
+  props: ["proplist", "index"],
+  setup(props) {
+    console.log("rofl:");
+    console.log(props.proplist);
+
+    function getImgUrl() {
+      return require("../assets/exercises/" +
+        props.proplist[props.index].name +
+        ".png");
+    }
+
+    return {
+      IonContent,
+      IonCard,
+      IonCardContent,
+      IonCardHeader,
+      IonCardTitle,
+      IonCardSubtitle,
+      IonModal,
+      props,
+      getImgUrl,
+    };
+  },
+});
+</script>
+
+<style scoped>
+.grid-style {
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  display: grid;
+  grid-template-rows: [row1-start] 50% [row1-end] 20% [row2-start] 30% [row2-end];
+  grid-template-columns: [line1-1] 100% [line2-1];
+}
+
+ion-card {
+  height: 100%;
+  border-radius: 16px;
+  border: 3px solid black;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.ionImage {
+  background-size: cover;
+  text-align: center;
+}
+.header {
+  border-top: 2px solid #003554;
+}
+
+ion-card-subtitle {
+  color: #003554;
+}
+
+ion-card-content {
+  color: #003554;
+}
+</style>

@@ -1,6 +1,8 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true" color="primary">
+      <!-- <p>{{ test }}</p> -->
+
       <div
         class="grid-style-top"
         :style="{ 'background-image': 'url(' + getImgUrl() + ')' }"
@@ -52,23 +54,37 @@
           >
         </div>
       </div>
+
       <div class="grid-style-bottom">
         <div class="exerciseListDiv">
           <ul>
-            <li v-for="exercise in list?.exercises" :key="exercise">
-              <ion-card class="li-card" color="secondary">
-                <ion-card-content> {{ exercise }} </ion-card-content>
+            <li v-for="(exercise, index) in list?.exercises" :key="exercise">
+              <ion-card
+                @click="showDetails(index)"
+                class="li-card"
+                color="secondary"
+              >
+                <ion-card-content> {{ exercise.name }} </ion-card-content>
               </ion-card>
             </li>
           </ul>
         </div>
-        <div class="buttonDiv">
+        <div>
           <router-link class="routerLink" :to="'/workout/' + page">
             <ion-button shape="round" color="danger"
               ><ion-icon slot="start" color="tertiary" :icon="play"></ion-icon
               >Start Workout</ion-button
             >
           </router-link>
+        </div>
+
+        <div class="alignCard">
+          <exercise-detail
+            :proplist="proplist"
+            :index="propIndex"
+            class="detail"
+            v-show="showModal"
+          ></exercise-detail>
         </div>
       </div>
     </ion-content>
@@ -89,6 +105,9 @@ import { computed } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
 import { ref } from "vue";
 import { play } from "ionicons/icons";
+import ExerciseStorage from "../storage/ExerciseStorage";
+import { getExercise } from "@/storage/getExerciseStorage";
+import ExerciseDetail from "../components/ExerciseDetail.vue";
 
 export default defineComponent({
   name: "WorkoutPreview",
@@ -98,6 +117,7 @@ export default defineComponent({
     IonCard,
     IonSelect,
     IonSelectOption,
+    ExerciseDetail,
   },
   setup() {
     const route = useRoute();
@@ -106,10 +126,29 @@ export default defineComponent({
     const store = useWorkoutsStore();
     const list = store.workoutList.find((element) => element.name == page);
     console.log(list);
+    let proplist = list.exercises;
+
+    // let test = ref("");
+    // async function zwei() {
+    //   test.value = await getExercise("Plank");
+    //   console.log("hier:");
+    //   console.log(test);
+    //   console.log(list?.exercises);
+
+    // }
+    // zwei();
 
     function getImgUrl() {
-      console.log("klicki");
       return require("../assets/HomePageWorkoutImages/" + page + ".png");
+    }
+
+    //POPUP EXERCISE DETAIL
+    let propIndex = ref(0);
+    let showModal = ref(false);
+    function showDetails(index) {
+      console.log("showdetails!");
+      showModal.value = !showModal.value;
+      propIndex.value = index;
     }
 
     //UI DATA
@@ -158,20 +197,23 @@ export default defineComponent({
       breakSelected,
       getImgUrl,
       play,
+      // test,
+      showModal,
+      showDetails,
+      proplist,
+      propIndex,
     };
   },
 });
 </script>
 
 <style scoped>
-
 .grid-style-top {
   height: 40%;
   background-size: cover;
   display: grid;
   grid-template-rows: [row1-start] 30% [row1-end] 30% [row2-start] 40% [row2-end];
   grid-template-columns: [line1] 50% [line2] 50% [line3];
-  
 }
 
 .grid-style-bottom {
@@ -268,6 +310,13 @@ ul {
   overflow-y: auto;
   height: 95%;
   margin-bottom: 0px;
+}
+
+.detail {
+  position: fixed;
+  width: 90%;
+  height: 40%;
+  bottom: 25%;
 }
 
 .routerLink {

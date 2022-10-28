@@ -9,8 +9,12 @@ WorkoutLive.vue
 -good background GIFs or Videos
 -back to menü button
 -get ready text and timer before workout starts 
--workout done text + statistics and option to safe this workout  
+-workout done text + statistics and option to safe this workout
 
+
+
+
+---------------------------------------------------------------------------
 WorkoutPreview:
 
 TO do
@@ -21,6 +25,9 @@ TO do
 -possible to safe exercise
 
 
+
+---------------------------------------------------------------
+
 GENERAL TO do
 
 -login/Accounts
@@ -29,3 +36,13 @@ GENERAL TO do
 -able to create and safe own exercises
 -track finished exercises in calendar
 -set reminder
+
+
+
+-----------------------------------------
+
+STORE:
+
+https://github.com/ionic-team/ionic-storage#usage-api
+
+

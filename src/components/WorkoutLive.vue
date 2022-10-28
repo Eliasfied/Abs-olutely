@@ -67,8 +67,13 @@ export default defineComponent({
 
     // import store
     const store = useWorkoutsStore();
-    console.log(store);
+    
     const list = store.workoutList.find((element) => element.name == page);
+    console.log("list: ")
+    console.log(list);
+    console.log("exercises: ")
+    console.log(list?.exercises);
+    console.log(list?.exercises.length);
 
     //ALL TIMER RELATED STUFF
 
@@ -79,7 +84,7 @@ export default defineComponent({
       });
     };
     //declare variables that change on screen
-    let currentExercise = ref(list?.exercises[0]);
+    let currentExercise = ref(list?.exercises[0].name);
     let counter = ref(30);
     let currentExerciseNumber = ref("");
     //exerciseIndex:
@@ -111,7 +116,7 @@ export default defineComponent({
     async function startExercise(index) {
       console.log("startExercise erreicht!");
       if (list?.exercises != undefined) {
-        currentExercise.value = list?.exercises[index];
+        currentExercise.value = list?.exercises[index].name;
         currentExerciseNumber.value = index + 1 + "/" + list.exercises.length;
         await startExerciseTimer();
       }
