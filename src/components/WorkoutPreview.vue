@@ -1,6 +1,14 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true" color="primary">
+      <div class="alignCard">
+        <exercise-detail
+          :proplist="proplist"
+          :index="propIndex"
+          class="detail"
+          v-show="showModal"
+        ></exercise-detail>
+      </div>
       <!-- <p>{{ test }}</p> -->
 
       <div
@@ -78,11 +86,11 @@
           </router-link>
         </div>
 
-        <div class="alignCard">
+        <div v-show="showModal" class="alignCard">
           <exercise-detail
+          @closeModal="closeModal"
             :proplist="proplist"
             :index="propIndex"
-            class="detail"
             v-show="showModal"
           ></exercise-detail>
         </div>
@@ -150,6 +158,9 @@ export default defineComponent({
       showModal.value = !showModal.value;
       propIndex.value = index;
     }
+    function closeModal() {
+      showModal.value = !showModal.value;
+    }
 
     //UI DATA
     let exerciseTime = ref(list?.exerciseTime);
@@ -202,6 +213,7 @@ export default defineComponent({
       showDetails,
       proplist,
       propIndex,
+      closeModal
     };
   },
 });
@@ -312,12 +324,16 @@ ul {
   margin-bottom: 0px;
 }
 
-.detail {
+.alignCard {
   position: fixed;
-  width: 90%;
   height: 40%;
   bottom: 25%;
+  position: fixed;
+  width: 90%;
+  left: 50%;
+  transform: translateX(-50%);
 }
+
 
 .routerLink {
   position: fixed;

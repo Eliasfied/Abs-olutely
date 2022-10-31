@@ -6,6 +6,8 @@
         <div class="item-timer">{{ counter }}</div>
         <div class="item-exerciseNumber">{{ currentExerciseNumber }}</div>
         <div class="item-exerciseName">{{ currentExercise }}</div>
+        <div class="item-nextExercise">{{ nextExercise }}</div>
+
         <div class="item-arrowLeft">
           <ion-button :disabled="disabled" @click="backToLastExercise">
             <ion-icon color="tertiary" :icon="playBack"></ion-icon
@@ -32,11 +34,12 @@
 <script lang="ts">
 import { IonContent, IonPage } from "@ionic/vue";
 import { defineComponent } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useWorkoutsStore } from "../store/workouts";
 import { ref, onMounted } from "vue";
 import { computed } from "vue";
 import TheTimer from "../components/TheTimer.vue";
+
 import {
   playBack,
   playForward,
@@ -63,15 +66,16 @@ export default defineComponent({
 
     // route name variable in page (beginner, advanced, champ..)
     const route = useRoute();
+    const $router = useRouter();
     const page = route.params.course;
 
     // import store
     const store = useWorkoutsStore();
-    
+
     const list = store.workoutList.find((element) => element.name == page);
-    console.log("list: ")
+    console.log("list: ");
     console.log(list);
-    console.log("exercises: ")
+    console.log("exercises: ");
     console.log(list?.exercises);
     console.log(list?.exercises.length);
 
@@ -87,47 +91,79 @@ export default defineComponent({
     let currentExercise = ref(list?.exercises[0].name);
     let counter = ref(30);
     let currentExerciseNumber = ref("");
+    let nextExercise = ref("");
+    let isPrepare = ref(true);
     //exerciseIndex:
     let i = 0;
     //image url
     function getImgUrl() {
-      return require("../assets/exercises/" + currentExercise.value + ".png");
+      return isPrepare.value
+        ? require("../assets/exercises/Prepare.png")
+        : require("../assets/exercises/" + currentExercise.value + ".png");
     }
+
+    //PREPARE FOR WORKOUT
+    async function prepareForWorkout() {
+      counter.value = 5;
+      currentExercise.value = exerciseValuePrepare;
+      while (counter.value > 0) {
+        if (counter.value < 10) {
+          nextExercise.value = "Next: " + list?.exercises[0].name;
+        } else {
+          nextExercise.value = "";
+        }
+        while (pauseStartToggle.value == true) {
+          await asyncTimeout(500);
+        }
+        await asyncTimeout(1000);
+        counter.value = counter.value - 1;
+        console.log(counter.value);
+      }
+    }
+
+    const exerciseValuePrepare = computed(() => {
+      return "Starting in " + counter.value + " seconds.";
+    });
 
     //triggers when page loads
     async function startWorkout() {
-      console.log("funktion gestartet!");
-
+      await prepareForWorkout();
+      isPrepare.value = false;
       if (list?.exercises.length != undefined) {
         while (i < list.exercises.length) {
           await showWorkoutItem(i);
-          await startBreakTimer();
+          await startBreakTimer(i);
           i++;
         }
+        currentExercise.value = "finished";
+        $router.push('/finished');
+    
+        
+        
       }
     }
 
     async function showWorkoutItem(index) {
-      console.log("showWorkoutItem erreicht!");
-      console.log("index: " + index);
       await startExercise(index);
     }
 
     async function startExercise(index) {
-      console.log("startExercise erreicht!");
       if (list?.exercises != undefined) {
         currentExercise.value = list?.exercises[index].name;
         currentExerciseNumber.value = index + 1 + "/" + list.exercises.length;
-        await startExerciseTimer();
+        await startExerciseTimer(index);
       }
     }
 
-    async function startExerciseTimer() {
-      console.log("statExerciseTimer erreicht");
+    async function startExerciseTimer(index) {
       if (list?.exerciseTime != undefined) {
         counter.value = list?.exerciseTime;
-        console.log("counter before loop: " + counter.value);
         while (counter.value > 0) {
+          if (counter.value < 10 && list?.breakTime == 0 && index < list?.exercises.length-1) {
+            nextExercise.value = "Next: " + list?.exercises[index+1].name;
+          } else {
+            nextExercise.value = "";
+          }
           while (pauseStartToggle.value == true) {
             await asyncTimeout(500);
           }
@@ -138,12 +174,16 @@ export default defineComponent({
       }
     }
 
-    async function startBreakTimer() {
-      console.log("startBreakTimer erreicht");
+    async function startBreakTimer(index) {
       if (list?.breakTime != undefined) {
         currentExercise.value = "Break";
         counter.value = list?.breakTime;
         while (counter.value > 0) {
+          if (counter.value < 10 && index < list?.exercises.length-1 ) {
+            nextExercise.value = "Next: " + list?.exercises[index+1].name;
+          } else {
+            nextExercise.value = "";
+          }
           while (pauseStartToggle.value == true) {
             await asyncTimeout(500);
           }
@@ -166,43 +206,35 @@ export default defineComponent({
     });
 
     async function backToLastExercise() {
-      console.log("BackButton clicked");
       if (i != 0) {
         pauseStartToggle.value = false;
         counter.value = 0;
         i = i - 2; //going to be +1 in the next step so its actually -1 only
         disabled.value = true;
-        console.log("diable anfang" + disabled.value);
         await asyncTimeout(disableDelay);
-        console.log("disable vorbei" + disabled.value);
         disabled.value = false;
       }
     }
 
     async function forwardToNextExercise() {
-      console.log("ForwardButton clicked");
       if (list?.exercises.length != undefined) {
         if (i < list?.exercises.length - 1) {
           pauseStartToggle.value = false;
           counter.value = 0;
           disabled.value = true;
-          console.log("diable anfang" + disabled.value);
+
           await asyncTimeout(disableDelay);
           disabled.value = false;
-          console.log("disable vorbei" + disabled.value);
         }
       }
       return;
     }
 
     async function pauseWorkout() {
-      console.log("Pause clicked");
       pauseStartToggle.value = !pauseStartToggle.value;
       disabled.value = true;
-      console.log("diable anfang" + disabled.value);
       await asyncTimeout(disableDelay);
       disabled.value = false;
-      console.log("disable vorbei" + disabled.value);
     }
 
     return {
@@ -232,6 +264,10 @@ export default defineComponent({
       pauseStartToggle,
       disableDelay,
       togglePauseButton,
+      nextExercise,
+      prepareForWorkout,
+      exerciseValuePrepare,
+      $router
     };
   },
 });
@@ -273,6 +309,16 @@ export default defineComponent({
   color: var(--ion-color-secondary);
   font-weight: bold;
   font-size: 28px;
+}
+
+.item-nextExercise {
+  justify-self: center;
+  align-self: center;
+  grid-column: line3 / line4;
+  grid-row: row1-end / row2-start;
+  color: var(--ion-color-secondary);
+  font-weight: bold;
+  font-size: 20x;
 }
 
 .item-arrowRight {

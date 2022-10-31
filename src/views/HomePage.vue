@@ -1,10 +1,11 @@
 <template>
   <ion-page>
+    <the-footer @openSideMenu="openSideMenu"> </the-footer>
     <ion-content :fullscreen="true" color="primary">
       <ion-grid>
         <ion-row>
-          <ion-col
-            ><router-link
+          <ion-col>
+            <router-link
               class="routerLink"
               :to="'/preview/' + beginnerWorkoutName"
             >
@@ -48,7 +49,6 @@
         </ion-row>
       </ion-grid>
     </ion-content>
-    <the-footer></the-footer>
   </ion-page>
 </template>
 
@@ -85,6 +85,12 @@ export default defineComponent({
   },
 
   setup() {
+    //sideMENÜ LOGIC
+
+    function openSideMenu() {
+      console.log("opensidemenu");
+    }
+
     //get the workouts that are saved in the store
     let list;
     let beginnerWorkoutName = ref("");
@@ -111,7 +117,13 @@ export default defineComponent({
     console.log("zweite list");
     console.log(list);
 
-    return { beginnerWorkoutName, advancedWorkoutName, champWorkoutName, loadStore };
+    return {
+      beginnerWorkoutName,
+      advancedWorkoutName,
+      champWorkoutName,
+      loadStore,
+      openSideMenu,
+    };
   },
 });
 </script>

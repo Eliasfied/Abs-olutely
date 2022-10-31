@@ -4,6 +4,13 @@
       <div class="ionImage">
         <img alt="" :src="getImgUrl()" />
       </div>
+      <div class="close-icon">
+        <ion-icon
+          @click="$emit('closeModal')"
+          color="danger"
+          :icon="closeCircleOutline"
+        ></ion-icon>
+      </div>
       <div>
         <ion-card-header class="header">
           <ion-card-title color="primary">{{
@@ -21,12 +28,12 @@
       </div>
     </div>
   </ion-card>
-
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { ref } from "vue";
+import { closeCircleOutline } from "ionicons/icons";
 import {
   IonContent,
   IonCard,
@@ -50,6 +57,10 @@ export default defineComponent({
         ".png");
     }
 
+    function closeModal() {
+      console.log("modal closed");
+    }
+
     return {
       IonContent,
       IonCard,
@@ -60,6 +71,8 @@ export default defineComponent({
       IonModal,
       props,
       getImgUrl,
+      closeCircleOutline,
+      closeModal,
     };
   },
 });
@@ -71,7 +84,7 @@ export default defineComponent({
   width: 100%;
   background-size: cover;
   display: grid;
-  grid-template-rows: [row1-start] 50% [row1-end] 20% [row2-start] 30% [row2-end];
+  grid-template-rows: [row1-start] 15% [row1-end] 35% [row2-start] 20% [row2-end]30% [row3-start];
   grid-template-columns: [line1-1] 100% [line2-1];
 }
 
@@ -85,9 +98,23 @@ ion-card {
 .ionImage {
   background-size: cover;
   text-align: center;
+  grid-row: row1-start / row2-start;
+  grid-column: line1-1 / line2-1;
 }
+
+.close-icon {
+  grid-row: row1-start / row1-end;
+  grid-column: line1-1 / line2-1;
+  justify-self: end;
+  margin-right: 5px;
+}
+
 .header {
   border-top: 2px solid #003554;
+}
+
+ion-icon {
+  font-size: 48px;
 }
 
 ion-card-subtitle {

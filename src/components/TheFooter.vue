@@ -1,52 +1,52 @@
 <template>
-  <ion-footer :translucent="true">
-    <ion-toolbar color="secondary">
-      <ion-buttons>
-        <ion-button>
-          <ion-icon :icon="settings"></ion-icon>
-        </ion-button>
-        <ion-button>
-          <ion-icon :icon="map"></ion-icon>
-        </ion-button>
-        <ion-button>
-          <ion-icon :icon="home"></ion-icon>
-        </ion-button>
-        <ion-button>
-          <ion-icon :icon="barbell"></ion-icon>
-        </ion-button>
+  <side-menu></side-menu>
+  <div class="ion-page" id="main-content"></div>
+  <ion-header :translucent="true">
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
       </ion-buttons>
+      <ion-title>EasyAbs</ion-title>
     </ion-toolbar>
-  </ion-footer>
+  </ion-header>
 </template>
 
 <script lang="ts">
-import { settings, home, map, barbell } from "ionicons/icons";
-import { IonFooter, IonIcon, IonToolbar, IonButtons, IonButton } from "@ionic/vue";
+import { menuOutline } from "ionicons/icons";
+import {
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonTitle,
+  IonMenuButton,
+} from "@ionic/vue";
 import { defineComponent } from "vue";
+import SideMenu from "../components/SideMenu.vue";
 
 export default defineComponent({
   name: "TheFooter",
   components: {
-    IonFooter,
-    IonIcon,
+    IonHeader,
     IonToolbar,
     IonButtons,
-    IonButton
+    IonTitle,
+    IonMenuButton,
+    SideMenu,
   },
   setup() {
-    return { settings, home, map, barbell };
+    return { menuOutline };
   },
 });
 </script>
 
 <style scoped>
-
-
+ion-toolbar {
+  border: 2px solid black;
+}
 
 ion-icon {
-  font-size: 36px;
+  font-size: 42px;
   color: var(--ion-color-tertiary);
   margin: 12px;
 }
 </style>
->
