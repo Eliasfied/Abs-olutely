@@ -136,7 +136,6 @@ export default defineComponent({
           i++;
         }
         currentExercise.value = "finished";
-        $router.push('/finished');
     
         
         
