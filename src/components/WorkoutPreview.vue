@@ -106,6 +106,8 @@ import {
   IonCard,
   IonSelect,
   IonSelectOption,
+  IonIcon,
+  IonButton,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
@@ -126,6 +128,8 @@ export default defineComponent({
     IonSelect,
     IonSelectOption,
     ExerciseDetail,
+    IonIcon,
+    IonButton,
   },
   setup() {
     const route = useRoute();

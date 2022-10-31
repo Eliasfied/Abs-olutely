@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonPage } from "@ionic/vue";
+import { IonContent, IonPage, IonButton, IonIcon } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useWorkoutsStore } from "../store/workouts";
@@ -54,6 +54,8 @@ export default defineComponent({
     IonContent,
     IonPage,
     TheTimer,
+    IonButton,
+    IonIcon,
   },
 
   setup() {
