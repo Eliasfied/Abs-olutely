@@ -1,16 +1,25 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { RouteRecordRaw } from "vue-router";
 import HomePage from "../views/HomePage.vue";
-import ExercisePreview from "../components/ExercisePreview.vue";
 import WorkoutLive from "../components/WorkoutLive.vue";
 import WorkoutPreview from "../components/WorkoutPreview.vue";
-import FinishedPage from "../components/FinishedPage.vue";
-
+import MyWorkouts from "../components/MyWorkouts.vue";
 const routes: Array<RouteRecordRaw> = [
+
+
   {
     path: "/",
+    redirect: '/home'
+  },
+  {
+    path: "/home",
     name: "Home",
     component: HomePage,
+  },
+  {
+    path: "/myworkouts",
+    name: "MyWorkouts",
+    component: MyWorkouts,
   },
   {
     path: "/preview/:course",
@@ -21,11 +30,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/workout/:course",
     name: "WorkoutLive",
     component: WorkoutLive,
-  },
-  {
-    path: "/finished",
-    name: "FinishedPage",
-    component: FinishedPage,
   },
 ];
 

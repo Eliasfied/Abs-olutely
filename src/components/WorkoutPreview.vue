@@ -88,7 +88,7 @@
 
         <div v-show="showModal" class="alignCard">
           <exercise-detail
-          @closeModal="closeModal"
+            @closeModal="closeModal"
             :proplist="proplist"
             :index="propIndex"
             v-show="showModal"
@@ -108,6 +108,7 @@ import {
   IonSelectOption,
   IonIcon,
   IonButton,
+  IonCardContent,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
@@ -130,6 +131,7 @@ export default defineComponent({
     ExerciseDetail,
     IonIcon,
     IonButton,
+    IonCardContent,
   },
   setup() {
     const route = useRoute();
@@ -217,7 +219,7 @@ export default defineComponent({
       showDetails,
       proplist,
       propIndex,
-      closeModal
+      closeModal,
     };
   },
 });
@@ -332,12 +334,10 @@ ul {
   position: fixed;
   height: 40%;
   bottom: 25%;
-  position: fixed;
   width: 90%;
   left: 50%;
   transform: translateX(-50%);
 }
-
 
 .routerLink {
   position: fixed;

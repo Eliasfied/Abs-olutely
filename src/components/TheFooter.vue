@@ -6,7 +6,7 @@
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
-      <ion-title>EasyAbs</ion-title>
+      <ion-title>{{props.title}}</ion-title>
     </ion-toolbar>
   </ion-header>
 </template>
@@ -33,8 +33,9 @@ export default defineComponent({
     IonMenuButton,
     SideMenu,
   },
-  setup() {
-    return { menuOutline };
+  props: ["title"],
+  setup(props) {
+    return { menuOutline, props };
   },
 });
 </script>

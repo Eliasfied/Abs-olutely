@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <the-footer @openSideMenu="openSideMenu"> </the-footer>
+    <the-footer title="EasyAbs" @openSideMenu="openSideMenu"> </the-footer>
     <ion-content :fullscreen="true" color="primary">
       <ion-grid>
         <ion-row>

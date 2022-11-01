@@ -27,6 +27,9 @@
           ></ion-button>
         </div>
       </div>
+      <div v-show="isFinished" class="align-card">
+        <finished-page @resetAll="resetAll" :page="page"></finished-page>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -39,6 +42,7 @@ import { useWorkoutsStore } from "../store/workouts";
 import { ref, onMounted } from "vue";
 import { computed } from "vue";
 import TheTimer from "../components/TheTimer.vue";
+import FinishedPage from "../components/FinishedPage.vue";
 
 import {
   playBack,
@@ -56,6 +60,7 @@ export default defineComponent({
     TheTimer,
     IonButton,
     IonIcon,
+    FinishedPage,
   },
 
   setup() {
@@ -70,6 +75,26 @@ export default defineComponent({
     const route = useRoute();
     const $router = useRouter();
     const page = route.params.course;
+
+
+// RESET ALL
+
+function resetAll() {
+  // i = 0;
+  // counter.value = 30;
+  // currentExerciseNumber.value = "";
+  // nextExercise.value = "";
+  // isPrepare.value = true;
+  // isFinished.value = false;
+  // disabled.value = false;
+  // pauseStartToggle.value = false;
+
+  console.log("okay lets go")
+  
+
+
+}
+
 
     // import store
     const store = useWorkoutsStore();
@@ -95,6 +120,7 @@ export default defineComponent({
     let currentExerciseNumber = ref("");
     let nextExercise = ref("");
     let isPrepare = ref(true);
+    let isFinished = ref(false);
     //exerciseIndex:
     let i = 0;
     //image url
@@ -134,13 +160,17 @@ export default defineComponent({
       if (list?.exercises.length != undefined) {
         while (i < list.exercises.length) {
           await showWorkoutItem(i);
-          await startBreakTimer(i);
+          if (i < list.exercises.length - 1) {
+            await startBreakTimer(i);
+          }
+
           i++;
         }
-        currentExercise.value = "finished";
-    
-        
-        
+        isFinished.value = true;
+        disabled.value = true;
+        window.screen.orientation.lock("portrait");
+        console.log("is finished");
+        console.log(isFinished);
       }
     }
 
@@ -160,8 +190,12 @@ export default defineComponent({
       if (list?.exerciseTime != undefined) {
         counter.value = list?.exerciseTime;
         while (counter.value > 0) {
-          if (counter.value < 10 && list?.breakTime == 0 && index < list?.exercises.length-1) {
-            nextExercise.value = "Next: " + list?.exercises[index+1].name;
+          if (
+            counter.value < 10 &&
+            list?.breakTime == 0 &&
+            index < list?.exercises.length - 1
+          ) {
+            nextExercise.value = "Next: " + list?.exercises[index + 1].name;
           } else {
             nextExercise.value = "";
           }
@@ -180,8 +214,8 @@ export default defineComponent({
         currentExercise.value = "Break";
         counter.value = list?.breakTime;
         while (counter.value > 0) {
-          if (counter.value < 10 && index < list?.exercises.length-1 ) {
-            nextExercise.value = "Next: " + list?.exercises[index+1].name;
+          if (counter.value < 10 && index < list?.exercises.length - 1) {
+            nextExercise.value = "Next: " + list?.exercises[index + 1].name;
           } else {
             nextExercise.value = "";
           }
@@ -268,7 +302,9 @@ export default defineComponent({
       nextExercise,
       prepareForWorkout,
       exerciseValuePrepare,
-      $router
+      $router,
+      isFinished,
+      resetAll,
     };
   },
 });
@@ -345,5 +381,15 @@ export default defineComponent({
   align-self: center;
   grid-column: line2 / line3;
   grid-row: row2-end / row3;
+}
+
+.align-card {
+  position: fixed;
+  height: 80%;
+  bottom: 5%;
+  top: 5%;
+  width: 90%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>

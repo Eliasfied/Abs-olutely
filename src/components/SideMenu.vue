@@ -7,15 +7,19 @@
     </ion-header>
     <ion-content color="secondary">
       <ion-list>
-        <ion-item color="secondary"
-          ><ion-icon slot="start" :icon="homeOutline"></ion-icon>
-          Homepage</ion-item
+        <router-link class="routerLink" to="/"
+          ><ion-item color="secondary"
+            ><ion-icon slot="start" :icon="homeOutline"></ion-icon>
+            Homepage</ion-item
+          ></router-link
         >
-        <ion-item color="secondary"
-          ><ion-icon slot="start" :icon="barbellOutline"></ion-icon>My
-          Workouts</ion-item
+        <router-link class="routerLink" to="/myworkouts">
+          <ion-item color="secondary"
+            ><ion-icon slot="start" :icon="barbellOutline"></ion-icon>My
+            Workouts</ion-item
+          ></router-link
         >
-        <ion-item color="secondary"
+        <ion-item href="/myworkouts" color="secondary"
           ><ion-icon slot="start" :icon="listCircleOutline"></ion-icon>Exercise
           List</ion-item
         >
@@ -44,7 +48,13 @@ import {
   IonItem,
   IonIcon,
 } from "@ionic/vue";
-import { homeOutline, barbellOutline, listCircleOutline, calendarOutline, settingsOutline } from "ionicons/icons";
+import {
+  homeOutline,
+  barbellOutline,
+  listCircleOutline,
+  calendarOutline,
+  settingsOutline,
+} from "ionicons/icons";
 
 export default defineComponent({
   name: "SideMenu",
@@ -60,8 +70,19 @@ export default defineComponent({
   },
   setup() {
     let content = "juhuu";
+    let workouts = "myWorkouts";
+    let beginnerWorkoutName = "beginner";
 
-    return { content, homeOutline, barbellOutline, listCircleOutline, calendarOutline, settingsOutline };
+    return {
+      content,
+      homeOutline,
+      barbellOutline,
+      listCircleOutline,
+      calendarOutline,
+      settingsOutline,
+      workouts,
+      beginnerWorkoutName,
+    };
   },
 });
 </script>
@@ -71,6 +92,7 @@ ion-list {
   background-color: var(--ion-color-secondary);
 }
 
-ion-item {
+.routerLink {
+  text-decoration: none;
 }
 </style>
