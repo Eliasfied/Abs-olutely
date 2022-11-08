@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { ref } from "vue";
 import { closeCircleOutline } from "ionicons/icons";
 import {
   IonContent,

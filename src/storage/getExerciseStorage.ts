@@ -1,8 +1,8 @@
 import ExerciseStorage from "./ExerciseStorage";
-let data = "";
+let data;
 
 export async function getExercise(exercise) {
-  await ExerciseStorage.get(exercise).then((result) => {
+  await ExerciseStorage.getItem(exercise).then((result) => {
     data = result;
   });
 

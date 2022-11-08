@@ -1,12 +1,9 @@
-import ExerciseStorage from "./ExerciseStorage";
-let data = "";
+import defaultWorkoutStorage from "./defaultWorkoutStorage";
+let data;
 export async function getWorkout(workout) {
-  await ExerciseStorage.get(workout).then((result) => {
+  await defaultWorkoutStorage.getItem(workout).then((result) => {
     data = result;
   });
-
-  console.log("okayletsgo");
-  console.log(data);
 
   return data;
 }

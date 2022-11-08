@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getExercise } from "../storage/getExerciseStorage";
+import { getWorkout } from "../storage/getWorkoutStorage";
 
 export const useWorkoutsStore = defineStore("workouts", {
   state: () => ({
@@ -11,11 +11,11 @@ export const useWorkoutsStore = defineStore("workouts", {
 
 
 
-      const beginner = await getExercise("beginner");
+      const beginner = await getWorkout("beginner");
       this.workoutList.push(beginner);
-      const advanced = await getExercise("advanced");
+      const advanced = await getWorkout("advanced");
       this.workoutList.push(advanced);
-      const champ = await getExercise("champ");
+      const champ = await getWorkout("champ");
       this.workoutList.push(champ);
     },
   },

@@ -116,8 +116,6 @@ import { computed } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
 import { ref } from "vue";
 import { play } from "ionicons/icons";
-import ExerciseStorage from "../storage/ExerciseStorage";
-import { getExercise } from "@/storage/getExerciseStorage";
 import ExerciseDetail from "../components/ExerciseDetail.vue";
 
 export default defineComponent({
@@ -139,6 +137,7 @@ export default defineComponent({
 
     const store = useWorkoutsStore();
     const list = store.workoutList.find((element) => element.name == page);
+    console.log("LIST: ")
     console.log(list);
     let proplist = list.exercises;
 

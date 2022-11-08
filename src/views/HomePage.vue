@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <the-footer title="EasyAbs" @openSideMenu="openSideMenu"> </the-footer>
+    <the-footer title="EasyAbs" :closeMenu="closeMenu"> </the-footer>
     <ion-content :fullscreen="true" color="primary">
       <ion-grid>
         <ion-row>
@@ -68,6 +68,7 @@ import { defineComponent } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
 import TheFooter from "../components/TheFooter.vue";
 import { ref } from "vue";
+import {  onIonViewWillLeave } from "@ionic/vue";
 
 export default defineComponent({
   name: "HomePage",
@@ -85,11 +86,20 @@ export default defineComponent({
   },
 
   setup() {
+  
+
+    let closeMenu = ref(false);
+    onIonViewWillLeave(() => {
+      console.log("Home page did leave");
+
+      // BIS AN SIDEMENU WEITERGEBEN UND DORT WATCHEN UND DANN DAS HIER TRIGGERN
+      closeMenu.value = true;
+      
+    });
+    
+
     //sideMENÜ LOGIC
 
-    function openSideMenu() {
-      console.log("opensidemenu");
-    }
 
     //get the workouts that are saved in the store
     let list;
@@ -122,7 +132,7 @@ export default defineComponent({
       advancedWorkoutName,
       champWorkoutName,
       loadStore,
-      openSideMenu,
+      closeMenu,
     };
   },
 });

@@ -1,12 +1,12 @@
 <template>
-  <side-menu></side-menu>
+  <side-menu :closeMenu="props.closeMenu"></side-menu>
   <div class="ion-page" id="main-content"></div>
   <ion-header :translucent="true">
     <ion-toolbar color="primary">
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
-      <ion-title>{{props.title}}</ion-title>
+      <ion-title>{{ props.title }}</ion-title>
     </ion-toolbar>
   </ion-header>
 </template>
@@ -25,6 +25,7 @@ import SideMenu from "../components/SideMenu.vue";
 
 export default defineComponent({
   name: "TheFooter",
+
   components: {
     IonHeader,
     IonToolbar,
@@ -33,7 +34,7 @@ export default defineComponent({
     IonMenuButton,
     SideMenu,
   },
-  props: ["title"],
+  props: ["title", "closeMenu"],
   setup(props) {
     return { menuOutline, props };
   },

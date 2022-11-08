@@ -46,3 +46,9 @@ STORE:
 https://github.com/ionic-team/ionic-storage#usage-api
 
 
+BREAK: Tippen zum Überspringen?
+
+
+WORKOUT EDITOR
+
+LONG HOLD ON LIST ITEM (EXERCISE) -> possible to move exercises and possible to delete them!

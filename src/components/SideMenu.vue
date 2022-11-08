@@ -1,25 +1,25 @@
 <template>
-  <ion-menu contentId="main-content">
+  <ion-menu menu-id="main" contentId="main-content">
     <ion-header>
       <ion-toolbar color="primary">
-        <ion-title>Menu Content</ion-title>
+        <ion-title>Menu</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content color="secondary">
       <ion-list>
-        <router-link class="routerLink" to="/"
-          ><ion-item color="secondary"
+        <router-link class="routerLink" to="/home">
+          <ion-item color="secondary"
             ><ion-icon slot="start" :icon="homeOutline"></ion-icon>
             Homepage</ion-item
-          ></router-link
-        >
+          >
+        </router-link>
         <router-link class="routerLink" to="/myworkouts">
           <ion-item color="secondary"
             ><ion-icon slot="start" :icon="barbellOutline"></ion-icon>My
             Workouts</ion-item
-          ></router-link
-        >
-        <ion-item href="/myworkouts" color="secondary"
+          >
+        </router-link>
+        <ion-item color="secondary"
           ><ion-icon slot="start" :icon="listCircleOutline"></ion-icon>Exercise
           List</ion-item
         >
@@ -56,8 +56,16 @@ import {
   settingsOutline,
 } from "ionicons/icons";
 
+import { ref, watch  } from "vue";
+import { menuController } from "@ionic/core";
+import {  onIonViewWillEnter } from "@ionic/vue";
+
+
+
 export default defineComponent({
   name: "SideMenu",
+  props: ["closeMenu"],
+
   components: {
     IonMenu,
     IonHeader,
@@ -68,20 +76,28 @@ export default defineComponent({
     IonContent,
     IonIcon,
   },
-  setup() {
-    let content = "juhuu";
-    let workouts = "myWorkouts";
-    let beginnerWorkoutName = "beginner";
+  setup(props) {
+    
 
+onIonViewWillEnter( () => {
+  console.log("propsOnENTER");
+  console.log(props.closeMenu);
+})
+
+    watch(props.closeMenu, (newValue) => {
+      if (props.closeMenu == true) {
+        menuController.close();
+      }
+      console.log("props: ");
+      console.log(props.closeMenu);
+
+    })
     return {
-      content,
       homeOutline,
       barbellOutline,
       listCircleOutline,
       calendarOutline,
       settingsOutline,
-      workouts,
-      beginnerWorkoutName,
     };
   },
 });

@@ -4,12 +4,11 @@ import HomePage from "../views/HomePage.vue";
 import WorkoutLive from "../components/WorkoutLive.vue";
 import WorkoutPreview from "../components/WorkoutPreview.vue";
 import MyWorkouts from "../components/MyWorkouts.vue";
+import WorkoutEditor from "../components/WorkoutEditor.vue";
 const routes: Array<RouteRecordRaw> = [
-
-
   {
     path: "/",
-    redirect: '/home'
+    redirect: "/home",
   },
   {
     path: "/home",
@@ -20,6 +19,16 @@ const routes: Array<RouteRecordRaw> = [
     path: "/myworkouts",
     name: "MyWorkouts",
     component: MyWorkouts,
+  },
+  {
+    path: "/myworkouts/editor/new",
+    name: "WorkoutEditor",
+    component: WorkoutEditor,
+  },
+  {
+    path: "/myworkouts/editor/:course",
+    name: "WorkoutEditor",
+    component: WorkoutEditor,
   },
   {
     path: "/preview/:course",
