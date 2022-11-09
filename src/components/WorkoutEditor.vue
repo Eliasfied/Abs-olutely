@@ -5,7 +5,7 @@
       <div class="grid-style-editor">
         <div class="label-workoutname">{{ workoutName }}</div>
         <div class="input-workoutname">
-          <ion-input placeholder="Enter Workout Name"></ion-input>
+          <ion-input v-model="workoutName" placeholder="Enter Workout Name"></ion-input>
         </div>
         <div class="select-break-length">
           <ion-card class="display-card" color="dark">
@@ -53,7 +53,10 @@
         </div>
         <div v-if="showExerciseList" class="align-exercise-list">
           <exercise-list
+            @update-exercises="updateExercises"
             :exerciseListStorage="exerciseListStorage"
+            :workoutName="workoutName"
+            :currentWorkout="currentWorkout"
           ></exercise-list>
         </div>
       </div>
@@ -96,7 +99,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { IonPage, IonContent } from "@ionic/vue";
+import { IonPage, IonContent, IonInput } from "@ionic/vue";
 import TheFooter from "../components/TheFooter.vue";
 import { ref } from "vue";
 import { addCircle, trash, barbell } from "ionicons/icons";
@@ -108,7 +111,7 @@ import { getExerciseList } from "../storage/getExerciseList";
 
 export default defineComponent({
   name: "CreateWorkout",
-  components: { IonPage, IonContent, TheFooter, ExerciseDetail, ExerciseList },
+  components: { IonPage, IonContent, TheFooter, ExerciseDetail, ExerciseList, IonInput },
   setup() {
     //route
     const route = useRoute();
@@ -127,17 +130,12 @@ export default defineComponent({
       list = store.workoutList.find((element) => element.name == page);
       proplist = list.exercises;
     }
-    console.log("list_::");
-    console.log(list);
 
     //exerciseList
     async function getList() {
       showExerciseList.value = !showExerciseList.value;
       exerciseListStorage.value = await getExerciseList();
     }
-
-    console.log("exerciseListStorage: ");
-    console.log(exerciseListStorage);
 
     //EXERCISE DETAIL
 
@@ -157,16 +155,30 @@ export default defineComponent({
     let workoutName = ref("ExampleName");
     let exerciseSelected = ref(1);
     let breakSelected = ref(1);
+    let breakTime = 30;
     let exerciseTime = 30;
 
     function updateExerciseTime() {
       console.log("");
     }
-    let breakTime = 30;
 
     function updateBreakTime() {
       console.log("");
     }
+
+    //DATA
+
+    let currentWorkout = ref({
+      name: workoutName.value,
+      breakTime: breakTime,
+      exerciseTime: exerciseTime,
+      exercises: [],
+    });
+
+    function updateExercises() {
+      console.log("es klappt oder so");
+    }
+
     return {
       workoutName,
       exerciseSelected,
@@ -187,6 +199,8 @@ export default defineComponent({
       exerciseListStorage,
       getList,
       showExerciseList,
+      updateExercises,
+      currentWorkout,
     };
   },
 });

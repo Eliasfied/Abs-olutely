@@ -30,31 +30,32 @@ async function loadAll() {
   heelTaps = await getExercise("Heel Taps");
   bicycle = await getExercise("Bicycle");
 
-  await WorkoutStorage.setItem("Workout1", {
-    name: "test1",
-    breakTime: 30,
-    exerciseTime: 30,
-    exercises: [
-      hold,
-      crunch,
-      hold,
-      sidePlank,
-      sidePlank,
-      grabToe,
-      russianTwist,
-      crunch,
-      hold,
-      grabToe,
-      russianTwist,
-      plank,
-    ],
-  });
-  await WorkoutStorage.setItem("Workout2", {
-    name: "test2",
-    breakTime: 20,
-    exerciseTime: 40,
-    exercises: [sidePlank, sidePlank, hold, plank, crunch, crunch],
-  });
+  //  await WorkoutStorage.clear();
+  // await WorkoutStorage.setItem("test1", {
+  //   name: "test1",
+  //   breakTime: 30,
+  //   exerciseTime: 30,
+  //   exercises: [
+  //     hold,
+  //     crunch,
+  //     hold,
+  //     sidePlank,
+  //     sidePlank,
+  //     grabToe,
+  //     russianTwist,
+  //     crunch,
+  //     hold,
+  //     grabToe,
+  //     russianTwist,
+  //     plank,
+  //   ],
+  // });
+  // await WorkoutStorage.setItem("test2", {
+  //   name: "test2",
+  //   breakTime: 20,
+  //   exerciseTime: 40,
+  //   exercises: [sidePlank, sidePlank, hold, plank, crunch, crunch],
+  // });
 }
 loadAll();
 
