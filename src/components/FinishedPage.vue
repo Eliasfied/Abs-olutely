@@ -4,9 +4,14 @@
       <div class="finish-text">{{ finishText }}</div>
       <div class="finish-subtext">{{ finishSubtext }}</div>
       <div class="finish-workout">
-        <img :src="finishedImage" alt="" /></div>
+        <img :src="finishedImage" alt="" />
+      </div>
       <div class="finish-buttons">
-       <router-link to="/" replace><ion-button @click="$emit('resetAll')" color="secondary">Back To Menu</ion-button></router-link> 
+        <router-link to="/" replace
+          ><ion-button @click="$emit('resetAll')" color="secondary"
+            >Back To Menu</ion-button
+          ></router-link
+        >
       </div>
     </div>
   </ion-card>
@@ -26,10 +31,12 @@ export default defineComponent({
 
     const finishedImage = computed(() => {
       console.log(props.page);
-      return require("../assets/HomePageWorkoutImages/" + props.page + ".png");
+      return props.page == "beginner" ||
+        props.page == "advanced" ||
+        props.page == "champ"
+        ? require("../assets/HomePageWorkoutImages/" + props.page + ".png")
+        : require("../assets/HomePageWorkoutImages/beginner.png");
     });
-
-    
 
     return { props, finishText, finishSubtext, finishedImage };
   },
@@ -82,7 +89,7 @@ img {
   align-self: center;
   grid-row: row2-end / row3-start;
   grid-column: line1 / line2;
-  
+
   width: 100%;
   height: 100%;
 }

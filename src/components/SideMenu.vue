@@ -5,31 +5,31 @@
         <ion-title>Menu</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content color="secondary">
+    <ion-content color="primary">
       <ion-list>
         <router-link class="routerLink" to="/home">
-          <ion-item color="secondary"
+          <ion-item class="list-item" color="primary"
             ><ion-icon slot="start" :icon="homeOutline"></ion-icon>
-            Homepage</ion-item
-          >
+            <p>Homepage</p>
+          </ion-item>
         </router-link>
         <router-link class="routerLink" to="/myworkouts">
-          <ion-item color="secondary"
-            ><ion-icon slot="start" :icon="barbellOutline"></ion-icon>My
-            Workouts</ion-item
+          <ion-item color="primary"
+            ><ion-icon slot="start" :icon="barbellOutline"></ion-icon>
+            <p>My Workouts</p></ion-item
           >
         </router-link>
-        <ion-item color="secondary"
-          ><ion-icon slot="start" :icon="listCircleOutline"></ion-icon>Exercise
-          List</ion-item
+        <ion-item color="primary"
+          ><ion-icon slot="start" :icon="listCircleOutline"></ion-icon>
+          <p>Exercise List</p></ion-item
         >
-        <ion-item color="secondary"
-          ><ion-icon slot="start" :icon="calendarOutline"></ion-icon
-          >Calendar</ion-item
-        >
-        <ion-item color="secondary"
-          ><ion-icon slot="start" :icon="settingsOutline"></ion-icon
-          >Settings</ion-item
+        <ion-item color="primary"
+          ><ion-icon slot="start" :icon="calendarOutline"></ion-icon>
+          <p>Calendar</p>
+        </ion-item>
+        <ion-item color="primary"
+          ><ion-icon slot="start" :icon="settingsOutline"></ion-icon>
+          <p>Settings</p></ion-item
         >
       </ion-list>
     </ion-content>
@@ -56,11 +56,9 @@ import {
   settingsOutline,
 } from "ionicons/icons";
 
-import { ref, watch  } from "vue";
+import { ref, watch } from "vue";
 import { menuController } from "@ionic/core";
-import {  onIonViewWillEnter } from "@ionic/vue";
-
-
+import { onIonViewWillEnter } from "@ionic/vue";
 
 export default defineComponent({
   name: "SideMenu",
@@ -77,12 +75,10 @@ export default defineComponent({
     IonIcon,
   },
   setup(props) {
-    
-
-onIonViewWillEnter( () => {
-  console.log("propsOnENTER");
-  console.log(props.closeMenu);
-})
+    onIonViewWillEnter(() => {
+      console.log("propsOnENTER");
+      console.log(props.closeMenu);
+    });
 
     watch(props.closeMenu, (newValue) => {
       if (props.closeMenu == true) {
@@ -90,8 +86,7 @@ onIonViewWillEnter( () => {
       }
       console.log("props: ");
       console.log(props.closeMenu);
-
-    })
+    });
     return {
       homeOutline,
       barbellOutline,
@@ -104,11 +99,29 @@ onIonViewWillEnter( () => {
 </script>
 
 <style scoped>
-ion-list {
-  background-color: var(--ion-color-secondary);
+p {
+  color: var(--ion-color-secondary);
 }
+
+ion-icon {
+  color: var(--ion-color-secondary);
+}
+
+ion-list {
+  background-color: var(--ion-color-primary);
+}
+
+/* ion-item {
+  --border-style: dashed;
+
+ 
+} */
 
 .routerLink {
   text-decoration: none;
+}
+
+ion-toolbar {
+  border-bottom: 2px solid black;
 }
 </style>

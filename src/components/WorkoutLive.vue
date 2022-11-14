@@ -10,7 +10,7 @@
 
         <div class="item-arrowLeft">
           <ion-button :disabled="disabled" @click="backToLastExercise">
-            <ion-icon color="tertiary" :icon="playBack"></ion-icon
+            <ion-icon color="secondary" :icon="playBack"></ion-icon
           ></ion-button>
         </div>
         <div class="item-exerciseDisplay">
@@ -18,12 +18,12 @@
         </div>
         <div class="item-arrowRight">
           <ion-button :disabled="disabled" @click="forwardToNextExercise">
-            <ion-icon color="tertiary" :icon="playForward"></ion-icon
+            <ion-icon color="secondary" :icon="playForward"></ion-icon
           ></ion-button>
         </div>
         <div class="item-pauseButton">
           <ion-button :disabled="disabled" @click="pauseWorkout">
-            <ion-icon color="tertiary" :icon="togglePauseButton"></ion-icon
+            <ion-icon color="secondary" :icon="togglePauseButton"></ion-icon
           ></ion-button>
         </div>
       </div>
@@ -43,6 +43,8 @@ import { ref, onMounted } from "vue";
 import { computed } from "vue";
 import TheTimer from "../components/TheTimer.vue";
 import FinishedPage from "../components/FinishedPage.vue";
+import { useMyWorkoutsStore } from "../store/myWorkouts";
+
 
 import {
   playBack,
@@ -97,7 +99,12 @@ function resetAll() {
 
 
     // import store
-    const store = useWorkoutsStore();
+    let store;
+    if (page == "beginner" || page == "advanced" || page == "champ") {
+      store = useWorkoutsStore();
+    } else {
+      store = useMyWorkoutsStore();
+    }
 
     const list = store.workoutList.find((element) => element.name == page);
     console.log("list: ");
@@ -323,7 +330,7 @@ function resetAll() {
   align-self: center;
   grid-column: line1 / line2;
   grid-row: row1-start / row1-end;
-  color: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
   font-weight: bold;
   font-size: 28px;
 }
@@ -333,7 +340,7 @@ function resetAll() {
   align-self: center;
   grid-column: line3 / line4;
   grid-row: row1-start / row1-end;
-  color: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
   font-weight: bold;
   font-size: 28px;
 }
@@ -343,7 +350,7 @@ function resetAll() {
   align-self: center;
   grid-column: line2 / line3;
   grid-row: row1-end / row2-start;
-  color: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
   font-weight: bold;
   font-size: 28px;
 }
@@ -392,4 +399,6 @@ function resetAll() {
   left: 50%;
   transform: translateX(-50%);
 }
+
+
 </style>

@@ -30,7 +30,7 @@ async function loadAll() {
   heelTaps = await getExercise("Heel Taps");
   bicycle = await getExercise("Bicycle");
 
-  //  await WorkoutStorage.clear();
+   //await WorkoutStorage.clear();
   // await WorkoutStorage.setItem("test1", {
   //   name: "test1",
   //   breakTime: 30,

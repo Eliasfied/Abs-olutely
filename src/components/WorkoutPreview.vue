@@ -70,9 +70,9 @@
               <ion-card
                 @click="showDetails(index)"
                 class="li-card"
-                color="secondary"
+                color="tertiary"
               >
-                <ion-card-content> {{ exercise.name }} </ion-card-content>
+                <ion-card-content class="card-content"> {{ exercise.name }} </ion-card-content>
               </ion-card>
             </li>
           </ul>
@@ -114,6 +114,8 @@ import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
+import { useMyWorkoutsStore } from "../store/myWorkouts";
+
 import { ref } from "vue";
 import { play } from "ionicons/icons";
 import ExerciseDetail from "../components/ExerciseDetail.vue";
@@ -134,10 +136,15 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const page = route.params.course;
+    let store;
+    if (page == "beginner" || page == "advanced" || page == "champ") {
+      store = useWorkoutsStore();
+    } else {
+      store = useMyWorkoutsStore();
+    }
 
-    const store = useWorkoutsStore();
     const list = store.workoutList.find((element) => element.name == page);
-    console.log("LIST: ")
+    console.log("LIST: ");
     console.log(list);
     let proplist = list.exercises;
 
@@ -152,7 +159,13 @@ export default defineComponent({
     // zwei();
 
     function getImgUrl() {
-      return require("../assets/HomePageWorkoutImages/" + page + ".png");
+      if (page == "beginner" || page == "advanced" || page == "champ") {
+        return require("../assets/HomePageWorkoutImages/" + page + ".png");
+      }
+      else {
+        return require("../assets/HomePageWorkoutImages/beginner.png");
+      }
+      
     }
 
     //POPUP EXERCISE DETAIL
@@ -299,14 +312,14 @@ export default defineComponent({
 .timeAndCountDiv {
   margin: 10px;
   text-align: center;
-  color: var(--ion-color-tertiary);
+  color: var(--ion-color-secondary);
   width: 100px;
 }
 
 .timeAndCountDivTop {
   margin: 0px;
   text-align: center;
-  color: var(--ion-color-tertiary);
+  color: var(--ion-color-secondary);
 }
 
 p {
@@ -327,6 +340,12 @@ ul {
   overflow-y: auto;
   height: 95%;
   margin-bottom: 0px;
+}
+
+.card-content {
+  color: var(--ion-color-primary);
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .alignCard {

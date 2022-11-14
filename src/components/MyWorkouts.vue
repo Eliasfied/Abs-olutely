@@ -1,11 +1,11 @@
 <template>
   <ion-page>
-    <ion-content color="secondary" :fullscreen="true">
+    <ion-content color="primary" :fullscreen="true">
       <the-footer title="My Workouts"></the-footer>
       <div class="grid-style-workouts">
         <div class="add-workout">
           <router-link class="routerLink" to="/myworkouts/editor/new">
-            <ion-button color="danger"
+            <ion-button color="secondary"
               ><ion-icon
                 slot="start"
                 color="tertiary"
@@ -18,11 +18,12 @@
         <div class="workout-list">
           <ul>
             <li v-for="(workout, index) in workouts" :key="workout.name">
+              <router-link class="routerLink" :to="'/preview/' + workout.name">
               <ion-card
                 ><ion-card-content class="ion-card-content">
                   <div class="grid-style-li">
                     <div class="icon-clipboard">
-                      <ion-icon :icon="clipboard"></ion-icon>
+                      <ion-icon class="style-clipboard" :icon="clipboard"></ion-icon>
                     </div>
                     <div class="label-workoutname">
                       <ion-label>{{ workout.name }}</ion-label>
@@ -35,14 +36,19 @@
                     </div>
                     <div class="icon-trash">
                       <ion-icon
+                        @click.prevent="removeWorkout(index)"
                         class="icon-color-trash"
                         :icon="trash"
                       ></ion-icon>
                     </div>
                   </div> </ion-card-content
               ></ion-card>
+            </router-link>
             </li>
           </ul>
+          <div v-if="isEmpty" class="no-workouts-text">
+            <p>No Workouts yet...</p>
+          </div>
         </div>
       </div>
     </ion-content>
@@ -50,9 +56,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import TheFooter from "../components/TheFooter.vue";
-import { IonPage, IonContent, IonCard, IonCardContent } from "@ionic/vue";
+import {
+  IonPage,
+  IonContent,
+  IonCard,
+  IonCardContent,
+  IonIcon,
+} from "@ionic/vue";
 import {
   addCircle,
   clipboardOutline,
@@ -62,24 +74,53 @@ import {
 } from "ionicons/icons";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { ref } from "vue";
+import myWorkoutStorage from "../storage/myWorkoutStorage";
 export default defineComponent({
   name: "MyWorkouts",
-  components: { TheFooter, IonPage, IonContent, IonCard, IonCardContent },
+  components: {
+    TheFooter,
+    IonPage,
+    IonContent,
+    IonCard,
+    IonCardContent,
+    IonIcon,
+  },
   setup() {
     // STORE DATA
+
     let workouts = ref();
+    let isEmpty = ref(true);
+
     async function loadStore() {
       const store = useMyWorkoutsStore();
       await store.loadWorkoutsFromStore();
       workouts.value = store.workoutList;
-      console.log("hier ist die workoutListe: ");
-      console.log(workouts);
+      if (workouts.value.length > 0) {
+        isEmpty.value = false;
+      }
+      console.log(isEmpty);
     }
     loadStore();
     console.log("workouts final: ");
     console.log(workouts);
 
-    return { addCircle, clipboardOutline, create, trash, clipboard, workouts };
+    async function removeWorkout(index) {
+      await myWorkoutStorage.removeItem(workouts.value[index].name);
+      console.log("index workout: ");
+      console.log(index);
+      workouts.value.splice(index, 1);
+    }
+
+    return {
+      addCircle,
+      clipboardOutline,
+      create,
+      trash,
+      clipboard,
+      workouts,
+      removeWorkout,
+      isEmpty,
+    };
   },
 });
 </script>
@@ -98,11 +139,14 @@ export default defineComponent({
 }
 
 ion-button {
-  width: 100%;
+  font-weight: bold;
 }
 
 ion-icon {
   font-size: 20px;
+  color: var(--ion-color-secondary);
+  vertical-align: middle;
+
 }
 
 li {
@@ -127,11 +171,17 @@ ion-card {
   grid-row: row1-start / row1-end;
   justify-self: center;
   align-self: center;
+  text-align: center;
 }
 
 .workout-list {
   width: 100%;
   grid-row: row1-end / row2-start;
+}
+
+.no-workouts-text {
+  grid-row: row1-end / row2-start;
+  text-align: center;
 }
 
 .ion-card-content {
@@ -142,10 +192,16 @@ ion-card {
 
 .routerLink {
   height: 100%;
+  text-decoration: none;
 }
 
 .icon-clipboard {
   align-self: center;
+}
+
+.style-clipboard {
+  color: var(--ion-color-primary);
+
 }
 .label-workoutname {
   align-self: center;

@@ -4,9 +4,9 @@
   <ion-header :translucent="true">
     <ion-toolbar color="primary">
       <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
+        <ion-menu-button color="secondary"></ion-menu-button>
       </ion-buttons>
-      <ion-title>{{ props.title }}</ion-title>
+      <ion-title color="secondary">{{ props.title }}</ion-title>
     </ion-toolbar>
   </ion-header>
 </template>
