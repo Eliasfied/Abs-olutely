@@ -18,37 +18,20 @@
             </ion-item>
           </div>
           <div v-if="!showExerciseList" class="select-break-length">
-            <ion-card class="display-card" color="dark">
-              <div class="timeAndCountDiv">
-                <p class="timeLabel">Break Time:</p>
-                <ion-select
-                  v-model="breakSelected"
-                  :placeholder="'' + breakTime"
-                  @ionChange="updateBreakTime"
-                >
-                  <ion-select-option value="0">0 sec</ion-select-option>
-                  <ion-select-option value="10">10 sec</ion-select-option>
-                  <ion-select-option value="20">20 sec</ion-select-option>
-                  <ion-select-option value="30">30 sec</ion-select-option>
-                </ion-select>
-              </div></ion-card
-            >
+            <workout-select
+              @updateTime="updateBreakTime"
+              name="BreakTime"
+              :time="breakTime"
+              :options="breakOptions"
+            ></workout-select>
           </div>
           <div v-if="!showExerciseList" class="select-exercise-length">
-            <ion-card class="display-card" color="dark">
-              <div class="timeAndCountDiv">
-                <p class="timeLabel">Exercise Time:</p>
-                <ion-select
-                  v-model="exerciseSelected"
-                  :placeholder="'' + exerciseTime"
-                  @ionChange="updateExerciseTime"
-                >
-                  <ion-select-option value="20">20 sec</ion-select-option>
-                  <ion-select-option value="30">30 sec</ion-select-option>
-                  <ion-select-option value="40">40 sec</ion-select-option>
-                </ion-select>
-              </div></ion-card
-            >
+            <workout-select
+              @updateTime="updateExerciseTime"
+              name="ExerciseTime"
+              :time="exerciseTime"
+              :options="exerciseOptions"
+            ></workout-select>
           </div>
 
           <div class="addExercise">
@@ -92,7 +75,7 @@
                 ><ion-card-content class="ion-card-content">
                   <div class="grid-style-li">
                     <div class="icon-clipboard">
-                     <ion-icon class="barbell-icon" :icon="barbell"></ion-icon>
+                      <ion-icon class="barbell-icon" :icon="barbell"></ion-icon>
                     </div>
                     <div class="label-workoutnameCard">
                       <ion-label>{{ exercise.name }}</ion-label>
@@ -130,22 +113,21 @@ import {
   IonInput,
   IonCard,
   IonCardContent,
-  IonSelect,
-  IonSelectOption,
   IonLabel,
   IonItem,
   IonIcon,
 } from "@ionic/vue";
-import TheFooter from "../components/TheFooter.vue";
+import TheFooter from "../components/reusable/TheFooter.vue";
 import { ref } from "vue";
 import { addCircle, trash, barbell, saveOutline } from "ionicons/icons";
 import { useRoute } from "vue-router";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
-import ExerciseDetail from "../components/ExerciseDetail.vue";
+import ExerciseDetail from "../components/reusable/ExerciseDetail.vue";
 import ExerciseList from "../components/ExerciseList.vue";
-import { getExerciseList } from "../storage/getExerciseList";
-import { getMyWorkout } from "../storage/getMyWorkoutStorage";
+import { getExerciseList } from "../composables/getExerciseList";
+import { getMyWorkout } from "../composables/getMyWorkoutStorage";
 import WorkoutStorage from "@/storage/myWorkoutStorage";
+import WorkoutSelect from "./reusable/WorkoutSelect.vue";
 
 export default defineComponent({
   name: "CreateWorkout",
@@ -158,11 +140,10 @@ export default defineComponent({
     IonInput,
     IonCard,
     IonCardContent,
-    IonSelect,
-    IonSelectOption,
     IonLabel,
     IonItem,
     IonIcon,
+    WorkoutSelect,
   },
   setup() {
     //route
@@ -227,19 +208,22 @@ export default defineComponent({
     };
     let workout;
 
-    function updateExerciseTime() {
+    function updateExerciseTime(value) {
       console.log("jo");
-      exerciseTime.value = exerciseSelected.value;
+      exerciseTime.value = value;
       console.log(exerciseTime.value);
     }
 
-    function updateBreakTime() {
+    function updateBreakTime(value) {
       console.log("ko");
-      breakTime.value = breakSelected.value;
+      breakTime.value = value;
       console.log(breakTime.value);
     }
 
     //DATA
+
+    let exerciseOptions = [20, 30, 35, 40];
+    let breakOptions = [0, 5, 10, 20, 30];
 
     function updateExercises(exercise) {
       exerciseArray.value.push(exercise);
@@ -283,9 +267,7 @@ export default defineComponent({
       workoutName,
       exerciseSelected,
       breakSelected,
-
       updateExerciseTime,
-
       updateBreakTime,
       addCircle,
       trash,
@@ -308,7 +290,9 @@ export default defineComponent({
       exerciseTime,
       breakTime,
       inputPlaceholder,
-      closeExerciselist
+      closeExerciselist,
+      exerciseOptions,
+      breakOptions,
     };
   },
 });
@@ -479,7 +463,6 @@ ion-card {
 .icon-color-trash {
   color: red;
   vertical-align: middle;
-
 }
 
 .alignCard {

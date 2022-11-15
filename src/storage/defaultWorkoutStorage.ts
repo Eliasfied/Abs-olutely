@@ -1,5 +1,5 @@
 import localForage from "localforage";
-import { getExercise } from "./getExerciseStorage";
+import { getExercise } from "../composables/getExerciseStorage";
 const defaultWorkouts = localForage.createInstance({ name: "defaultWorkouts" });
 let plank;
 let hold;

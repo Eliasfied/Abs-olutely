@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "vue";
-import TheFooter from "../components/TheFooter.vue";
+import TheFooter from "../components/reusable/TheFooter.vue";
 import {
   IonPage,
   IonContent,

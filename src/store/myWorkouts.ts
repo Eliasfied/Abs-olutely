@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getWorkoutList } from "../storage/getMyWorkoutList";
+import { getWorkoutList } from "../composables/getMyWorkoutList";
 
 export const useMyWorkoutsStore = defineStore("myWorkouts", {
   state: () => ({

@@ -28,38 +28,21 @@
           </div>
         </div>
         <div class="selectBreakTimeDiv">
-          <ion-card class="display-card" color="dark">
-            <div class="timeAndCountDiv">
-              <p class="timeLabel">Break Time:</p>
-              <ion-select
-                v-model="breakSelected"
-                :placeholder="'' + breakTime"
-                @ionChange="updateBreakTime"
-              >
-                <ion-select-option value="0">0 sec</ion-select-option>
-                <ion-select-option value="10">10 sec</ion-select-option>
-                <ion-select-option value="20">20 sec</ion-select-option>
-                <ion-select-option value="30">30 sec</ion-select-option>
-              </ion-select>
-            </div></ion-card
-          >
+          <workout-select
+              @updateTime="updateBreakTime"
+              name="BreakTime"
+              :time="breakTime"
+              :options="breakOptions"
+            ></workout-select>
         </div>
 
         <div class="selectExerciseTimeDiv">
-          <ion-card class="display-card" color="dark">
-            <div class="timeAndCountDiv">
-              <p class="timeLabel">Exercise Time:</p>
-              <ion-select
-                v-model="exerciseSelected"
-                :placeholder="'' + exerciseTime"
-                @ionChange="updateExerciseTime"
-              >
-                <ion-select-option value="20">20 sec</ion-select-option>
-                <ion-select-option value="30">30 sec</ion-select-option>
-                <ion-select-option value="40">40 sec</ion-select-option>
-              </ion-select>
-            </div></ion-card
-          >
+          <workout-select
+              @updateTime="updateExerciseTime"
+              name="ExerciseTime"
+              :time="exerciseTime"
+              :options="exerciseOptions"
+            ></workout-select>
         </div>
       </div>
 
@@ -104,8 +87,7 @@ import {
   IonContent,
   IonPage,
   IonCard,
-  IonSelect,
-  IonSelectOption,
+  
   IonIcon,
   IonButton,
   IonCardContent,
@@ -115,10 +97,11 @@ import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
-
 import { ref } from "vue";
 import { play } from "ionicons/icons";
-import ExerciseDetail from "../components/ExerciseDetail.vue";
+import ExerciseDetail from "../components/reusable/ExerciseDetail.vue";
+import WorkoutSelect from "./reusable/WorkoutSelect.vue";
+
 
 export default defineComponent({
   name: "WorkoutPreview",
@@ -126,12 +109,12 @@ export default defineComponent({
     IonContent,
     IonPage,
     IonCard,
-    IonSelect,
-    IonSelectOption,
+    
     ExerciseDetail,
     IonIcon,
     IonButton,
     IonCardContent,
+    WorkoutSelect,
   },
   setup() {
     const route = useRoute();
@@ -148,15 +131,7 @@ export default defineComponent({
     console.log(list);
     let proplist = list.exercises;
 
-    // let test = ref("");
-    // async function zwei() {
-    //   test.value = await getExercise("Plank");
-    //   console.log("hier:");
-    //   console.log(test);
-    //   console.log(list?.exercises);
-
-    // }
-    // zwei();
+  
 
     function getImgUrl() {
       if (page == "beginner" || page == "advanced" || page == "champ") {
@@ -181,6 +156,9 @@ export default defineComponent({
     }
 
     //UI DATA
+
+    let exerciseOptions = [20, 30, 35, 40];
+    let breakOptions = [0, 5, 10, 20, 30];
     let exerciseTime = ref(list?.exerciseTime);
     let breakTime = ref(list?.breakTime);
     let quantityExercises = ref(list?.exercises?.length);
@@ -198,15 +176,15 @@ export default defineComponent({
 
     // ion-select break and exerise length options
     const exerciseSelected = ref(1);
-    function updateExerciseTime() {
-      exerciseTime.value = exerciseSelected.value;
+    function updateExerciseTime(value) {
+      exerciseTime.value = value;
       if (list?.exerciseTime != undefined) {
         list.exerciseTime = exerciseTime.value;
       }
     }
     const breakSelected = ref(1);
-    function updateBreakTime() {
-      breakTime.value = breakSelected.value;
+    function updateBreakTime(value) {
+      breakTime.value = value;
       if (list?.breakTime != undefined) {
         list.breakTime = breakTime.value;
       }
@@ -226,12 +204,13 @@ export default defineComponent({
       breakSelected,
       getImgUrl,
       play,
-      // test,
       showModal,
       showDetails,
       proplist,
       propIndex,
       closeModal,
+      exerciseOptions,
+      breakOptions,
     };
   },
 });
@@ -298,6 +277,10 @@ export default defineComponent({
   color: transparent;
   grid-row: row2-start / row2-end;
   grid-column: line1 / line2;
+  width: 125px;
+  text-align: center;
+
+
 }
 .selectExerciseTimeDiv {
   justify-self: center;
@@ -307,6 +290,10 @@ export default defineComponent({
   color: var(--ion-color-tertiary);
   grid-row: row2-start / row2-end;
   grid-column: line2 / line3;
+  width: 125px;
+  text-align: center;
+
+
 }
 
 .timeAndCountDiv {

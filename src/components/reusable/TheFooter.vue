@@ -21,7 +21,7 @@ import {
   IonMenuButton,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
-import SideMenu from "../components/SideMenu.vue";
+import SideMenu from "../../components/SideMenu.vue";
 
 export default defineComponent({
   name: "TheFooter",

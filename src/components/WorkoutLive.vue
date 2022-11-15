@@ -41,7 +41,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useWorkoutsStore } from "../store/workouts";
 import { ref, onMounted } from "vue";
 import { computed } from "vue";
-import TheTimer from "../components/TheTimer.vue";
+import TheTimer from "../components/reusable/TheTimer.vue";
 import FinishedPage from "../components/FinishedPage.vue";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 

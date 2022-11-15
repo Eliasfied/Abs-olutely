@@ -51,7 +51,7 @@ export default defineComponent({
     console.log(props.proplist);
 
     function getImgUrl() {
-      return require("../assets/exercises/" +
+      return require("../../assets/exercises/" +
         props.proplist[props.index].name +
         ".png");
     }

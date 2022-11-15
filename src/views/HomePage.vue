@@ -5,46 +5,32 @@
       <ion-grid>
         <ion-row>
           <ion-col>
-            <router-link
-              class="routerLink"
-              :to="'/preview/' + beginnerWorkoutName"
+            <workout-card
+              :workoutName="beginnerWorkoutName"
+              :urlprefix="urlprefix"
+              imageName="beginner"
             >
-              <ion-card class="beginnerCardImage">
-                <ion-card-header>
-                  <ion-card-title color="secondary">Beginner</ion-card-title>
-                </ion-card-header>
-                <ion-card-content> </ion-card-content>
-              </ion-card>
-            </router-link>
+            </workout-card>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <router-link
-              class="routerLink"
-              :to="'/preview/' + advancedWorkoutName"
+            <workout-card
+              :workoutName="advancedWorkoutName"
+              :urlprefix="urlprefix"
+              imageName="advanced"
             >
-              <ion-card class="advancedCardImage">
-                <ion-card-header>
-                  <ion-card-title color="secondary">Advanced</ion-card-title>
-                </ion-card-header>
-
-                <ion-card-content> </ion-card-content>
-              </ion-card> </router-link
-          ></ion-col>
+            </workout-card>
+          </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <router-link
-              class="routerLink"
-              :to="'/preview/' + champWorkoutName"
+            <workout-card
+              :workoutName="champWorkoutName"
+              :urlprefix="urlprefix"
+              imageName="champ"
             >
-              <ion-card class="champCardImage">
-                <ion-card-header>
-                  <ion-card-title color="secondary">Champ</ion-card-title>
-                </ion-card-header>
-                <ion-card-content> </ion-card-content> </ion-card
-            ></router-link>
+            </workout-card>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -53,22 +39,13 @@
 </template>
 
 <script lang="ts">
-import {
-  IonContent,
-  IonPage,
-  IonGrid,
-  IonCol,
-  IonRow,
-  IonCard,
-  IonCardTitle,
-  IonCardHeader,
-  IonCardContent,
-} from "@ionic/vue";
+import { IonContent, IonPage, IonGrid, IonCol, IonRow } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
-import TheFooter from "../components/TheFooter.vue";
+import TheFooter from "../components/reusable/TheFooter.vue";
 import { ref } from "vue";
-import {  onIonViewWillLeave } from "@ionic/vue";
+import { onIonViewWillLeave } from "@ionic/vue";
+import WorkoutCard from "@/components/reusable/WorkoutCard.vue";
 
 export default defineComponent({
   name: "HomePage",
@@ -78,34 +55,28 @@ export default defineComponent({
     IonCol,
     IonGrid,
     IonRow,
-    IonCard,
-    IonCardTitle,
-    IonCardHeader,
-    IonCardContent,
+
     TheFooter,
+    WorkoutCard,
   },
 
   setup() {
-  
-
     let closeMenu = ref(false);
     onIonViewWillLeave(() => {
       console.log("Home page did leave");
 
       // BIS AN SIDEMENU WEITERGEBEN UND DORT WATCHEN UND DANN DAS HIER TRIGGERN
       closeMenu.value = true;
-      
     });
-    
 
     //sideMENÜ LOGIC
-
 
     //get the workouts that are saved in the store
     let list;
     let beginnerWorkoutName = ref("");
     let advancedWorkoutName = ref("");
     let champWorkoutName = ref("");
+    let urlprefix = "/preview/";
     async function loadStore() {
       const store = useWorkoutsStore();
       await store.loadWorkoutsFromStore();
@@ -133,6 +104,7 @@ export default defineComponent({
       champWorkoutName,
       loadStore,
       closeMenu,
+      urlprefix,
     };
   },
 });
@@ -147,29 +119,5 @@ ion-row {
   height: 33.33%;
 }
 
-ion-card-title {
-  font-size: 40px;
-}
-.beginnerCardImage {
-  height: 100%;
-  margin: 0;
-  background-image: url("../assets/HomePageWorkoutImages/beginner.png");
-  background-size: cover;
-}
-.advancedCardImage {
-  height: 100%;
-  margin: 0;
-  background-image: url("../assets/HomePageWorkoutImages/advanced.png");
-  background-size: cover;
-}
-.champCardImage {
-  height: 100%;
-  margin: 0;
-  background-image: url("../assets/HomePageWorkoutImages/champ.png");
-  background-size: cover;
-}
 
-.routerLink {
-  text-decoration: none;
-}
 </style>

@@ -1,4 +1,4 @@
-import ExerciseStorage from "./ExerciseStorage";
+import ExerciseStorage from "../storage/ExerciseStorage";
 let data;
 
 export async function getExercise(exercise) {

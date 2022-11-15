@@ -1,4 +1,4 @@
-import ExerciseStorage from "./ExerciseStorage";
+import ExerciseStorage from "../storage/ExerciseStorage";
 
 const data:any[] = []
 

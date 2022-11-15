@@ -1,4 +1,4 @@
-import myWorkoutStorage from "./myWorkoutStorage";
+import myWorkoutStorage from "../storage/myWorkoutStorage";
 
 const data: any[] = [];
 
