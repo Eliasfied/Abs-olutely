@@ -1,7 +1,8 @@
 <template>
   <ion-page>
+    <the-footer title="My Workouts"></the-footer>
+
     <ion-content color="primary" :fullscreen="true">
-      <the-footer title="My Workouts"></the-footer>
       <div class="grid-style-workouts">
         <div class="add-workout">
           <router-link class="routerLink" to="/myworkouts/editor/new">
@@ -19,31 +20,34 @@
           <ul>
             <li v-for="(workout, index) in workouts" :key="workout.name">
               <router-link class="routerLink" :to="'/preview/' + workout.name">
-              <ion-card
-                ><ion-card-content class="ion-card-content">
-                  <div class="grid-style-li">
-                    <div class="icon-clipboard">
-                      <ion-icon class="style-clipboard" :icon="clipboard"></ion-icon>
-                    </div>
-                    <div class="label-workoutname">
-                      <ion-label>{{ workout.name }}</ion-label>
-                    </div>
-                    <div class="icon-edit">
-                      <router-link
-                        :to="'/myworkouts/editor/' + workouts[index].name"
-                        ><ion-icon :icon="create"></ion-icon
-                      ></router-link>
-                    </div>
-                    <div class="icon-trash">
-                      <ion-icon
-                        @click.prevent="removeWorkout(index)"
-                        class="icon-color-trash"
-                        :icon="trash"
-                      ></ion-icon>
-                    </div>
-                  </div> </ion-card-content
-              ></ion-card>
-            </router-link>
+                <ion-card
+                  ><ion-card-content class="ion-card-content">
+                    <div class="grid-style-li">
+                      <div class="icon-clipboard">
+                        <ion-icon
+                          class="style-clipboard"
+                          :icon="clipboard"
+                        ></ion-icon>
+                      </div>
+                      <div class="label-workoutname">
+                        <ion-label>{{ workout.name }}</ion-label>
+                      </div>
+                      <div class="icon-edit">
+                        <router-link
+                          :to="'/myworkouts/editor/' + workouts[index].name"
+                          ><ion-icon :icon="create"></ion-icon
+                        ></router-link>
+                      </div>
+                      <div class="icon-trash">
+                        <ion-icon
+                          @click.prevent="removeWorkout(index)"
+                          class="icon-color-trash"
+                          :icon="trash"
+                        ></ion-icon>
+                      </div>
+                    </div> </ion-card-content
+                ></ion-card>
+              </router-link>
             </li>
           </ul>
           <div v-if="isEmpty" class="no-workouts-text">
@@ -146,7 +150,6 @@ ion-icon {
   font-size: 20px;
   color: var(--ion-color-secondary);
   vertical-align: middle;
-
 }
 
 li {
@@ -201,7 +204,6 @@ ion-card {
 
 .style-clipboard {
   color: var(--ion-color-primary);
-
 }
 .label-workoutname {
   align-self: center;

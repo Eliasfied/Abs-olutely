@@ -11,6 +11,7 @@
           <div class="input-workoutname">
             <ion-item v-if="!showExerciseList" color="primary">
               <ion-input
+              :maxlength="20"
                 v-if="!showExerciseList"
                 v-model="workoutName"
                 placeholder="Enter a name"

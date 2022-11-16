@@ -1,0 +1,33 @@
+<template>
+  <ion-page>
+    <the-footer title="ExerciseList"></the-footer>
+
+    <ion-content color="secondary" :fullscreen="true">
+      <div>
+        <span>{{ content }}</span>
+      </div>
+    </ion-content></ion-page
+  >
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import { IonContent, IonPage } from "@ionic/vue";
+import TheFooter from "./reusable/TheFooter.vue";
+
+export default defineComponent({
+  name: "ExerciseListPage",
+  components: { IonContent, IonPage, TheFooter },
+  setup() {
+    let content = "exerciseList wuhu";
+    return { content };
+  },
+});
+</script>
+
+<style scoped>
+span {
+  position: fixed;
+  top: 20%;
+}
+</style>

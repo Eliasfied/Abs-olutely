@@ -1,6 +1,6 @@
 <template>
-  <ion-page>
-    <ion-content :fullscreen="true">
+  <ion-page :fullscreen="true">
+    <ion-content>
       <div class="grid-style">
         <the-timer></the-timer>
         <div class="item-timer">{{ counter }}</div>
@@ -44,7 +44,7 @@ import { computed } from "vue";
 import TheTimer from "../components/reusable/TheTimer.vue";
 import FinishedPage from "../components/FinishedPage.vue";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
-
+import { Insomnia } from "@awesome-cordova-plugins/insomnia";
 
 import {
   playBack,
@@ -78,25 +78,20 @@ export default defineComponent({
     const $router = useRouter();
     const page = route.params.course;
 
+    // RESET ALL
 
-// RESET ALL
+    function resetAll() {
+      // i = 0;
+      // counter.value = 30;
+      // currentExerciseNumber.value = "";
+      // nextExercise.value = "";
+      // isPrepare.value = true;
+      // isFinished.value = false;
+      // disabled.value = false;
+      // pauseStartToggle.value = false;
 
-function resetAll() {
-  // i = 0;
-  // counter.value = 30;
-  // currentExerciseNumber.value = "";
-  // nextExercise.value = "";
-  // isPrepare.value = true;
-  // isFinished.value = false;
-  // disabled.value = false;
-  // pauseStartToggle.value = false;
-
-  console.log("okay lets go")
-  
-
-
-}
-
+      console.log("okay lets go");
+    }
 
     // import store
     let store;
@@ -162,6 +157,13 @@ function resetAll() {
 
     //triggers when page loads
     async function startWorkout() {
+      document.addEventListener("deviceready", () => {
+        Insomnia.keepAwake().then(
+          () => console.log("success"),
+          () => console.log("error")
+        );
+      });
+
       await prepareForWorkout();
       isPrepare.value = false;
       if (list?.exercises.length != undefined) {
@@ -399,6 +401,4 @@ function resetAll() {
   left: 50%;
   transform: translateX(-50%);
 }
-
-
 </style>

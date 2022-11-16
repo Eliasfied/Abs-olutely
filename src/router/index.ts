@@ -5,6 +5,9 @@ import WorkoutLive from "../components/WorkoutLive.vue";
 import WorkoutPreview from "../components/WorkoutPreview.vue";
 import MyWorkouts from "../components/MyWorkouts.vue";
 import WorkoutEditor from "../components/WorkoutEditor.vue";
+import ExerciseListPage from "../components/ExerciseListPage.vue";
+import CalendarPage from "../components/CalendarPage.vue";
+import SettingsPage from "../components/SettingsPage.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -39,6 +42,21 @@ const routes: Array<RouteRecordRaw> = [
     path: "/workout/:course",
     name: "WorkoutLive",
     component: WorkoutLive,
+  },
+  {
+    path: "/exerciseList",
+    name: "ExerciseListPage",
+    component: ExerciseListPage,
+  },
+  {
+    path: "/calendar",
+    name: "CalendarPage",
+    component: CalendarPage,
+  },
+  {
+    path: "/settings",
+    name: "SettingsPage",
+    component: SettingsPage,
   },
 ];
 

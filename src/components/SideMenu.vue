@@ -1,5 +1,5 @@
 <template>
-  <ion-menu menu-id="main" contentId="main-content">
+  <ion-menu content-id="main-content">
     <ion-header>
       <ion-toolbar color="primary">
         <ion-title>Menu</ion-title>
@@ -7,30 +7,34 @@
     </ion-header>
     <ion-content color="primary">
       <ion-list>
-        <router-link class="routerLink" to="/home">
-          <ion-item class="list-item" color="primary"
+        <ion-menu-toggle>
+          <ion-item router-link="/home" class="list-item" color="primary"
             ><ion-icon slot="start" :icon="homeOutline"></ion-icon>
             <p>Homepage</p>
           </ion-item>
-        </router-link>
-        <router-link class="routerLink" to="/myworkouts">
-          <ion-item color="primary"
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item router-link="/myworkouts" class="list-item" color="primary"
             ><ion-icon slot="start" :icon="barbellOutline"></ion-icon>
             <p>My Workouts</p></ion-item
           >
-        </router-link>
-        <ion-item color="primary"
-          ><ion-icon slot="start" :icon="listCircleOutline"></ion-icon>
-          <p>Exercise List</p></ion-item
-        >
-        <ion-item color="primary"
-          ><ion-icon slot="start" :icon="calendarOutline"></ion-icon>
-          <p>Calendar</p>
-        </ion-item>
-        <ion-item color="primary"
-          ><ion-icon slot="start" :icon="settingsOutline"></ion-icon>
-          <p>Settings</p></ion-item
-        >
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item router-link="/exerciseList" color="primary"
+            ><ion-icon slot="start" :icon="listCircleOutline"></ion-icon>
+            <p>Exercise List</p></ion-item
+          >
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item router-link="/calendar" color="primary"
+            ><ion-icon slot="start" :icon="calendarOutline"></ion-icon>
+            <p>Calendar</p>
+          </ion-item>
+          <ion-item router-link="/settings" color="primary"
+            ><ion-icon slot="start" :icon="settingsOutline"></ion-icon>
+            <p>Settings</p></ion-item
+          >
+        </ion-menu-toggle>
       </ion-list>
     </ion-content>
   </ion-menu>
@@ -47,6 +51,7 @@ import {
   IonList,
   IonItem,
   IonIcon,
+  IonMenuToggle,
 } from "@ionic/vue";
 import {
   homeOutline,
@@ -73,6 +78,7 @@ export default defineComponent({
     IonItem,
     IonContent,
     IonIcon,
+    IonMenuToggle,
   },
   setup(props) {
     onIonViewWillEnter(() => {

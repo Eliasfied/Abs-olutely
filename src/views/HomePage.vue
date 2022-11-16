@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <the-footer title="EasyAbs" :closeMenu="closeMenu"> </the-footer>
+    <the-footer title="EasyAbs"> </the-footer>
     <ion-content :fullscreen="true" color="primary">
       <ion-grid>
         <ion-row>
@@ -55,7 +55,6 @@ export default defineComponent({
     IonCol,
     IonGrid,
     IonRow,
-
     TheFooter,
     WorkoutCard,
   },
@@ -118,6 +117,4 @@ ion-grid {
 ion-row {
   height: 33.33%;
 }
-
-
 </style>
