@@ -1,6 +1,9 @@
 <template>
   <router-link class="routerLink" :to="urlprefix + props.workoutName">
-    <ion-card class="CardImage">
+    <ion-card
+      :style="{ 'background-image': 'url(' + workoutImage + ')' }"
+      class="CardImage"
+    >
       <ion-card-header>
         <ion-card-title color="secondary">{{
           props.workoutName
@@ -29,7 +32,7 @@ export default defineComponent({
     IonCardContent,
   },
   name: "WorkoutCard",
-  props: ["urlprefix", "workoutName", 'imageName'],
+  props: ["urlprefix", "workoutName", "imageName"],
   setup(props) {
     let proptest = "beginner";
     console.log("workoutname props: ");
@@ -37,17 +40,14 @@ export default defineComponent({
     console.log(proptest);
 
     const workoutImage = computed(() => {
-      return (
-        "url(" +
-        require("@/assets/HomePageWorkoutImages/" +
-          props.imageName +
-          ".png") +
-        ")"
-      );
+      return require("../../assets/HomePageWorkoutImages/" +
+        props.imageName +
+        ".png");
     });
     console.log(workoutImage);
 
     return { props, workoutImage, proptest };
+    
   },
 });
 </script>
@@ -57,13 +57,12 @@ export default defineComponent({
   height: 100%;
   margin: 0;
   background-size: cover;
-  background-image: v-bind(workoutImage);
+  /* background-image: v-bind(workoutImage); */
 }
 
 ion-card-title {
   font-size: 40px;
 }
-
 
 .routerLink {
   text-decoration: none;

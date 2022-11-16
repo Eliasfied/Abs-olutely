@@ -44,7 +44,6 @@ import { computed } from "vue";
 import TheTimer from "../components/reusable/TheTimer.vue";
 import FinishedPage from "../components/FinishedPage.vue";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
-import { Insomnia } from "@awesome-cordova-plugins/insomnia";
 
 import {
   playBack,
@@ -70,8 +69,11 @@ export default defineComponent({
 
     onMounted(() => startWorkout());
 
+
     // only in landscape mode (plugin)
     window.screen.orientation.lock("landscape");
+    window["plugins"].insomnia.keepAlive();
+    
 
     // route name variable in page (beginner, advanced, champ..)
     const route = useRoute();
@@ -157,13 +159,6 @@ export default defineComponent({
 
     //triggers when page loads
     async function startWorkout() {
-      document.addEventListener("deviceready", () => {
-        Insomnia.keepAwake().then(
-          () => console.log("success"),
-          () => console.log("error")
-        );
-      });
-
       await prepareForWorkout();
       isPrepare.value = false;
       if (list?.exercises.length != undefined) {
