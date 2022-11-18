@@ -9,12 +9,27 @@
 import { IonApp, IonRouterOutlet } from "@ionic/vue";
 import { defineComponent } from "vue";
 import SideMenu from "./components/SideMenu.vue";
+import { StatusBar } from "@capacitor/status-bar";
+
 export default defineComponent({
   name: "App",
   components: {
     IonApp,
     IonRouterOutlet,
     SideMenu,
+  },
+
+  setup() {
+    async function setStatusBarColor() {
+    
+      await StatusBar.setBackgroundColor({
+        color: "#003554",
+      });
+    
+    }
+    setStatusBarColor();
+
+    return {};
   },
 });
 </script>

@@ -44,6 +44,8 @@ import { computed } from "vue";
 import TheTimer from "../components/reusable/TheTimer.vue";
 import FinishedPage from "../components/FinishedPage.vue";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
+import { KeepAwake } from "@capacitor-community/keep-awake";
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 import {
   playBack,
@@ -69,11 +71,10 @@ export default defineComponent({
 
     onMounted(() => startWorkout());
 
-
     // only in landscape mode (plugin)
     window.screen.orientation.lock("landscape");
-    window["plugins"].insomnia.keepAlive();
-    
+
+    // vueInsomnia.on();
 
     // route name variable in page (beginner, advanced, champ..)
     const route = useRoute();
@@ -159,6 +160,8 @@ export default defineComponent({
 
     //triggers when page loads
     async function startWorkout() {
+      KeepAwake.keepAwake();
+      StatusBar.hide()
       await prepareForWorkout();
       isPrepare.value = false;
       if (list?.exercises.length != undefined) {
