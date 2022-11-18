@@ -5,16 +5,14 @@
     <ion-content color="primary" :fullscreen="true">
       <div class="grid-style-workouts">
         <div class="add-workout">
-          <router-link class="routerLink" to="/myworkouts/editor/new">
-            <ion-button color="secondary"
-              ><ion-icon
-                slot="start"
-                color="tertiary"
-                :icon="addCircle"
-              ></ion-icon
-              >Add Workout</ion-button
-            >
-          </router-link>
+          <ion-button @click="newWorkout" color="secondary"
+            ><ion-icon
+              slot="start"
+              color="tertiary"
+              :icon="addCircle"
+            ></ion-icon
+            >Add Workout</ion-button
+          >
         </div>
         <div class="workout-list">
           <ul>
@@ -60,8 +58,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { defineComponent } from "vue";
 import TheFooter from "../components/reusable/TheFooter.vue";
+import { useRouter } from "vue-router";
 import {
   IonPage,
   IonContent,
@@ -102,7 +101,6 @@ export default defineComponent({
       if (workouts.value.length > 0) {
         isEmpty.value = false;
       }
-      console.log(isEmpty);
     }
     loadStore();
     console.log("workouts final: ");
@@ -115,6 +113,14 @@ export default defineComponent({
       workouts.value.splice(index, 1);
     }
 
+    //routing
+    const router = useRouter();
+    let routeID;
+    function newWorkout() {
+      routeID = Math.floor(Math.random()* 1000);
+      router.push("/myworkouts/editor/" + routeID);
+    }
+
     return {
       addCircle,
       clipboardOutline,
@@ -124,6 +130,7 @@ export default defineComponent({
       workouts,
       removeWorkout,
       isEmpty,
+      newWorkout,
     };
   },
 });

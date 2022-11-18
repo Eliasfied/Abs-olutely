@@ -11,7 +11,7 @@
           <div class="input-workoutname">
             <ion-item v-if="!showExerciseList" color="primary">
               <ion-input
-              :maxlength="20"
+                :maxlength="20"
                 v-if="!showExerciseList"
                 v-model="workoutName"
                 placeholder="Enter a name"
@@ -68,29 +68,43 @@
       <div class="grid-style-editor-bottom">
         <div class="list-exercises">
           <ul>
-            <li v-for="(exercise, index) in exerciseArray" :key="exercise.name">
-              <ion-card
-                @click="showDetails(index)"
-                class="li-card"
-                color="tertiary"
-                ><ion-card-content class="ion-card-content">
-                  <div class="grid-style-li">
-                    <div class="icon-clipboard">
-                      <ion-icon class="barbell-icon" :icon="barbell"></ion-icon>
-                    </div>
-                    <div class="label-workoutnameCard">
-                      <ion-label>{{ exercise.name }}</ion-label>
-                    </div>
-                    <div class="icon-trash">
-                      <ion-icon
-                        @click.stop="removeExercise(index)"
-                        class="icon-color-trash"
-                        :icon="trash"
-                      ></ion-icon>
-                    </div>
-                  </div> </ion-card-content
-              ></ion-card>
-            </li>
+            <ion-reorder-group
+              :disabled="false"
+              @ionItemReorder="handleReorder($event)"
+            >
+              <li
+                v-for="(exercise, index) in exerciseArray"
+                :key="exercise.name"
+              >
+                <ion-card
+                  @click="showDetails(index)"
+                  class="li-card"
+                  color="tertiary"
+                  ><ion-card-content class="ion-card-content">
+                    <div class="grid-style-li">
+                      <div class="reorder-div">
+                        <ion-reorder
+                          ><ion-icon
+                            class="reorder-icon"
+                            :icon="reorderTwoOutline"
+                          ></ion-icon
+                        ></ion-reorder>
+                      </div>
+                      <div class="label-workoutnameCard">
+                        <ion-label class="center-workoutname">{{ exercise.name }}</ion-label>
+                      </div>
+
+                      <div class="icon-trash">
+                        <ion-icon
+                          @click.stop="removeExercise(index)"
+                          class="icon-color-trash"
+                          :icon="trash"
+                        ></ion-icon>
+                      </div>
+                    </div> </ion-card-content
+                ></ion-card>
+              </li>
+            </ion-reorder-group>
           </ul>
         </div>
         <div v-if="showModal" class="alignCard">
@@ -117,10 +131,18 @@ import {
   IonLabel,
   IonItem,
   IonIcon,
+  IonReorderGroup,
+  IonReorder,
 } from "@ionic/vue";
 import TheFooter from "../components/reusable/TheFooter.vue";
 import { ref } from "vue";
-import { addCircle, trash, barbell, saveOutline } from "ionicons/icons";
+import {
+  addCircle,
+  trash,
+  barbell,
+  saveOutline,
+  reorderTwoOutline,
+} from "ionicons/icons";
 import { useRoute } from "vue-router";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import ExerciseDetail from "../components/reusable/ExerciseDetail.vue";
@@ -129,6 +151,8 @@ import { getExerciseList } from "../composables/getExerciseList";
 import { getMyWorkout } from "../composables/getMyWorkoutStorage";
 import WorkoutStorage from "@/storage/myWorkoutStorage";
 import WorkoutSelect from "./reusable/WorkoutSelect.vue";
+
+
 
 export default defineComponent({
   name: "CreateWorkout",
@@ -145,6 +169,8 @@ export default defineComponent({
     IonItem,
     IonIcon,
     WorkoutSelect,
+    IonReorderGroup,
+    IonReorder,
   },
   setup() {
     //route
@@ -160,14 +186,37 @@ export default defineComponent({
     let exerciseListStorage = ref();
     let showExerciseList = ref(false);
     let exerciseArray: any = ref([]);
-    let proplist = exerciseArray.value;
+    let proplist = ref(exerciseArray.value);
 
-    if (route.params.course != "new") {
+
+
+    const found = store.workoutList.find((element) => element.name == page);
+
+    
+  
+
+    if (found != undefined) {
       list.value = store.workoutList.find((element) => element.name == page);
-      proplist = list.value.exercises;
+      proplist.value = list.value.exercises;
       exerciseArray.value = list.value.exercises;
       getUIData();
     }
+
+    //REORDER HANDLER
+    const handleReorder = (event: CustomEvent) => {
+      // Before complete is called with the items they will remain in the
+      // order before the drag
+      console.log("Before complete", exerciseArray.value);
+
+      // Finish the reorder and position the item in the DOM based on
+      // where the gesture ended. Update the items variable to the
+      // new order of items
+      exerciseArray.value = event.detail.complete(exerciseArray.value);
+      proplist.value = exerciseArray.value;
+
+      // After complete is called the items will be in the new order
+      console.log("After complete", exerciseArray.value);
+    };
 
     //exerciseList
     async function getList() {
@@ -228,11 +277,11 @@ export default defineComponent({
 
     function updateExercises(exercise) {
       exerciseArray.value.push(exercise);
-      proplist = JSON.parse(JSON.stringify(exerciseArray.value));
+      proplist.value = JSON.parse(JSON.stringify(exerciseArray.value));
     }
 
     async function safeExercise() {
-      if (page === "new") {
+      if (found == undefined) {
         currentWorkout.exercises = JSON.parse(
           JSON.stringify(exerciseArray.value)
         );
@@ -240,6 +289,9 @@ export default defineComponent({
         currentWorkout.exerciseTime = exerciseTime.value;
         currentWorkout.breakTime = breakTime.value;
         await WorkoutStorage.setItem(workoutName.value, currentWorkout);
+        console.log("bin im safeexercise method");
+        store.addToWorkoutlist(currentWorkout);
+        console.log(store.workoutList);
       } else {
         workout = await getMyWorkout(page);
         workout.exercises = JSON.parse(JSON.stringify(exerciseArray.value));
@@ -247,6 +299,8 @@ export default defineComponent({
         workout.exerciseTime = exerciseTime.value;
         workout.breakTime = breakTime.value;
         await WorkoutStorage.setItem(workoutName.value, workout);
+     
+        
       }
     }
 
@@ -254,7 +308,7 @@ export default defineComponent({
       console.log("removed");
       console.log(index);
       exerciseArray.value.splice(index, 1);
-      proplist = JSON.parse(JSON.stringify(exerciseArray.value));
+      proplist.value = JSON.parse(JSON.stringify(exerciseArray.value));
     }
 
     async function getUIData() {
@@ -294,6 +348,8 @@ export default defineComponent({
       closeExerciselist,
       exerciseOptions,
       breakOptions,
+      handleReorder,
+      reorderTwoOutline,
     };
   },
 });
@@ -439,6 +495,16 @@ ion-card {
   grid-column: column1-start / column1-end; */
 }
 
+.reorder-div {
+  grid-row: row1 / row2;
+  align-self: center;
+  justify-self: start;
+}
+
+.reorder-icon {
+  vertical-align: middle;
+}
+
 .barbell-icon {
   vertical-align: middle;
 }
@@ -448,6 +514,10 @@ ion-card {
   justify-self: start;
   grid-row: row1 / row2;
   grid-column: column1-end / column2-start;
+}
+
+.center-workoutname {
+  vertical-align: middle;
 }
 .ion-card-content {
   /* color: var(--ion-color-primary); */

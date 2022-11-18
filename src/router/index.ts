@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
     component: MyWorkouts,
   },
   {
-    path: "/myworkouts/editor/new",
+    path: "/myworkouts/editor/:new",
     name: "WorkoutEditor",
     component: WorkoutEditor,
   },

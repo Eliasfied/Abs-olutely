@@ -8,11 +8,12 @@ export const useMyWorkoutsStore = defineStore("myWorkouts", {
 
   actions: {
     async loadWorkoutsFromStore() {
-
-
-
       this.workoutList = await getWorkoutList();
-     
+    },
+    addToWorkoutlist(workout) {
+      console.log("bin im store");
+      this.workoutList.push(workout);
+
     },
   },
 });
