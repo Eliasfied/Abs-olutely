@@ -2,16 +2,17 @@
   <ion-page>
     <the-footer title="My Workouts"></the-footer>
 
-    <ion-content color="primary" :fullscreen="true">
+    <ion-content color="tertiary" :fullscreen="true">
       <div class="grid-style-workouts">
         <div class="add-workout">
-          <ion-button @click="newWorkout" color="secondary"
+          <ion-button expand="block" @click="newWorkout" color="secondary"
             ><ion-icon
               slot="start"
-              color="tertiary"
+              color="success"
               :icon="addCircle"
             ></ion-icon
-            >Add Workout</ion-button
+            ><ion-label color="primary"> Add Workout</ion-label>
+           </ion-button
           >
         </div>
         <div class="workout-list">
@@ -151,11 +152,12 @@ export default defineComponent({
 
 ion-button {
   font-weight: bold;
+  color: var(--ion-color-primary);
 }
 
 ion-icon {
   font-size: 20px;
-  color: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
   vertical-align: middle;
 }
 
@@ -169,11 +171,11 @@ ul {
   padding: 0;
 }
 
+
+
 ion-card {
-  border: 2px solid black;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  /* border: 1px solid black; */
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
 .add-workout {

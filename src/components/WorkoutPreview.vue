@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true" color="primary">
+    <ion-content :fullscreen="true" color="tertiary">
       <div class="alignCard">
         <exercise-detail
           :proplist="proplist"
@@ -33,6 +33,7 @@
               name="BreakTime"
               :time="breakTime"
               :options="breakOptions"
+              background-color="dark"
             ></workout-select>
         </div>
 
@@ -42,6 +43,7 @@
               name="ExerciseTime"
               :time="exerciseTime"
               :options="exerciseOptions"
+              background-color="dark"
             ></workout-select>
         </div>
       </div>
@@ -53,7 +55,7 @@
               <ion-card
                 @click="showDetails(index)"
                 class="li-card"
-                color="tertiary"
+                color="secondary"
               >
                 <ion-card-content class="card-content"> {{ exercise.name }} </ion-card-content>
               </ion-card>
@@ -63,7 +65,7 @@
         <div>
           <router-link class="routerLink" :to="'/workout/' + page">
             <ion-button shape="round" color="danger"
-              ><ion-icon slot="start" color="tertiary" :icon="play"></ion-icon
+              ><ion-icon slot="start" color="secondary" :icon="play"></ion-icon
               >Start Workout</ion-button
             >
           </router-link>
@@ -244,7 +246,7 @@ export default defineComponent({
 }
 
 .li-card {
-  border: 2px solid black;
+  /* border: 1px solid black; */
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
     rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
     rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
@@ -255,7 +257,7 @@ export default defineComponent({
   align-self: center;
   font-weight: bold;
   font-size: 24px;
-  color: var(--ion-color-tertiary);
+  color: var(--ion-color-secondary);
 
   grid-row: row1-start / row1-end;
   grid-column: line1 / line2;
@@ -265,7 +267,7 @@ export default defineComponent({
   align-self: center;
   font-weight: bold;
   font-size: 24px;
-  color: var(--ion-color-tertiary);
+  color: var(--ion-color-secondary);
   grid-row: row1-start / row1-end;
   grid-column: line2 / line3;
 }
@@ -287,7 +289,7 @@ export default defineComponent({
   align-self: end;
   font-weight: bold;
   font-size: 16px;
-  color: var(--ion-color-tertiary);
+  color: var(--ion-color-secondary);
   grid-row: row2-start / row2-end;
   grid-column: line2 / line3;
   width: 125px;

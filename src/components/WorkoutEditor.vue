@@ -1,50 +1,35 @@
 <template>
   <ion-page>
-    <ion-content color="primary" :fullscreen="true">
-      <the-footer title="Workout Editor"></the-footer>
-
-      <ion-card color="primary" class="big-card">
-        <div class="grid-style-editor">
-          <div class="label-workoutname">
-            <ion-label class="workoutname-label">{{ workoutName }}</ion-label>
+    <ion-content color="tertiary" :fullscreen="true">
+      <the-footer v-if="!showExerciseList" title="Workout Editor"></the-footer>
+      <div v-if="showExerciseList" class="align-exercise-list">
+        <exercise-list
+          @update-exercises="updateExercises"
+          @close-exerciselist="closeExerciselist"
+          :exerciseListStorage="exerciseListStorage"
+          :workoutName="workoutName"
+          :currentWorkout="currentWorkout"
+        ></exercise-list>
+      </div>
+      <div class="grid-page">
+        <div v-if="!showExerciseList" class="grid-top">
+          <div class="back-icon">
+            <ion-icon
+              class="back-icon"
+              slot="start"
+              :icon="closeOutline"
+            ></ion-icon>
           </div>
           <div class="input-workoutname">
-            <ion-item v-if="!showExerciseList" color="primary">
+            <ion-item>
+              <ion-label class="input-label" position="stacked">Name</ion-label>
               <ion-input
                 :maxlength="20"
                 v-if="!showExerciseList"
                 v-model="workoutName"
-                placeholder="Enter a name"
-              ></ion-input>
-            </ion-item>
-          </div>
-          <div v-if="!showExerciseList" class="select-break-length">
-            <workout-select
-              @updateTime="updateBreakTime"
-              name="BreakTime"
-              :time="breakTime"
-              :options="breakOptions"
-            ></workout-select>
-          </div>
-          <div v-if="!showExerciseList" class="select-exercise-length">
-            <workout-select
-              @updateTime="updateExerciseTime"
-              name="ExerciseTime"
-              :time="exerciseTime"
-              :options="exerciseOptions"
-            ></workout-select>
-          </div>
-
-          <div class="addExercise">
-            <ion-button @click="getList" color="secondary"
-              ><ion-icon
-                size="large"
-                slot="start"
-                color="tertiary"
-                :icon="addCircle"
-              ></ion-icon
-              >Add Exercises</ion-button
-            >
+                placeholder="My Workout"
+              ></ion-input
+            ></ion-item>
           </div>
           <div class="safeExercise">
             <ion-icon
@@ -54,74 +39,123 @@
               :icon="saveOutline"
             ></ion-icon>
           </div>
-          <div v-if="showExerciseList" class="align-exercise-list">
-            <exercise-list
-              @update-exercises="updateExercises"
-              @close-exerciselist="closeExerciselist"
-              :exerciseListStorage="exerciseListStorage"
-              :workoutName="workoutName"
-              :currentWorkout="currentWorkout"
-            ></exercise-list>
+        </div>
+
+        <div class="big-card">
+          <div v-if="!showExerciseList" class="grid-style-editor">
+            <div v-if="!showExerciseList" class="select-break-length">
+              <workout-select
+                @updateTime="updateBreakTime"
+                name="BreakTime"
+                :time="breakTime"
+                :options="breakOptions"
+              ></workout-select>
+            </div>
+            <div v-if="!showExerciseList" class="select-exercise-length">
+              <workout-select
+                @updateTime="updateExerciseTime"
+                name="ExerciseTime"
+                :time="exerciseTime"
+                :options="exerciseOptions"
+              ></workout-select>
+            </div>
           </div>
         </div>
-      </ion-card>
-      <div class="grid-style-editor-bottom">
-        <div class="list-exercises">
-          <ul>
-            <ion-reorder-group
-              :disabled="false"
-              @ionItemReorder="handleReorder($event)"
-            >
-              <li
-                v-for="(exercise, index) in exerciseArray"
-                :key="exercise.name"
-              >
-                <ion-card
-                  @click="showDetails(index)"
-                  class="li-card"
-                  color="tertiary"
-                  ><ion-card-content class="ion-card-content">
-                    <div class="grid-style-li">
-                      <div class="reorder-div">
-                        <ion-reorder
-                          ><ion-icon
-                            class="reorder-icon"
-                            :icon="reorderTwoOutline"
-                          ></ion-icon
-                        ></ion-reorder>
-                      </div>
-                      <div class="label-workoutnameCard">
-                        <ion-label class="center-workoutname">{{ exercise.name }}</ion-label>
-                      </div>
 
-                      <div class="icon-trash">
-                        <ion-icon
-                          @click.stop="removeExercise(index)"
-                          class="icon-color-trash"
-                          :icon="trash"
-                        ></ion-icon>
-                      </div>
-                    </div> </ion-card-content
-                ></ion-card>
-              </li>
-            </ion-reorder-group>
-          </ul>
-        </div>
-        <div v-if="showModal" class="alignCard">
-          <exercise-detail
-            @closeModal="closeModal"
-            :proplist="proplist"
-            :index="propIndex"
-            v-show="showModal"
-          ></exercise-detail>
+        <div v-if="!showExerciseList" class="grid-style-editor-bottom">
+          <div v-if="noExercises" class="nothing-added">
+            <ion-icon
+              color="secondary"
+              :icon="clipboardOutline"
+              size="large"
+            ></ion-icon>
+            <p></p>
+            <ion-label color="secondary">Nothing added yet...</ion-label>
+          </div>
+          <div v-else class="list-exercises">
+            <ul>
+              <ion-reorder-group
+                :disabled="false"
+                @ionItemReorder="handleReorder($event)"
+              >
+                <li
+                  v-for="(exercise, index) in exerciseArray"
+                  :key="exercise.name"
+                >
+                  <ion-card
+                    @click="showDetails(index)"
+                    class="li-card"
+                    color="secondary"
+                    ><ion-card-content class="ion-card-content">
+                      <div class="grid-style-li">
+                        <div class="reorder-div">
+                          <ion-reorder
+                            ><ion-icon
+                              class="reorder-icon"
+                              :icon="reorderTwoOutline"
+                            ></ion-icon
+                          ></ion-reorder>
+                        </div>
+                        <div class="label-workoutnameCard">
+                          <ion-label class="center-workoutname">{{
+                            exercise.name
+                          }}</ion-label>
+                        </div>
+
+                        <div class="icon-trash">
+                          <ion-icon
+                            @click.stop="removeExercise(index)"
+                            class="icon-color-trash"
+                            :icon="trash"
+                          ></ion-icon>
+                        </div>
+                      </div> </ion-card-content
+                  ></ion-card>
+                </li>
+              </ion-reorder-group>
+            </ul>
+          </div>
+
+          <div v-if="showModal" class="alignCard">
+            <exercise-detail
+              @closeModal="closeModal"
+              :proplist="proplist"
+              :index="propIndex"
+              v-show="showModal"
+            ></exercise-detail>
+          </div>
         </div>
       </div>
     </ion-content>
+    <ion-footer>
+      <div class="footer-grid">
+        <div class="addExercise">
+          <ion-button shape="round" @click="getList" color="success"
+            ><ion-icon
+              size="large"
+              slot="start"
+              color="secondary"
+              :icon="addCircle"
+            ></ion-icon
+            ><ion-label color="secondary">Add Exercises</ion-label></ion-button
+          >
+        </div>
+        <div class="time-calculate">
+          <ion-icon
+            class="style-time"
+            size="medium"
+            :icon="timeOutline"
+          ></ion-icon>
+          <ion-label class="style-label">5 min</ion-label>
+        </div>
+      </div>
+    </ion-footer>
   </ion-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { computed } from "vue";
 import {
   IonPage,
   IonContent,
@@ -133,15 +167,20 @@ import {
   IonIcon,
   IonReorderGroup,
   IonReorder,
+  IonFooter,
 } from "@ionic/vue";
 import TheFooter from "../components/reusable/TheFooter.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import {
   addCircle,
   trash,
   barbell,
   saveOutline,
   reorderTwoOutline,
+  arrowBackOutline,
+  closeOutline,
+  timeOutline,
+  clipboardOutline,
 } from "ionicons/icons";
 import { useRoute } from "vue-router";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
@@ -151,8 +190,6 @@ import { getExerciseList } from "../composables/getExerciseList";
 import { getMyWorkout } from "../composables/getMyWorkoutStorage";
 import WorkoutStorage from "@/storage/myWorkoutStorage";
 import WorkoutSelect from "./reusable/WorkoutSelect.vue";
-
-
 
 export default defineComponent({
   name: "CreateWorkout",
@@ -166,11 +203,12 @@ export default defineComponent({
     IonCard,
     IonCardContent,
     IonLabel,
-    IonItem,
     IonIcon,
     WorkoutSelect,
     IonReorderGroup,
     IonReorder,
+    IonItem,
+    IonFooter,
   },
   setup() {
     //route
@@ -188,12 +226,11 @@ export default defineComponent({
     let exerciseArray: any = ref([]);
     let proplist = ref(exerciseArray.value);
 
-
+    let noExercises = computed(() => {
+      return exerciseArray.value.length > 0 ? false : true;
+    });
 
     const found = store.workoutList.find((element) => element.name == page);
-
-    
-  
 
     if (found != undefined) {
       list.value = store.workoutList.find((element) => element.name == page);
@@ -299,8 +336,6 @@ export default defineComponent({
         workout.exerciseTime = exerciseTime.value;
         workout.breakTime = breakTime.value;
         await WorkoutStorage.setItem(workoutName.value, workout);
-     
-        
       }
     }
 
@@ -350,56 +385,98 @@ export default defineComponent({
       breakOptions,
       handleReorder,
       reorderTwoOutline,
+      arrowBackOutline,
+      closeOutline,
+      timeOutline,
+      clipboardOutline,
+      noExercises,
     };
   },
 });
 </script>
 
 <style scoped>
+.grid-page {
+  height: 90%;
+  display: grid;
+  grid-template-rows: [row1-start] 15% [row1-end] 15% [row2-start] 80% [row2-end];
+}
+
+.grid-top {
+  grid-row: row1-start / row1-end;
+  display: grid;
+  background-color: var(--ion-color-secondary);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  grid-template-rows: [row1-start] 30% [row1-end] 70% [row2-start];
+  grid-template-columns: [column1-start] 50% [column1-end] 50% [column2-start];
+}
+
+.input-label {
+  font-weight: lighter;
+  color: grey;
+}
+ion-item {
+  border: none;
+  outline: none;
+}
+
+.item-has-focus ion-label {
+  color: black !important;
+}
+ion-input {
+  font-weight: bold;
+  color: black;
+  caret-color: black;
+}
+
+.back-icon {
+  font-size: 32px;
+  padding: 2px;
+}
+
+.bottom-div {
+  height: 15%;
+  background-color: white;
+}
 .grid-style-editor {
   height: 100%;
   display: grid;
-  grid-template-rows: [row1-start] 20% [row1-end] 20% [row2-start] 40% [row2-end]20% [row3-start];
+  grid-template-rows: [row1-start] 100% [row1-end];
   grid-template-columns: [column1-start] 50% [column1-end] 50% [column2-start];
 }
 
 .big-card {
-  height: 40%;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-
-  border: 3px solid black;
+  grid-row: row1-end / row2-start;
 }
 
 .grid-style-editor-bottom {
+  grid-row: row2-start / row2-end;
   display: grid;
-  height: 50%;
+
   grid-template-rows: [row1-start] 100% [row1-end];
 }
 
-.label-workoutname {
+.nothing-added {
   grid-row: row1-start / row1-end;
-  grid-column: column1-start / column2-start;
-  font-weight: bold;
-  justify-self: center;
   align-self: center;
-  margin-left: 16px;
+  justify-self: center;
+  text-align: center;
 }
 
 .workoutname-label {
-  color: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
   font-weight: bold;
 }
 .input-workoutname {
   grid-row: row1-end / row2-start;
   grid-column: column1-start / column2-start;
   align-self: center;
-  justify-self: center;
+  justify-self: start;
 }
 
 .select-exercise-length {
-  grid-row: row2-start / row2-end;
+  grid-row: row1-start / row1-end;
   align-self: center;
   justify-self: center;
   font-weight: bold;
@@ -410,7 +487,7 @@ export default defineComponent({
 }
 
 .select-break-length {
-  grid-row: row2-start / row2-end;
+  grid-row: row1-start / row1-end;
   align-self: center;
   justify-self: center;
   font-weight: bold;
@@ -420,13 +497,42 @@ export default defineComponent({
   width: 125px;
 }
 
+ion-footer {
+  height: 10%;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-rows: [row1-start] 50% [row1-end] 50% [row2-start];
+  grid-template-columns: [column1-start] 100% [column1-end];
+
+  height: 100%;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  border-top: 0.5px solid lightgray;
+}
 .addExercise {
+  grid-row: row1-start / row1-end;
   width: 100%;
-  grid-row: row2-end / row3-start;
-  grid-column: column1-start / column2-start;
+  text-align: center;
+}
+
+.time-calculate {
+  grid-row: row1-end / row2-start;
+  grid-column: column1-start / column1-end;
   align-self: center;
   justify-self: center;
-  text-align: center;
+}
+
+.style-time {
+  margin-right: 5px;
+  vertical-align: middle;
+  color: gray;
+}
+
+.style-label {
+  vertical-align: text-top;
+  color: gray;
 }
 
 .safeExercise {
@@ -434,7 +540,8 @@ export default defineComponent({
   grid-column: column1-end / column2-start;
   align-self: center;
   justify-self: end;
-  margin-right: 10px;
+  padding: 3px;
+  margin-top: 10px;
 }
 
 .safe-icon {
@@ -442,13 +549,8 @@ export default defineComponent({
   color: var(--ion-color-danger);
 }
 
-ion-input {
-  text-align: center;
-}
-
 ion-button {
-  width: 90%;
-  font-weight: bold;
+  width: 70%;
 }
 ion-icon {
   font-size: 20px;
@@ -468,14 +570,10 @@ ul {
   padding: 0;
   overflow-y: auto;
   margin-top: 5px;
-  border-top: 2px solid var(--ion-color-secondary);
 }
 
 ion-card {
-  border: 2px solid black;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 .list-exercises {
   width: 100%;
@@ -487,12 +585,6 @@ ion-card {
   display: grid;
   grid-template-rows: [row1] 100% [row2];
   grid-template-columns: [colmumn1-start] 10% [column1-end] 70% [column2-start] 20% [column2-end];
-}
-
-.icon-clipboard {
-  /* align-self: center; */
-  /* grid-row: row1 / row2;
-  grid-column: column1-start / column1-end; */
 }
 
 .reorder-div {
@@ -547,16 +639,13 @@ ion-card {
 
 .align-exercise-list {
   position: fixed;
-  height: 30%;
-  width: 90%;
+  height: 90%;
+  width: 100%;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .li-card {
-  border: 3px solid black;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 </style>

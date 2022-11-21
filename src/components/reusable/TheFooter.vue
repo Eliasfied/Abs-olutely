@@ -1,11 +1,11 @@
 <template>
   <div class="ion-page" id="main-content"></div>
   <ion-header :translucent="true">
-    <ion-toolbar color="primary">
+    <ion-toolbar color="secondary">
       <ion-buttons slot="start">
-        <ion-menu-button color="secondary"></ion-menu-button>
+        <ion-menu-button color="primary"></ion-menu-button>
       </ion-buttons>
-      <ion-title color="secondary">{{ props.title }}</ion-title>
+      <ion-title color="primary">{{ props.title }}</ion-title>
     </ion-toolbar>
   </ion-header>
 </template>
@@ -40,7 +40,11 @@ export default defineComponent({
 
 <style scoped>
 ion-toolbar {
-  border: 2px solid black;
+  border-bottom: 0.5px solid black;
+}
+
+ion-title {
+  font-weight: bold;
 }
 
 ion-icon {

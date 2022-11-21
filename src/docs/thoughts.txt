@@ -5,11 +5,11 @@
 WorkoutLive.vue 
 
 -sound for timer
--remaining timer bar top left
+-remaining timer bar top left //DONE
 -good background GIFs or Videos
 -back to menü button
--get ready text and timer before workout starts 
--workout done text + statistics and option to safe this workout
+-get ready text and timer before workout starts  //DONE 
+-workout done text + statistics and option to safe this workout //HALFDONE
 
 
 
@@ -19,11 +19,15 @@ WorkoutPreview:
 
 TO do
 
--color from second to first div maybe get brighter on the edge?
--possible to delete exercises and to add exercises
--possible to klick on exercises in list and new small window in card style opens which explains the exercise
--possible to safe exercise
+-possible to delete exercises and to add exercises //DONE
+-possible to klick on exercises in list and new small window in card style opens which explains the exercise //DONE
+-possible to safe exercise //DONE
 
+
+--------------------------------------
+WorkoutEditor
+
+-exchange exercises
 
 
 ---------------------------------------------------------------
@@ -33,7 +37,7 @@ GENERAL TO do
 -login/Accounts
 -store exercises/workouts/images in DB?
 
--able to create and safe own exercises
+-able to create and safe own exercises //DONE
 -track finished exercises in calendar
 -set reminder
 
@@ -51,4 +55,4 @@ BREAK: Tippen zum Überspringen?
 
 WORKOUT EDITOR
 
-LONG HOLD ON LIST ITEM (EXERCISE) -> possible to move exercises and possible to delete them!
+LONG HOLD ON LIST ITEM (EXERCISE) -> possible to move exercises and possible to delete them! //DONE

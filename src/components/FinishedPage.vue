@@ -1,5 +1,5 @@
 <template>
-  <ion-card color="primary">
+  <ion-card color="secondary">
     <div class="grid-style-finish">
       <div class="finish-text">{{ finishText }}</div>
       <div class="finish-subtext">{{ finishSubtext }}</div>
@@ -8,7 +8,7 @@
       </div>
       <div class="finish-buttons">
         <router-link to="/" replace
-          ><ion-button @click="$emit('resetAll')" color="secondary"
+          ><ion-button @click="$emit('resetAll')" color="primary"
             >Back To Menu</ion-button
           ></router-link
         >
@@ -27,7 +27,7 @@ export default defineComponent({
   props: ["page"],
   setup(props) {
     let finishText = "Good Job!";
-    let finishSubtext = "You completed the " + props.page + " workout:";
+    let finishSubtext = "Workout completed: " + props.page;
 
     const finishedImage = computed(() => {
       console.log(props.page);
@@ -74,6 +74,7 @@ img {
   align-self: center;
   grid-row: row1-end / row2-start;
   grid-column: line1 / line2;
+  color: var(--ion-color-primary);
 }
 
 .finish-subtext {
@@ -82,6 +83,8 @@ img {
   align-self: center;
   grid-row: row2-start / row2-end;
   grid-column: line1 / line2;
+  color: var(--ion-color-primary);
+
 }
 
 .finish-workout {
@@ -104,5 +107,6 @@ img {
 
 ion-button {
   width: 100%;
+  
 }
 </style>

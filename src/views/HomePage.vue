@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <the-footer title="EasyAbs"> </the-footer>
-    <ion-content :fullscreen="true" color="primary">
+    <ion-content :fullscreen="true" color="tertiary">
       <ion-grid>
         <ion-row>
           <ion-col>
@@ -9,6 +9,7 @@
               :workoutName="beginnerWorkoutName"
               :urlprefix="urlprefix"
               imageName="beginner"
+            
             >
             </workout-card>
           </ion-col>

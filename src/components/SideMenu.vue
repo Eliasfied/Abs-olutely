@@ -1,36 +1,36 @@
 <template>
   <ion-menu content-id="main-content">
     <ion-header>
-      <ion-toolbar color="primary">
-        <ion-title>Menu</ion-title>
+      <ion-toolbar color="secondary">
+        <ion-title color="primary">Menu</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content color="primary">
+    <ion-content color="secondary">
       <ion-list>
         <ion-menu-toggle>
-          <ion-item router-link="/home" class="list-item" color="primary"
+          <ion-item router-link="/home" class="list-item" color="secondary"
             ><ion-icon slot="start" :icon="homeOutline"></ion-icon>
             <p>Homepage</p>
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle>
-          <ion-item router-link="/myworkouts" class="list-item" color="primary"
+          <ion-item router-link="/myworkouts" class="list-item" color="secondary"
             ><ion-icon slot="start" :icon="barbellOutline"></ion-icon>
             <p>My Workouts</p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
-          <ion-item router-link="/exerciseList" color="primary"
+          <ion-item router-link="/exerciseList" color="secondary"
             ><ion-icon slot="start" :icon="listCircleOutline"></ion-icon>
             <p>Exercise List</p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
-          <ion-item router-link="/calendar" color="primary"
+          <ion-item router-link="/calendar" color="secondary"
             ><ion-icon slot="start" :icon="calendarOutline"></ion-icon>
             <p>Calendar</p>
           </ion-item>
-          <ion-item router-link="/settings" color="primary"
+          <ion-item router-link="/settings" color="secondary"
             ><ion-icon slot="start" :icon="settingsOutline"></ion-icon>
             <p>Settings</p></ion-item
           >
@@ -106,15 +106,15 @@ export default defineComponent({
 
 <style scoped>
 p {
-  color: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
 }
 
 ion-icon {
-  color: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
 }
 
 ion-list {
-  background-color: var(--ion-color-primary);
+  background-color: var(--ion-color-secondary);
 }
 
 /* ion-item {
