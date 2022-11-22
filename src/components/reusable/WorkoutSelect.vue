@@ -1,9 +1,10 @@
 <template>
   <ion-card class="display-card" :color="props.backgroundColor">
     <div class="timeAndCountDiv">
-      <p class="timeLabel">{{ props.name }}</p>
+      <!-- <p class="timeLabel">{{ props.name }}</p> -->
+      <ion-icon size="large" :icon="selectIcon"></ion-icon>
       <ion-select
-      :style="{'--placeholder-color': props.placeholderColor}"
+        :style="{ '--placeholder-color': props.placeholderColor }"
         v-model="timeSelected"
         :placeholder="'' + props.time"
         @ionChange="$emit('updateTime', timeSelected)"
@@ -20,19 +21,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { IonCard, IonSelect, IonSelectOption } from "@ionic/vue";
+import { computed, defineComponent } from "vue";
+import { IonCard, IonSelect, IonSelectOption, IonIcon } from "@ionic/vue";
 import { ref } from "vue";
+import { hourglassOutline, barbellOutline } from "ionicons/icons";
 
 export default defineComponent({
   name: "WorkoutSelect",
   props: ["time", "options", "name", "placeholderColor", "backgroundColor"],
   emits: ["updateTime"],
-  components: { IonCard, IonSelect, IonSelectOption },
+  components: { IonCard, IonSelect, IonSelectOption, IonIcon },
   setup(props) {
     let timeSelected = ref(1);
-    
-    return { props, timeSelected };
+    let selectIcon = computed(() => {
+      return props.name == "BreakTime" ? hourglassOutline : barbellOutline;
+    });
+
+    return {
+      props,
+      timeSelected,
+      hourglassOutline,
+      barbellOutline,
+      selectIcon,
+    };
   },
 });
 </script>
@@ -43,7 +54,7 @@ ion-select {
 }
 
 ion-select::part(icon) {
-    color: var(--ion-color-success);
-    opacity: 1;
-  }
+  color: var(--ion-color-success);
+  opacity: 1;
+}
 </style>

@@ -360,7 +360,7 @@ export default defineComponent({
   align-self: center;
   grid-column: line3 / line4;
   grid-row: row1-end / row2-start;
-  color: var(--ion-color-secondary);
+  color: var(--ion-color-success);
   font-weight: bold;
   font-size: 20x;
 }

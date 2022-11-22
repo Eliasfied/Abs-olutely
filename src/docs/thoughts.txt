@@ -28,6 +28,8 @@ TO do
 WorkoutEditor
 
 -exchange exercises
+-variable "isSaved";
+
 
 
 ---------------------------------------------------------------
@@ -40,6 +42,8 @@ GENERAL TO do
 -able to create and safe own exercises //DONE
 -track finished exercises in calendar
 -set reminder
+-SLIDES FOR FIRST TIME
+-more pictures
 
 
 

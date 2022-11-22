@@ -69,6 +69,10 @@ ion-card {
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
+ion-card:active {
+  background-color: var(--ion-color-success);
+}
+
 .grid-exercise-list {
   height: 100%;
   display: grid;

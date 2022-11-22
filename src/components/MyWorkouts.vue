@@ -6,21 +6,16 @@
       <div class="grid-style-workouts">
         <div class="add-workout">
           <ion-button expand="block" @click="newWorkout" color="secondary"
-            ><ion-icon
-              slot="start"
-              color="success"
-              :icon="addCircle"
-            ></ion-icon
+            ><ion-icon slot="start" color="success" :icon="addCircle"></ion-icon
             ><ion-label color="primary"> Add Workout</ion-label>
-           </ion-button
-          >
+          </ion-button>
         </div>
         <div class="workout-list">
           <ul>
             <li v-for="(workout, index) in workouts" :key="workout.name">
               <router-link class="routerLink" :to="'/preview/' + workout.name">
-                <ion-card
-                  ><ion-card-content class="ion-card-content">
+                <ion-card>
+                  <ion-card-content class="ion-card-content">
                     <div class="grid-style-li">
                       <div class="icon-clipboard">
                         <ion-icon
@@ -118,7 +113,7 @@ export default defineComponent({
     const router = useRouter();
     let routeID;
     function newWorkout() {
-      routeID = Math.floor(Math.random()* 1000);
+      routeID = Math.floor(Math.random() * 1000);
       router.push("/myworkouts/editor/" + routeID);
     }
 
@@ -147,6 +142,7 @@ export default defineComponent({
 .grid-style-li {
   display: grid;
   height: 100%;
+  grid-template-rows: [row1-start] 60% [row1-end] 40% [row2-start];
   grid-template-columns: [colmumn1-start] 10% [column1-end] 70% [column2-start] 10% [column2-end] 10% [column3-start];
 }
 
@@ -170,8 +166,6 @@ ul {
   list-style: none;
   padding: 0;
 }
-
-
 
 ion-card {
   /* border: 1px solid black; */

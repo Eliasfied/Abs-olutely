@@ -2,7 +2,10 @@
   <ion-page>
     <ion-content color="tertiary" :fullscreen="true">
       <the-footer v-if="!showExerciseList" title="Workout Editor"></the-footer>
-      <div v-if="showExerciseList" class="align-exercise-list">
+      <div
+        v-if="showExerciseList && !showTimeSelect"
+        class="align-exercise-list"
+      >
         <exercise-list
           @update-exercises="updateExercises"
           @close-exerciselist="closeExerciselist"
@@ -15,13 +18,14 @@
         <div v-if="!showExerciseList" class="grid-top">
           <div class="back-icon">
             <ion-icon
+              @click="backToWorkouts"
               class="back-icon"
               slot="start"
               :icon="closeOutline"
             ></ion-icon>
           </div>
           <div class="input-workoutname">
-            <ion-item>
+            <ion-item lines="none">
               <ion-label class="input-label" position="stacked">Name</ion-label>
               <ion-input
                 :maxlength="20"
@@ -31,26 +35,33 @@
               ></ion-input
             ></ion-item>
           </div>
+          <div class="exercise-time">
+            <ion-icon :icon="barbellOutline"></ion-icon>
+            <ion-label>{{ exerciseTime }}s</ion-label>
+          </div>
+          <div class="break-time">
+            <ion-icon :icon="hourglassOutline"></ion-icon>
+            <ion-label>{{ breakTime }}s</ion-label>
+          </div>
+          <div class="edit-time">
+            <ion-icon
+              @click="openTimeeditor"
+              :icon="settingsOutline"
+            ></ion-icon>
+          </div>
+
           <div class="safeExercise">
             <ion-icon
               @click="safeExercise"
               slot="start"
-              class="safe-icon"
               :icon="saveOutline"
+              size="large"
             ></ion-icon>
           </div>
         </div>
 
-        <div class="big-card">
-          <div v-if="!showExerciseList" class="grid-style-editor">
-            <div v-if="!showExerciseList" class="select-break-length">
-              <workout-select
-                @updateTime="updateBreakTime"
-                name="BreakTime"
-                :time="breakTime"
-                :options="breakOptions"
-              ></workout-select>
-            </div>
+        <ion-card v-if="showTimeSelect">
+          <div class="grid-style-editor">
             <div v-if="!showExerciseList" class="select-exercise-length">
               <workout-select
                 @updateTime="updateExerciseTime"
@@ -59,21 +70,25 @@
                 :options="exerciseOptions"
               ></workout-select>
             </div>
+            <div class="select-break-length">
+              <workout-select
+                @updateTime="updateBreakTime"
+                name="BreakTime"
+                :time="breakTime"
+                :options="breakOptions"
+              ></workout-select>
+            </div>
           </div>
-        </div>
+        </ion-card>
 
         <div v-if="!showExerciseList" class="grid-style-editor-bottom">
           <div v-if="noExercises" class="nothing-added">
-            <ion-icon
-              color="secondary"
-              :icon="clipboardOutline"
-              size="large"
-            ></ion-icon>
+            <ion-icon color="secondary" :icon="clipboardOutline"></ion-icon>
             <p></p>
             <ion-label color="secondary">Nothing added yet...</ion-label>
           </div>
           <div v-else class="list-exercises">
-            <ul>
+            <ul v-if="!showTimeSelect">
               <ion-reorder-group
                 :disabled="false"
                 @ionItemReorder="handleReorder($event)"
@@ -130,7 +145,11 @@
     <ion-footer>
       <div class="footer-grid">
         <div class="addExercise">
-          <ion-button shape="round" @click="getList" color="success"
+          <ion-button
+            class="add-button"
+            shape="round"
+            @click="getList"
+            color="success"
             ><ion-icon
               size="large"
               slot="start"
@@ -146,7 +165,7 @@
             size="medium"
             :icon="timeOutline"
           ></ion-icon>
-          <ion-label class="style-label">5 min</ion-label>
+          <ion-label class="style-label">{{ timePreview }} Min.</ion-label>
         </div>
       </div>
     </ion-footer>
@@ -168,9 +187,10 @@ import {
   IonReorderGroup,
   IonReorder,
   IonFooter,
+  alertController,
 } from "@ionic/vue";
 import TheFooter from "../components/reusable/TheFooter.vue";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import {
   addCircle,
   trash,
@@ -181,8 +201,12 @@ import {
   closeOutline,
   timeOutline,
   clipboardOutline,
+  hourglassOutline,
+  barbellOutline,
+  ellipsisHorizontalOutline,
+  settingsOutline,
 } from "ionicons/icons";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import ExerciseDetail from "../components/reusable/ExerciseDetail.vue";
 import ExerciseList from "../components/ExerciseList.vue";
@@ -204,15 +228,16 @@ export default defineComponent({
     IonCardContent,
     IonLabel,
     IonIcon,
-    WorkoutSelect,
     IonReorderGroup,
     IonReorder,
     IonItem,
     IonFooter,
+    WorkoutSelect,
   },
   setup() {
     //route
     const route = useRoute();
+    const router = useRouter();
     const page = route.params.course;
     console.log("page: ");
     console.log(page);
@@ -223,6 +248,7 @@ export default defineComponent({
 
     let exerciseListStorage = ref();
     let showExerciseList = ref(false);
+    let showTimeSelect = ref(false);
     let exerciseArray: any = ref([]);
     let proplist = ref(exerciseArray.value);
 
@@ -253,11 +279,13 @@ export default defineComponent({
 
       // After complete is called the items will be in the new order
       console.log("After complete", exerciseArray.value);
+      saved.value = false;
     };
 
     //exerciseList
     async function getList() {
       showExerciseList.value = !showExerciseList.value;
+      showTimeSelect.value = false;
       exerciseListStorage.value = await getExerciseList();
     }
 
@@ -286,6 +314,7 @@ export default defineComponent({
     let exerciseTime = ref(30);
     let breakTime = ref(30);
     let inputPlaceholder = "Give your Workout a Name:";
+    let saved = ref(true);
 
     let currentWorkout = {
       name: workoutName.value,
@@ -298,12 +327,14 @@ export default defineComponent({
     function updateExerciseTime(value) {
       console.log("jo");
       exerciseTime.value = value;
+      saved.value = false;
       console.log(exerciseTime.value);
     }
 
     function updateBreakTime(value) {
       console.log("ko");
       breakTime.value = value;
+      saved.value = false;
       console.log(breakTime.value);
     }
 
@@ -312,12 +343,27 @@ export default defineComponent({
     let exerciseOptions = [20, 30, 35, 40];
     let breakOptions = [0, 5, 10, 20, 30];
 
+    let timePreview = computed(() => {
+      return Math.round(
+        (exerciseTime.value * exerciseArray.value.length +
+          (breakTime.value * exerciseArray.value.length - breakTime.value)) /
+          60
+      );
+    });
+
     function updateExercises(exercise) {
       exerciseArray.value.push(exercise);
       proplist.value = JSON.parse(JSON.stringify(exerciseArray.value));
+      saved.value = false;
     }
 
+    const handlerMessage = ref();
+
     async function safeExercise() {
+      saved.value = true;
+
+      //ALERT HANDLER MAKE COMPOSABLE OUT OF THIS
+
       if (found == undefined) {
         currentWorkout.exercises = JSON.parse(
           JSON.stringify(exerciseArray.value)
@@ -329,6 +375,7 @@ export default defineComponent({
         console.log("bin im safeexercise method");
         store.addToWorkoutlist(currentWorkout);
         console.log(store.workoutList);
+        router.push("/myworkouts");
       } else {
         workout = await getMyWorkout(page);
         workout.exercises = JSON.parse(JSON.stringify(exerciseArray.value));
@@ -336,6 +383,7 @@ export default defineComponent({
         workout.exerciseTime = exerciseTime.value;
         workout.breakTime = breakTime.value;
         await WorkoutStorage.setItem(workoutName.value, workout);
+        router.push("/myworkouts");
       }
     }
 
@@ -344,6 +392,7 @@ export default defineComponent({
       console.log(index);
       exerciseArray.value.splice(index, 1);
       proplist.value = JSON.parse(JSON.stringify(exerciseArray.value));
+      saved.value = false;
     }
 
     async function getUIData() {
@@ -351,6 +400,50 @@ export default defineComponent({
       workoutName.value = workout.name;
       exerciseTime.value = workout.exerciseTime;
       breakTime.value = workout.breakTime;
+    }
+
+    async function backToWorkouts() {
+      if (saved.value == false) {
+        const alert = await alertController.create({
+          header: "Save Workout?",
+          message: "You have unsaved changes",
+          cssClass: "custom-alert",
+          buttons: [
+            {
+              text: "Yes",
+              cssClass: "alert-button-confirm",
+              handler: () => {
+                handlerMessage.value = 1;
+              },
+            },
+            {
+              text: "No",
+              cssClass: "alert-button-cancel",
+              handler: () => {
+                handlerMessage.value = 0;
+              },
+            },
+          ],
+        });
+
+        await alert.present();
+        await alert.onDidDismiss();
+
+        if (handlerMessage.value == 0) {
+          console.log("no save");
+          return;
+        }
+        console.log("saved");
+        saved.value = true;
+        router.push("/myworkouts");
+      } else {
+        router.push("/myworkouts");
+      }
+    }
+
+    function openTimeeditor() {
+      showTimeSelect.value = !showTimeSelect.value;
+      console.log(showTimeSelect.value);
     }
 
     return {
@@ -390,6 +483,15 @@ export default defineComponent({
       timeOutline,
       clipboardOutline,
       noExercises,
+      timePreview,
+      backToWorkouts,
+      hourglassOutline,
+      barbellOutline,
+      ellipsisHorizontalOutline,
+      settingsOutline,
+      showTimeSelect,
+      openTimeeditor,
+      saved,
     };
   },
 });
@@ -399,17 +501,82 @@ export default defineComponent({
 .grid-page {
   height: 90%;
   display: grid;
-  grid-template-rows: [row1-start] 15% [row1-end] 15% [row2-start] 80% [row2-end];
+  grid-template-rows: [row1-start] 20% [row1-end] 85% [row2-start];
 }
 
 .grid-top {
   grid-row: row1-start / row1-end;
   display: grid;
   background-color: var(--ion-color-secondary);
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
-    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
-  grid-template-rows: [row1-start] 30% [row1-end] 70% [row2-start];
-  grid-template-columns: [column1-start] 50% [column1-end] 50% [column2-start];
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  border-bottom: 0.5px solid lightgray;
+  grid-template-rows: [row1-start] 40% [row1-end] 60% [row2-start];
+  grid-template-columns: [column1-start] 50% [column1-end] 20% [column2-start] 20% [column2-end] 10% [column3-start];
+  border-radius: 0px 0px 20px 20px;
+}
+
+.exercise-time {
+  grid-row: row1-end / row2-start;
+  grid-column: column1-end / column2-start;
+  align-self: center;
+  justify-self: center;
+}
+
+.exercise-time ion-icon {
+  color: gray;
+  vertical-align: middle;
+  padding: 5px;
+}
+
+.exercise-time ion-label {
+  color: gray;
+  vertical-align: text-top;
+}
+
+.break-time {
+  grid-row: row1-end / row2-start;
+  grid-column: column2-start / column2-end;
+  align-self: center;
+  justify-self: start;
+}
+
+.break-time ion-icon {
+  color: gray;
+  vertical-align: middle;
+  padding: 5px;
+}
+
+.break-time ion-label {
+  color: gray;
+  vertical-align: text-top;
+}
+
+.edit-time {
+  grid-row: row1-end / row2-start;
+  grid-column: column2-end / column3-start;
+  align-self: center;
+  justify-self: start;
+}
+
+.edit-time ion-icon {
+  color: gray;
+  vertical-align: bottom;
+}
+
+.safeExercise {
+  grid-row: row1-start / row1-end;
+  grid-column: column2-end / column3-start;
+  align-self: center;
+  justify-self: start;
+}
+
+.safeExercise ion-icon {
+  color: gray;
+  vertical-align: middle;
+}
+
+.safeExercise ion-icon:active {
+  color: var(--ion-color-success);
 }
 
 .input-label {
@@ -431,8 +598,13 @@ ion-input {
 }
 
 .back-icon {
+  grid-row: row1-start / row1-end;
+  grid-column: column1-start / column1-end;
+  align-self: center;
+  justify-self: start;
   font-size: 32px;
   padding: 2px;
+  color: var(--ion-color-danger);
 }
 
 .bottom-div {
@@ -440,7 +612,11 @@ ion-input {
   background-color: white;
 }
 .grid-style-editor {
-  height: 100%;
+  height: 40%;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
   display: grid;
   grid-template-rows: [row1-start] 100% [row1-end];
   grid-template-columns: [column1-start] 50% [column1-end] 50% [column2-start];
@@ -451,9 +627,9 @@ ion-input {
 }
 
 .grid-style-editor-bottom {
-  grid-row: row2-start / row2-end;
+  border-radius: 25px;
+  grid-row: row1-end / row2-start;
   display: grid;
-
   grid-template-rows: [row1-start] 100% [row1-end];
 }
 
@@ -464,13 +640,23 @@ ion-input {
   text-align: center;
 }
 
+.nothing-added ion-icon {
+  font-size: 64px;
+  color: var(--ion-color-secondary);
+}
+
+.nothing-added ion-label {
+  font-size: 24px;
+}
+
 .workoutname-label {
   color: var(--ion-color-primary);
   font-weight: bold;
 }
 .input-workoutname {
+  padding: 10px;
   grid-row: row1-end / row2-start;
-  grid-column: column1-start / column2-start;
+  grid-column: column1-start / column1-end;
   align-self: center;
   justify-self: start;
 }
@@ -503,7 +689,7 @@ ion-footer {
 
 .footer-grid {
   display: grid;
-  grid-template-rows: [row1-start] 50% [row1-end] 50% [row2-start];
+  grid-template-rows: [row1-start] 20% [row1-end] 80% [row2-start];
   grid-template-columns: [column1-start] 100% [column1-end];
 
   height: 100%;
@@ -515,6 +701,13 @@ ion-footer {
   grid-row: row1-start / row1-end;
   width: 100%;
   text-align: center;
+}
+
+.add-button {
+  position: fixed;
+  bottom: 7%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .time-calculate {
@@ -533,20 +726,6 @@ ion-footer {
 .style-label {
   vertical-align: text-top;
   color: gray;
-}
-
-.safeExercise {
-  grid-row: row1-start / row1-end;
-  grid-column: column1-end / column2-start;
-  align-self: center;
-  justify-self: end;
-  padding: 3px;
-  margin-top: 10px;
-}
-
-.safe-icon {
-  font-size: 40px;
-  color: var(--ion-color-danger);
 }
 
 ion-button {
@@ -614,7 +793,7 @@ ion-card {
 .ion-card-content {
   /* color: var(--ion-color-primary); */
   font-size: medium;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 .icon-trash {
@@ -647,5 +826,37 @@ ion-card {
 
 .li-card {
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+ion-alert.custom-alert {
+  --backdrop-opacity: 0.7;
+}
+
+.custom-alert .alert-button-group {
+  padding: 8px;
+}
+
+button.alert-button.alert-button-confirm {
+  background-color: var(--ion-color-success);
+  color: var(--ion-color-success-contrast);
+}
+
+.md button.alert-button.alert-button-confirm {
+  border-radius: 4px;
+}
+
+.ios .custom-alert button.alert-button {
+  border: 0.55px solid rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.2);
+}
+
+.ios button.alert-button.alert-button-cancel {
+  border-right: 0;
+  border-bottom-left-radius: 13px;
+  border-top-left-radius: 13px;
+}
+
+.ios button.alert-button.alert-button-confirm {
+  border-bottom-right-radius: 13px;
+  border-top-right-radius: 13px;
 }
 </style>
