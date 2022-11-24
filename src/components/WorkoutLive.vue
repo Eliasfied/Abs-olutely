@@ -28,7 +28,7 @@
         </div>
       </div>
       <div v-show="isFinished" class="align-card">
-        <finished-page @resetAll="resetAll" :page="page"></finished-page>
+        <finished-page @resetAll="resetAll" :page="page" :proptime="proptime"></finished-page>
       </div>
     </ion-content>
   </ion-page>
@@ -45,7 +45,7 @@ import TheTimer from "../components/reusable/TheTimer.vue";
 import FinishedPage from "../components/FinishedPage.vue";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { KeepAwake } from "@capacitor-community/keep-awake";
-import { StatusBar, Style } from '@capacitor/status-bar';
+import { StatusBar, Style } from "@capacitor/status-bar";
 
 import {
   playBack,
@@ -110,6 +110,11 @@ export default defineComponent({
     console.log("exercises: ");
     console.log(list?.exercises);
     console.log(list?.exercises.length);
+    let proptime = Math.round(
+      (list.exerciseTime * list.exercises.length +
+        (list.breakTime * list.exercises.length - list.breakTime)) /
+        60
+    );
 
     //ALL TIMER RELATED STUFF
 
@@ -161,7 +166,7 @@ export default defineComponent({
     //triggers when page loads
     async function startWorkout() {
       KeepAwake.keepAwake();
-      StatusBar.hide()
+      StatusBar.hide();
       await prepareForWorkout();
       isPrepare.value = false;
       if (list?.exercises.length != undefined) {
@@ -312,6 +317,7 @@ export default defineComponent({
       $router,
       isFinished,
       resetAll,
+      proptime,
     };
   },
 });

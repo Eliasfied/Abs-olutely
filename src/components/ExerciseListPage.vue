@@ -2,7 +2,7 @@
   <ion-page>
     <the-footer title="ExerciseList"></the-footer>
 
-    <ion-content color="secondary" :fullscreen="true">
+    <ion-content color="tertiary" :fullscreen="true">
       <div class="grid-page">
         <div class="search-bar">
           <ion-searchbar

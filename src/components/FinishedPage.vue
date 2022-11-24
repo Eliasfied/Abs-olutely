@@ -20,14 +20,34 @@
 import { defineComponent } from "vue";
 import { IonCard, IonButton } from "@ionic/vue";
 import { computed } from "vue";
+import statisticStorage from "../storage/statisticsStorage";
 
 export default defineComponent({
   name: "FinishedPage",
   components: { IonCard, IonButton },
-  props: ["page"],
+  props: ["page", "proptime"],
   setup(props) {
     let finishText = "Good Job!";
     let finishSubtext = "Workout completed: " + props.page;
+    let id = Date.now().toString();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+
+    let date = dd + "/" + mm + "/" + yyyy;
+    console.log(id);
+    console.log("date:");
+    console.log(date);
+
+    function workoutToStatistics() {
+      statisticStorage.setItem(id, {
+        workoutname: props.page,
+        date: date,
+        minutes: props.proptime,
+      });
+    }
+    workoutToStatistics();
 
     const finishedImage = computed(() => {
       console.log(props.page);
@@ -38,7 +58,7 @@ export default defineComponent({
         : require("../assets/HomePageWorkoutImages/beginner.png");
     });
 
-    return { props, finishText, finishSubtext, finishedImage };
+    return { props, finishText, finishSubtext, finishedImage, date };
   },
 });
 </script>
@@ -84,7 +104,6 @@ img {
   grid-row: row2-start / row2-end;
   grid-column: line1 / line2;
   color: var(--ion-color-primary);
-
 }
 
 .finish-workout {
@@ -107,6 +126,5 @@ img {
 
 ion-button {
   width: 100%;
-  
 }
 </style>
