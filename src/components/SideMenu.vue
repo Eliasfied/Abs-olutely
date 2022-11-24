@@ -14,7 +14,10 @@
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle>
-          <ion-item router-link="/myworkouts" class="list-item" color="secondary"
+          <ion-item
+            router-link="/myworkouts"
+            class="list-item"
+            color="secondary"
             ><ion-icon slot="start" :icon="barbellOutline"></ion-icon>
             <p>My Workouts</p></ion-item
           >
@@ -22,14 +25,16 @@
         <ion-menu-toggle>
           <ion-item router-link="/exerciseList" color="secondary"
             ><ion-icon slot="start" :icon="listCircleOutline"></ion-icon>
-            <p>Exercise List</p></ion-item
+            <p>Exercises</p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
-          <ion-item router-link="/calendar" color="secondary"
-            ><ion-icon slot="start" :icon="calendarOutline"></ion-icon>
-            <p>Calendar</p>
-          </ion-item>
+          <ion-item router-link="/statistics" color="secondary"
+            ><ion-icon slot="start" :icon="analyticsOutline"></ion-icon>
+            <p>Statistics</p></ion-item
+          >
+        </ion-menu-toggle>
+        <ion-menu-toggle>
           <ion-item router-link="/settings" color="secondary"
             ><ion-icon slot="start" :icon="settingsOutline"></ion-icon>
             <p>Settings</p></ion-item
@@ -59,6 +64,7 @@ import {
   listCircleOutline,
   calendarOutline,
   settingsOutline,
+  analyticsOutline,
 } from "ionicons/icons";
 
 import { ref, watch } from "vue";
@@ -99,6 +105,7 @@ export default defineComponent({
       listCircleOutline,
       calendarOutline,
       settingsOutline,
+      analyticsOutline,
     };
   },
 });

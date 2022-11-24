@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <the-footer title="ExerciseList"></the-footer>
+    <the-footer title="Settings"></the-footer>
 
     <ion-content color="primary" :fullscreen="true">
       <div><span>SETTINGS</span></div>

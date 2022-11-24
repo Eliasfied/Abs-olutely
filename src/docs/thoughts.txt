@@ -28,7 +28,7 @@ TO do
 WorkoutEditor
 
 -exchange exercises
--variable "isSaved";
+-variable "isSaved";  //DONE
 
 
 

@@ -1,50 +1,31 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true" color="tertiary">
-      <div class="alignCard">
-        <exercise-detail
-          :proplist="proplist"
-          :index="propIndex"
-          class="detail"
-          v-show="showModal"
-        ></exercise-detail>
-      </div>
-      <!-- <p>{{ test }}</p> -->
-
       <div
         class="grid-style-top"
         :style="{ 'background-image': 'url(' + getImgUrl() + ')' }"
       >
-        <div class="timeDiv">
-          <div class="timeAndCountDivTop">
-            <p class="bigger-p">{{ totalTime }}</p>
-            <p>Minutes</p>
-          </div>
-        </div>
-        <div class="countDiv">
-          <div class="timeAndCountDivTop">
-            <p class="bigger-p">{{ quantityExercises }}</p>
-            <p>Exercises</p>
-          </div>
+        <div class="exercise-name-div">
+          <ion-label class="exercise-name-label">{{ list.name }}</ion-label>
         </div>
         <div class="selectBreakTimeDiv">
           <workout-select
-              @updateTime="updateBreakTime"
-              name="BreakTime"
-              :time="breakTime"
-              :options="breakOptions"
-              background-color="dark"
-            ></workout-select>
+            @updateTime="updateBreakTime"
+            name="BreakTime"
+            :time="breakTime"
+            :options="breakOptions"
+            background-color="dark"
+          ></workout-select>
         </div>
 
         <div class="selectExerciseTimeDiv">
           <workout-select
-              @updateTime="updateExerciseTime"
-              name="ExerciseTime"
-              :time="exerciseTime"
-              :options="exerciseOptions"
-              background-color="dark"
-            ></workout-select>
+            @updateTime="updateExerciseTime"
+            name="ExerciseTime"
+            :time="exerciseTime"
+            :options="exerciseOptions"
+            background-color="dark"
+          ></workout-select>
         </div>
       </div>
 
@@ -57,18 +38,25 @@
                 class="li-card"
                 color="secondary"
               >
-                <ion-card-content class="card-content"> {{ exercise.name }} </ion-card-content>
+                <div class="card-grid">
+                  <div class="title-div">
+                    <ion-card-header
+                      ><ion-card-title class="card-title">
+                        {{ exercise.name }}</ion-card-title
+                      ></ion-card-header
+                    >
+                  </div>
+                  <div class="img-div">
+                    <img
+                      class="exercise-img"
+                      :src="getExerciseURL(index)"
+                      alt=""
+                    />
+                  </div>
+                </div>
               </ion-card>
             </li>
           </ul>
-        </div>
-        <div>
-          <router-link class="routerLink" :to="'/workout/' + page">
-            <ion-button shape="round" color="danger"
-              ><ion-icon slot="start" color="secondary" :icon="play"></ion-icon
-              >Start Workout</ion-button
-            >
-          </router-link>
         </div>
 
         <div v-show="showModal" class="alignCard">
@@ -81,6 +69,41 @@
         </div>
       </div>
     </ion-content>
+    <ion-footer>
+      <div class="footer-grid">
+        <div class="addExercise">
+          <ion-button
+            class="add-button"
+            shape="round"
+            @click="startWorkout"
+            color="success"
+            ><ion-icon
+              size="large"
+              slot="start"
+              color="secondary"
+              :icon="play"
+            ></ion-icon
+            ><ion-label color="secondary">Start Workout</ion-label></ion-button
+          >
+        </div>
+        <div class="time-calculate">
+          <ion-icon
+            class="style-time"
+            size="large"
+            :icon="timeOutline"
+          ></ion-icon>
+          <ion-label class="style-label">{{ totalTime }} Min.</ion-label>
+        </div>
+        <div class="exercises-calculate">
+          <ion-icon
+            class="style-exercise"
+            size="large"
+            :icon="barbellOutline"
+          ></ion-icon>
+          <ion-label class="style-label">{{ quantityExercises }} Ex.</ion-label>
+        </div>
+      </div>
+    </ion-footer>
   </ion-page>
 </template>
 
@@ -89,21 +112,22 @@ import {
   IonContent,
   IonPage,
   IonCard,
-  
   IonIcon,
   IonButton,
-  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonFooter,
+  IonLabel,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { computed } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { ref } from "vue";
-import { play } from "ionicons/icons";
+import { play, barbellOutline, timeOutline } from "ionicons/icons";
 import ExerciseDetail from "../components/reusable/ExerciseDetail.vue";
 import WorkoutSelect from "./reusable/WorkoutSelect.vue";
-
 
 export default defineComponent({
   name: "WorkoutPreview",
@@ -111,14 +135,17 @@ export default defineComponent({
     IonContent,
     IonPage,
     IonCard,
-    
     ExerciseDetail,
     IonIcon,
     IonButton,
-    IonCardContent,
     WorkoutSelect,
+    IonCardHeader,
+    IonCardTitle,
+    IonFooter,
+    IonLabel,
   },
   setup() {
+    const router = useRouter();
     const route = useRoute();
     const page = route.params.course;
     let store;
@@ -133,16 +160,22 @@ export default defineComponent({
     console.log(list);
     let proplist = list.exercises;
 
-  
-
     function getImgUrl() {
       if (page == "beginner" || page == "advanced" || page == "champ") {
         return require("../assets/HomePageWorkoutImages/" + page + ".png");
-      }
-      else {
+      } else {
         return require("../assets/HomePageWorkoutImages/beginner.png");
       }
-      
+    }
+
+    function getExerciseURL(index) {
+      return require("../assets/exercises/" +
+        list.exercises[index].name +
+        ".png");
+    }
+
+    function startWorkout() {
+      router.push("/workout/" + page);
     }
 
     //POPUP EXERCISE DETAIL
@@ -150,6 +183,7 @@ export default defineComponent({
     let showModal = ref(false);
     function showDetails(index) {
       console.log("showdetails!");
+      console.log(index);
       showModal.value = !showModal.value;
       propIndex.value = index;
     }
@@ -213,6 +247,10 @@ export default defineComponent({
       closeModal,
       exerciseOptions,
       breakOptions,
+      getExerciseURL,
+      startWorkout,
+      barbellOutline,
+      timeOutline,
     };
   },
 });
@@ -240,37 +278,26 @@ export default defineComponent({
 
 .display-card {
   border: 1px solid grey;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
 .li-card {
   /* border: 1px solid black; */
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
-.timeDiv {
+.exercise-name-div {
+  grid-row: row1-start / row1-end;
+  grid-column: line1 / line3;
   justify-self: center;
   align-self: center;
-  font-weight: bold;
-  font-size: 24px;
-  color: var(--ion-color-secondary);
+}
 
-  grid-row: row1-start / row1-end;
-  grid-column: line1 / line2;
-}
-.countDiv {
-  justify-self: center;
-  align-self: center;
+.exercise-name-label {
+  font-size: xx-large;
   font-weight: bold;
-  font-size: 24px;
-  color: var(--ion-color-secondary);
-  grid-row: row1-start / row1-end;
-  grid-column: line2 / line3;
 }
+
 .selectBreakTimeDiv {
   justify-self: center;
   align-self: end;
@@ -281,8 +308,6 @@ export default defineComponent({
   grid-column: line1 / line2;
   width: 125px;
   text-align: center;
-
-
 }
 .selectExerciseTimeDiv {
   justify-self: center;
@@ -294,8 +319,6 @@ export default defineComponent({
   grid-column: line2 / line3;
   width: 125px;
   text-align: center;
-
-
 }
 
 .timeAndCountDiv {
@@ -331,7 +354,29 @@ ul {
   margin-bottom: 0px;
 }
 
-.card-content {
+li {
+  height: 15%;
+}
+
+.card-grid {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 70% 30%;
+}
+
+.card-title {
+  color: black !important;
+}
+.exercise-img {
+  height: 100%;
+  width: 100%;
+}
+
+.card-label {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
   color: var(--ion-color-primary);
   font-size: 18px;
   font-weight: bold;
@@ -346,11 +391,62 @@ ul {
   transform: translateX(-50%);
 }
 
-.routerLink {
-  position: fixed;
-  bottom: 1%;
-  text-decoration: none;
+ion-footer {
+  height: 10%;
+}
+.footer-grid {
+  display: grid;
+  grid-template-rows: [row1-start] 20% [row1-end] 80% [row2-start];
+  grid-template-columns: [column1-start] 40% [column1-end] 20% [column2-start] 40% [column2-end];
+
+  height: 100%;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  border-top: 0.5px solid lightgray;
+}
+
+.addExercise {
+  grid-row: row1-start / row1-end;
   width: 100%;
   text-align: center;
+}
+
+.add-button {
+  position: fixed;
+  bottom: 7%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.time-calculate {
+  grid-row: row1-end / row2-start;
+  grid-column: column1-start / column1-end;
+  align-self: center;
+  justify-self: end;
+}
+
+.exercises-calculate {
+  grid-row: row1-end / row2-start;
+  grid-column: column2-start / column2-end;
+  align-self: center;
+  justify-self: start;
+}
+
+.style-time {
+  margin-right: 5px;
+  vertical-align: middle;
+  color: gray;
+}
+
+.style-exercise {
+  margin-right: 5px;
+  vertical-align: middle;
+  color: gray;
+}
+
+.style-label {
+  vertical-align: text-top;
+  color: gray;
+  font-size: larger;
 }
 </style>

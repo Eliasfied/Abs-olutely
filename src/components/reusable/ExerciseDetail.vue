@@ -47,8 +47,7 @@ export default defineComponent({
   name: "ExerciseDetail",
   props: ["proplist", "index"],
   setup(props) {
-    console.log("rofl:");
-    console.log(props.proplist);
+
 
     function getImgUrl() {
       return require("../../assets/exercises/" +

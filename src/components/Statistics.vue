@@ -1,9 +1,9 @@
 <template>
   <ion-page>
-    <the-footer title="ExerciseList"></the-footer>
+    <the-footer title="Statistics"></the-footer>
 
     <ion-content color="danger" :fullscreen="true">
-    <div><span>CALENDAR</span></div>
+    <div><span>Statistics</span></div>
     </ion-content></ion-page
   >
 </template>

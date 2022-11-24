@@ -282,7 +282,7 @@ export default defineComponent({
       saved.value = false;
     };
 
-    //exerciseList
+    //GET exerciseList
     async function getList() {
       showExerciseList.value = !showExerciseList.value;
       showTimeSelect.value = false;
@@ -434,8 +434,7 @@ export default defineComponent({
           return;
         }
         console.log("saved");
-        saved.value = true;
-        router.push("/myworkouts");
+        safeExercise();
       } else {
         router.push("/myworkouts");
       }
