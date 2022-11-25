@@ -5,16 +5,33 @@
     <ion-content color="tertiary" :fullscreen="true">
       <div class="grid-style">
         <div class="top-text">
-          <ion-card class="top-card">
-            
+          <ion-card>
+            <div class="list-div-grid">
+              <div class="list-div">
+                <ion-list>
+                  <ion-item>
+                    <ion-icon color="success" slot="start" :icon="flagOutline"></ion-icon>
+                    <p>Finished Workouts: {{ list.length }}</p>
+                  </ion-item>
+                  <ion-item>
+                    <ion-icon color="danger" slot="start" :icon="stopwatchOutline"></ion-icon>
+                    <p>Overall Workout-Time: {{ totalTime }} Min.</p>
+                  </ion-item>
+                  <ion-item>
+                    <ion-icon :style="{color: 'purple'}" slot="start" :icon="hourglassOutline"></ion-icon>
+                    <p>Average Workout-Time: {{ averageTime }} Min.</p>
+                  </ion-item>
+                </ion-list>
+              </div>
+            </div>
           </ion-card>
         </div>
         <div class="list-text">
-
+          <ion-label class="text-label"> Recent Workouts...</ion-label>
         </div>
         <div class="top-list">
           <ul>
-            <li v-for="item in list" :key="item.length">
+            <li v-for="(item, index) in list" :key="item.length">
               <ion-card>
                 <div class="grid-style-li">
                   <div class="workout-name">
@@ -30,12 +47,20 @@
                     <ion-label color="danger">{{ item.date }}</ion-label>
                   </div>
                   <div class="workout-start">
-                    <ion-icon size="large" color="success" :icon="play"></ion-icon>
+                    <ion-icon
+                      @click="goToWorkout(item, index)"
+                      size="large"
+                      color="success"
+                      :icon="play"
+                    ></ion-icon>
                   </div>
                 </div>
               </ion-card>
             </li>
           </ul>
+        </div>
+        <div class="calendar-div">
+          <v-calendar :attributes="attrs" is-expanded> </v-calendar>
         </div>
       </div> </ion-content
   ></ion-page>
@@ -43,69 +68,172 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { IonContent, IonPage, IonCard, IonLabel, IonIcon } from "@ionic/vue";
-import { timeOutline, play } from "ionicons/icons";
+import {
+  IonContent,
+  IonPage,
+  IonCard,
+  IonLabel,
+  IonIcon,
+  IonList,
+  IonItem,
+} from "@ionic/vue";
+import {
+  timeOutline,
+  play,
+  flagOutline,
+  ribbonOutline,
+  stopwatchOutline,
+  hourglassOutline,
+} from "ionicons/icons";
 import TheFooter from "./reusable/TheFooter.vue";
-import { ref } from "vue";
+import { ref, computed, reactive } from "vue";
 import { getStatisticsList } from "@/composables/getStatisticsList";
+import { useRouter } from "vue-router";
+import { useWorkoutsStore } from "../store/workouts";
+import { useMyWorkoutsStore } from "../store/myWorkouts";
 
 export default defineComponent({
   name: "CalendarPage",
-  components: { IonContent, IonPage, TheFooter, IonCard, IonLabel, IonIcon },
+  components: {
+    IonContent,
+    IonPage,
+    TheFooter,
+    IonCard,
+    IonLabel,
+    IonIcon,
+    IonList,
+    IonItem,
+  },
   setup() {
-    let list = ref();
+    //fill store
+
+    const store = useMyWorkoutsStore();
+    store.loadWorkoutsFromStore();
+    const store2 = useWorkoutsStore();
+    store2.loadWorkoutsFromStore();
+
+    //router
+    let router = useRouter();
+
+    //CALENDAR
+    let attrs: any = ref([]);
+
+    //data
+    let list: any = ref([]);
+    let totalTime = ref();
+    let averageTime = ref();
+    let id = 445;
+
+    //initialisieren und aus Storage laden
     async function getData() {
       list.value = await getStatisticsList();
+      totalTime.value = computed(() => {
+        let total = 0;
+        for (var i = 0; i < list.value.length; i++) {
+          total = total + list.value[i].minutes;
+        }
+        return total;
+      });
+      averageTime.value = computed(() => {
+        let total = 0;
+        for (var i = 0; i < list.value.length; i++) {
+          total = total + list.value[i].minutes;
+        }
+        return Math.round(total / list.value.length);
+      });
+
+      attrs.value = list.value.map((item) => ({
+        key: id++,
+        highlight: {
+          color: "blue",
+          fillMode: "solid",
+          contentClass: "italic",
+        },
+        dates: [item.calendarDate],
+        popover: {
+          label: item.workoutname,
+        },
+      }));
     }
 
     getData();
 
-    console.log("list in statistics: ");
-    console.log(list);
+    function goToWorkout(item, index) {
+      console.log("lets go");
+      console.log(item);
+      console.log(index);
+      router.push("/preview/" + item.workoutname);
+    }
 
-    return { list, timeOutline, play };
+    return {
+      list,
+      timeOutline,
+      play,
+      flagOutline,
+      ribbonOutline,
+      stopwatchOutline,
+      hourglassOutline,
+      totalTime,
+      averageTime,
+      attrs,
+      goToWorkout,
+    };
   },
 });
 </script>
 
 <style scoped>
 .grid-style {
-  height: 100%;
+  height: 99%;
   display: grid;
-  grid-template-rows: [row1-start] 30% [row1-end] 5% [row2-start] 65% [row2-end];
+  grid-template-rows: [row1-start] 25% [row1-end] 5% [row2-start] 35% [row2-end] 35% [row3-start];
 }
 
 .top-text {
-  height: 100%;
+  height: 90%;
   grid-row: row1-start / row1-end;
 }
 
-.top-card {
- padding: 5%;
+.text-label {
+  color: var(--ion-color-primary);
 }
 
 .list-text {
-  background-color: var(--ion-color-secondary);
-  margin-right: 5%;
-  margin-left: 5%;
+  background-color: var(--ion-color-tertiary);
+  border-radius: 40px;
   grid-row: row1-end / row2-start;
-
+  align-self: center;
+  justify-self: center;
 }
 
 .top-list {
   grid-row: row2-start / row2-end;
-  
+}
+
+.top-card-grid {
+  height: 100%;
+}
+
+.list-div-grid {
+  height: 100%;
+  display: grid;
+  grid-template-rows: [row1-start] 100% [row1-end];
+}
+
+.list-div {
+  align-self: center;
 }
 
 ul {
-  height: 100%;
+  height: 90%;
   list-style: none;
   margin: 0;
   padding: 0;
+  overflow-y: auto;
 }
 
 li {
-  height: 15%;
+  height: 30%;
 }
 
 ion-card {
@@ -162,5 +290,10 @@ ion-card {
 .style-label {
   vertical-align: middle;
   color: gray;
+}
+
+.calendar-div {
+  padding: 5px;
+  grid-row: row2-end / row3-start;
 }
 </style>

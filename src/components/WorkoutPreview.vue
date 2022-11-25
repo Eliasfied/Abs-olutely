@@ -148,12 +148,15 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const page = route.params.course;
+    console.log("page");
+    console.log(page);
     let store;
     if (page == "beginner" || page == "advanced" || page == "champ") {
       store = useWorkoutsStore();
     } else {
       store = useMyWorkoutsStore();
     }
+    console.log(store);
 
     const list = store.workoutList.find((element) => element.name == page);
     console.log("LIST: ");

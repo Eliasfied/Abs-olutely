@@ -28,7 +28,12 @@
         </div>
       </div>
       <div v-show="isFinished" class="align-card">
-        <finished-page @resetAll="resetAll" :page="page" :proptime="proptime"></finished-page>
+        <finished-page
+          @resetAll="resetAll"
+          :page="page"
+          :proptime="proptime"
+          :isFinished="isFinished"
+        ></finished-page>
       </div>
     </ion-content>
   </ion-page>
@@ -73,8 +78,6 @@ export default defineComponent({
 
     // only in landscape mode (plugin)
     window.screen.orientation.lock("landscape");
-
-    // vueInsomnia.on();
 
     // route name variable in page (beginner, advanced, champ..)
     const route = useRoute();

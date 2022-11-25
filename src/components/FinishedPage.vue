@@ -19,13 +19,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { IonCard, IonButton } from "@ionic/vue";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import statisticStorage from "../storage/statisticsStorage";
 
 export default defineComponent({
   name: "FinishedPage",
   components: { IonCard, IonButton },
-  props: ["page", "proptime"],
+  props: ["page", "proptime", "isFinished"],
   setup(props) {
     let finishText = "Good Job!";
     let finishSubtext = "Workout completed: " + props.page;
@@ -44,10 +44,21 @@ export default defineComponent({
       statisticStorage.setItem(id, {
         workoutname: props.page,
         date: date,
+        calendarDate: today,
         minutes: props.proptime,
       });
     }
-    workoutToStatistics();
+
+    watch(
+      () => props.isFinished,
+      (newValue) => {
+        console.log(newValue);
+        if (newValue == true) {
+          workoutToStatistics();
+        }
+      },
+      { deep: true }
+    );
 
     const finishedImage = computed(() => {
       console.log(props.page);
