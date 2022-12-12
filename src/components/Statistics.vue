@@ -10,15 +10,27 @@
               <div class="list-div">
                 <ion-list>
                   <ion-item>
-                    <ion-icon color="success" slot="start" :icon="flagOutline"></ion-icon>
+                    <ion-icon
+                      color="success"
+                      slot="start"
+                      :icon="flagOutline"
+                    ></ion-icon>
                     <p>Finished Workouts: {{ list.length }}</p>
                   </ion-item>
                   <ion-item>
-                    <ion-icon color="danger" slot="start" :icon="stopwatchOutline"></ion-icon>
+                    <ion-icon
+                      color="danger"
+                      slot="start"
+                      :icon="stopwatchOutline"
+                    ></ion-icon>
                     <p>Overall Workout-Time: {{ totalTime }} Min.</p>
                   </ion-item>
                   <ion-item>
-                    <ion-icon :style="{color: 'purple'}" slot="start" :icon="hourglassOutline"></ion-icon>
+                    <ion-icon
+                      :style="{ color: 'purple' }"
+                      slot="start"
+                      :icon="hourglassOutline"
+                    ></ion-icon>
                     <p>Average Workout-Time: {{ averageTime }} Min.</p>
                   </ion-item>
                 </ion-list>
@@ -31,7 +43,7 @@
         </div>
         <div class="top-list">
           <ul>
-            <li v-for="(item, index) in list" :key="item.length">
+            <li v-for="(item, index) in list" :key="item.index">
               <ion-card>
                 <div class="grid-style-li">
                   <div class="workout-name">
@@ -91,6 +103,7 @@ import { getStatisticsList } from "@/composables/getStatisticsList";
 import { useRouter } from "vue-router";
 import { useWorkoutsStore } from "../store/workouts";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
+import { useStatisticsStore } from "../store/statisticsStore";
 
 export default defineComponent({
   name: "CalendarPage",
@@ -107,10 +120,7 @@ export default defineComponent({
   setup() {
     //fill store
 
-    const store = useMyWorkoutsStore();
-    store.loadWorkoutsFromStore();
-    const store2 = useWorkoutsStore();
-    store2.loadWorkoutsFromStore();
+    const statsStore = useStatisticsStore();
 
     //router
     let router = useRouter();
@@ -126,7 +136,9 @@ export default defineComponent({
 
     //initialisieren und aus Storage laden
     async function getData() {
-      list.value = await getStatisticsList();
+      await statsStore.loadStatisticsFromStore();
+      list.value = statsStore.statisticsList;
+      list.value.reverse();
       totalTime.value = computed(() => {
         let total = 0;
         for (var i = 0; i < list.value.length; i++) {

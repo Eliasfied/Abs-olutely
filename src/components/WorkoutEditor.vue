@@ -431,6 +431,7 @@ export default defineComponent({
 
         if (handlerMessage.value == 0) {
           console.log("no save");
+          router.push("/myworkouts");
           return;
         }
         console.log("saved");

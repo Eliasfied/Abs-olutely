@@ -1,3 +1,22 @@
+
+PLAN
+
+different settings:
+
+-duration in weeks(1 to 12)
+-number of workouts per week (1 to 7)
+-different workouts for every week possible
+
+layout:
+
+-ion-range for duration in weeks pick
+-ion range for workouts per week pick
+
+then all weeks appear and the corresponding workout can be added to each week or select one workout for all weeks
+
+
+----------------------------------------------------------------------------------------
+
 -composables instead of computed property (or a mix) for computed property totalTime???
 
 ---------------------------------------
@@ -9,7 +28,7 @@ WorkoutLive.vue
 -good background GIFs or Videos
 -back to menü button
 -get ready text and timer before workout starts  //DONE 
--workout done text + statistics and option to safe this workout //HALFDONE
+-workout done text + statistics and option to safe this workout //DONE
 
 
 
@@ -40,7 +59,7 @@ GENERAL TO do
 -store exercises/workouts/images in DB?
 
 -able to create and safe own exercises //DONE
--track finished exercises in calendar
+-track finished exercises in calendar //DONE
 -set reminder
 -SLIDES FOR FIRST TIME
 -more pictures

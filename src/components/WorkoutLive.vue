@@ -51,7 +51,7 @@ import FinishedPage from "../components/FinishedPage.vue";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { KeepAwake } from "@capacitor-community/keep-awake";
 import { StatusBar, Style } from "@capacitor/status-bar";
-
+import { NativeAudio } from '@awesome-cordova-plugins/native-audio';
 import {
   playBack,
   playForward,
@@ -75,6 +75,11 @@ export default defineComponent({
     //onMounted
 
     onMounted(() => startWorkout());
+
+
+    //audio
+
+    NativeAudio.preloadSimple('fiveSecondsBeep', '../src/assets/audio/fiveSecondBeep.mp3');
 
     // only in landscape mode (plugin)
     window.screen.orientation.lock("landscape");
@@ -147,6 +152,8 @@ export default defineComponent({
     async function prepareForWorkout() {
       counter.value = 5;
       currentExercise.value = exerciseValuePrepare;
+      
+
       while (counter.value > 0) {
         if (counter.value < 10) {
           nextExercise.value = "Next: " + list?.exercises[0].name;
@@ -156,6 +163,7 @@ export default defineComponent({
         while (pauseStartToggle.value == true) {
           await asyncTimeout(500);
         }
+        NativeAudio.play('fiveSecondsBeep');
         await asyncTimeout(1000);
         counter.value = counter.value - 1;
         console.log(counter.value);

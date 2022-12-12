@@ -15,6 +15,15 @@
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item
+            router-link="/workoutplan"
+            class="list-item"
+            color="secondary"
+            ><ion-icon slot="start" :icon="readerOutline"></ion-icon>
+            <p>My Plans</p></ion-item
+          >
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item
             router-link="/myworkouts"
             class="list-item"
             color="secondary"
@@ -65,6 +74,7 @@ import {
   calendarOutline,
   settingsOutline,
   analyticsOutline,
+  readerOutline,
 } from "ionicons/icons";
 
 import { ref, watch } from "vue";
@@ -106,6 +116,7 @@ export default defineComponent({
       calendarOutline,
       settingsOutline,
       analyticsOutline,
+      readerOutline
     };
   },
 });

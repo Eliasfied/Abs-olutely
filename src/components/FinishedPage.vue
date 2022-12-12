@@ -7,7 +7,7 @@
         <img :src="finishedImage" alt="" />
       </div>
       <div class="finish-buttons">
-        <router-link to="/" replace
+        <router-link to="/statistics" replace
           ><ion-button @click="$emit('resetAll')" color="primary"
             >Back To Menu</ion-button
           ></router-link
@@ -21,6 +21,8 @@ import { defineComponent } from "vue";
 import { IonCard, IonButton } from "@ionic/vue";
 import { computed, watch } from "vue";
 import statisticStorage from "../storage/statisticsStorage";
+import { useStatisticsStore } from "../store/statisticsStore";
+
 
 export default defineComponent({
   name: "FinishedPage",
@@ -35,18 +37,21 @@ export default defineComponent({
     var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
     var yyyy = today.getFullYear();
 
+    let store = useStatisticsStore();
+
     let date = dd + "/" + mm + "/" + yyyy;
     console.log(id);
     console.log("date:");
     console.log(date);
 
-    function workoutToStatistics() {
+    async function workoutToStatistics() {
       statisticStorage.setItem(id, {
         workoutname: props.page,
         date: date,
         calendarDate: today,
         minutes: props.proptime,
       });
+      await store.addToStatisticsList({workoutname: props.page, date: date, calendarDate: today, minutes: props.proptime});
     }
 
     watch(
