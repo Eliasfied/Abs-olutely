@@ -2,6 +2,10 @@
   <div class="grid-exercise-list">
     <div class="explain-text">
       <ion-title>Add Exercises to your Workout!</ion-title>
+      <ion-searchbar
+        :debounce="500"
+        @ionChange="handleChange($event)"
+      ></ion-searchbar>
     </div>
     <div class="close-icon">
       <ion-icon
@@ -11,10 +15,7 @@
     </div>
     <div class="exercise-list">
       <ul>
-        <li
-          v-for="(exercise, index) in props.exerciseListStorage"
-          :key="exercise"
-        >
+        <li v-for="(exercise, index) in results" :key="exercise">
           <ion-card @click="addExercises(index)">
             <ion-card-content> {{ exercise.name }}</ion-card-content>
           </ion-card>
@@ -26,9 +27,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { IonCard, IonCardContent, IonIcon } from "@ionic/vue";
+import { IonCard, IonCardContent, IonIcon, IonSearchbar } from "@ionic/vue";
 import { useRoute } from "vue-router";
 import { closeCircleOutline } from "ionicons/icons";
+import { ref, onBeforeMount } from "vue";
+import { getExerciseList } from "../composables/getExerciseList";
 
 export default defineComponent({
   name: "ExerciseList",
@@ -38,27 +41,59 @@ export default defineComponent({
     IonCard,
     IonCardContent,
     IonIcon,
+    IonSearchbar,
   },
   setup(props, { emit }) {
     //ROUTE
     const route = useRoute();
     const page = route.params.course.toString();
     console.log(page);
-    let exerciseList;
+    let exerciseList: any[] = [];
+    let results = ref();
+    async function init() {
+      exerciseList = await getExerciseList();
+      console.log("exerciseList:");
+      console.log(exerciseList);
+      results.value = exerciseList;
+      console.log("result list:")
+      console.log(results.value);
+      proplist.value = results.value;
+    }
 
     let exercise;
+
+    onBeforeMount(() => init());
+
+    let proplist = ref();
 
     //ADD AND DELETE ITEMS
 
     function addExercises(index) {
       console.log("addExercises function!");
-      exerciseList = JSON.parse(JSON.stringify(props.exerciseListStorage));
+      exerciseList = JSON.parse(JSON.stringify(results.value));
       console.log(exerciseList);
       exercise = exerciseList[index];
+      exercise.reorderID = Date.now();
+      console.log(exercise);
       emit("updateExercises", exercise);
     }
 
-    return { props, addExercises, closeCircleOutline };
+    function handleChange(event) {
+      const query = event.target.value.toLowerCase();
+      results.value = exerciseList.filter(
+        (d) => d.name.toLowerCase().indexOf(query) > -1
+      );
+      proplist.value = results.value;
+    }
+
+    return {
+      props,
+      addExercises,
+      closeCircleOutline,
+      handleChange,
+      results,
+      proplist,
+    };
   },
 });
 </script>

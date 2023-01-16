@@ -80,6 +80,8 @@ export default defineComponent({
     //audio
 
     NativeAudio.preloadSimple('fiveSecondsBeep', '../src/assets/audio/fiveSecondBeep.mp3');
+    
+
 
     // only in landscape mode (plugin)
     window.screen.orientation.lock("landscape");

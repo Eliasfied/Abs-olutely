@@ -118,14 +118,18 @@ export default defineComponent({
     let timePreview = ref();
     let workoutLength = ref();
 
-    watch(workouts.value, () => {
-      console.log("geht in watcher rein");
-      if (workouts.value.length > 0) {
-        isEmpty.value = false;
-      } else {
-        isEmpty.value = true;
-      }
-    });
+    watch(
+      workouts.value.length,
+      () => {
+        console.log("geht in watcher rein");
+        if (workouts.value.length > 0) {
+          isEmpty.value = false;
+        } else {
+          isEmpty.value = true;
+        }
+      },
+      { deep: true, immediate: true }
+    );
 
     async function loadStore() {
       const store = useMyWorkoutsStore();

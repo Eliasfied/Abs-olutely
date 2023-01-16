@@ -10,6 +10,7 @@ async function loadAll() {
     img: "@/assets/exercises/Plank.png",
     difficulty: 3,
     description: "Put your elbows on the ground and blablablabla",
+    muscleGroup: "core",
   });
 
   await ExerciseStorage.setItem("Crunch", {
@@ -17,6 +18,7 @@ async function loadAll() {
     img: "@/assets/exercises/Crunch.png",
     difficulty: 3,
     description: "Put your body to your belly lalalala",
+    muscleGroup: "upper-abs",
   });
 
   await ExerciseStorage.setItem("Grab-Toe", {
@@ -24,6 +26,8 @@ async function loadAll() {
     img: "@/assets/exercises/Grab-Toe.png",
     difficulty: 3,
     description: "blablablablablabla",
+    muscleGroup: "core",
+
   });
 
   await ExerciseStorage.setItem("Hold", {
@@ -31,6 +35,10 @@ async function loadAll() {
     img: "@/assets/exercises/Hold.png",
     difficulty: 3,
     description: "blablablablablabla",
+    muscleGroup: "core",
+    reorderID: 0,
+
+
   });
 
   await ExerciseStorage.setItem("Mountain Climber", {
@@ -38,6 +46,8 @@ async function loadAll() {
     img: "@/assets/exercises/Mountain Climber.png",
     difficulty: 3,
     description: "blablablablablabla",
+    muscleGroup: "core"
+
   });
 
   await ExerciseStorage.setItem("Push-Up", {
@@ -45,6 +55,8 @@ async function loadAll() {
     img: "@/assets/exercises/Push-Up.png",
     difficulty: 3,
     description: "blablablablablabla",
+    muscleGroup: "core"
+
   });
 
   await ExerciseStorage.setItem("Russian Twist", {
@@ -52,13 +64,19 @@ async function loadAll() {
     img: "@/assets/exercises/Russian Twist.png",
     difficulty: 3,
     description: "blablablablablabla",
+    muscleGroup: "side-abs"
+
   });
 
   await ExerciseStorage.setItem("Side-Plank", {
     name: "Side-Plank",
     img: "@/assets/exercises/Side-Plank.png",
     difficulty: 3,
-    description: "blablablablablabla",
+    description: ",gspdfkposdkfs-abs",
+    muscleGroup: "side-abs",
+    reorderID: 0,
+
+
   });
 
   await ExerciseStorage.setItem("Leg Lower", {
@@ -66,13 +84,19 @@ async function loadAll() {
     img: "@/assets/exercises/Leg Lower.png",
     difficulty: 3,
     description: "blablablablablabla",
+    muscleGroup: "lower-abs",
+    reorderID: 0,
+
+
   });
 
   await ExerciseStorage.setItem("V-Up", {
     name: "V-Up",
     img: "@/assets/exercises/V-Up.png",
     difficulty: 3,
-    description: "blablablablablabla",
+    description: "fmodsfodskfsd",
+    muscleGroup: "core"
+
   });
 
   await ExerciseStorage.setItem("Reverse Crunch", {
@@ -80,6 +104,9 @@ async function loadAll() {
     img: "@/assets/exercises/Leg Lower.png",
     difficulty: 3,
     description: "blablablablablabla",
+    muscleGroup: "lower-abs",
+
+
   });
 
   await ExerciseStorage.setItem("Heel Taps", {
@@ -87,6 +114,9 @@ async function loadAll() {
     img: "@/assets/exercises/Heel Taps.png",
     difficulty: 3,
     description: "blablablablablabla",
+    muscleGroup: "side-abs",
+    reorderID: 0,
+
   });
 
   await ExerciseStorage.setItem("Bicycle", {
@@ -94,7 +124,38 @@ async function loadAll() {
     img: "@/assets/exercises/Bicycle.png",
     difficulty: 3,
     description: "blablablablablabla",
+    muscleGroup: "lower-abs"
+
   });
+
+  await ExerciseStorage.setItem("Scissors", {
+    name: "Scissors",
+    img: "@/assets/exercises/Heel Taps.png",
+    difficulty: 3,
+    description: "blablablablablabla",
+    muscleGroup: "lower-abs"
+
+  });
+
+  await ExerciseStorage.setItem("Sit-Up", {
+    name: "Sit-Up",
+    img: "@/assets/exercises/Heel Taps.png",
+    difficulty: 3,
+    description: "blablablablablabla",
+    muscleGroup: "upper-abs"
+
+  });
+
+  await ExerciseStorage.setItem("Cross-Crunches", {
+    name: "Cross-Crunches",
+    img: "@/assets/exercises/Heel Taps.png",
+    difficulty: 3,
+    description: "blablablablablabla",
+    muscleGroup: "side-abs"
+
+  });
+
+
 
 }
 

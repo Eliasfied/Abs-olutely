@@ -95,7 +95,7 @@
               >
                 <li
                   v-for="(exercise, index) in exerciseArray"
-                  :key="exercise.name"
+                  :key="exercise.reorderID"
                 >
                   <ion-card
                     @click="showDetails(index)"
@@ -286,7 +286,6 @@ export default defineComponent({
     async function getList() {
       showExerciseList.value = !showExerciseList.value;
       showTimeSelect.value = false;
-      exerciseListStorage.value = await getExerciseList();
     }
 
     function closeExerciselist() {
@@ -327,6 +326,7 @@ export default defineComponent({
     function updateExerciseTime(value) {
       console.log("jo");
       exerciseTime.value = value;
+      list.value.exerciseTime = value;
       saved.value = false;
       console.log(exerciseTime.value);
     }
@@ -334,6 +334,8 @@ export default defineComponent({
     function updateBreakTime(value) {
       console.log("ko");
       breakTime.value = value;
+      list.value.breakTime = value;
+
       saved.value = false;
       console.log(breakTime.value);
     }
@@ -352,6 +354,7 @@ export default defineComponent({
     });
 
     function updateExercises(exercise) {
+      console.log(exerciseArray.value);
       exerciseArray.value.push(exercise);
       proplist.value = JSON.parse(JSON.stringify(exerciseArray.value));
       saved.value = false;
@@ -374,15 +377,21 @@ export default defineComponent({
         await WorkoutStorage.setItem(workoutName.value, currentWorkout);
         console.log("bin im safeexercise method");
         store.addToWorkoutlist(currentWorkout);
+        console.log("workoutlist stored");
         console.log(store.workoutList);
         router.push("/myworkouts");
       } else {
         workout = await getMyWorkout(page);
+        await WorkoutStorage.removeItem(workout.name);
         workout.exercises = JSON.parse(JSON.stringify(exerciseArray.value));
         workout.name = workoutName.value;
         workout.exerciseTime = exerciseTime.value;
         workout.breakTime = breakTime.value;
+        console.log("listvalue");
+        console.log(list.value);
+        list.value.name = workoutName.value;
         await WorkoutStorage.setItem(workoutName.value, workout);
+        //store.loadWorkoutsFromStore;
         router.push("/myworkouts");
       }
     }

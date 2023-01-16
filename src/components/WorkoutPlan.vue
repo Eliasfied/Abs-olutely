@@ -12,40 +12,44 @@
               </div>
               <div class="duration-range">
                 <ion-range
+                  v-model="planDuration"
                   :pin="true"
                   :ticks="true"
                   :snaps="true"
                   :min="0"
-                  :max="4"
+                  :max="12"
+                  :value="4"
                 ></ion-range>
               </div>
               <div class="number-text"><p>Number of Workouts per week?</p></div>
               <div class="number-range">
                 <ion-range
+                  v-model="workoutsWeek"
                   :pin="true"
                   :ticks="true"
                   :snaps="true"
                   :min="0"
                   :max="7"
+                  :value="3"
                 ></ion-range>
               </div>
               <div class="select-workouts-text">
+                <p>workouts week: {{ workoutsWeek }}</p>
+                <p>plan Duration: {{ planDuration }}</p>
                 <p>Select your workout:</p>
               </div>
               <div class="select-workouts">
                 <ul>
-                  <li>workout1</li>
-                  <li>workout1</li>
-                  <li>workout3</li>
-                  <li>workout4</li>
+                  <li><ion-card>week1</ion-card></li>
+                  <li><ion-card>week2</ion-card></li>
+                  <li><ion-card>week3</ion-card></li>
+                  <li><ion-card>week4</ion-card></li>
                 </ul>
               </div>
             </div>
           </ion-card>
         </div>
-        <div class="number-week-picker">
-          <ion-card></ion-card>
-        </div>
+        <div class="calendar-div"></div>
       </div> </ion-content
   ></ion-page>
 </template>
@@ -54,12 +58,19 @@
 import { defineComponent } from "vue";
 import { IonContent, IonPage, IonRange, IonCard } from "@ionic/vue";
 import TheFooter from "./reusable/TheFooter.vue";
+import { ref } from "vue";
 
 export default defineComponent({
   name: "WorkoutPlan",
   components: { IonContent, IonPage, TheFooter, IonRange, IonCard },
   setup() {
-    return {};
+    let planDuration = ref(4);
+    let workoutsWeek = ref(3);
+
+    return {
+      planDuration,
+      workoutsWeek,
+    };
   },
 });
 </script>
@@ -73,6 +84,12 @@ export default defineComponent({
 .top-grid {
   height: 100%;
   display: grid;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 ion-range::part(tick) {

@@ -16,11 +16,8 @@
               <ion-card @click="showDetails(index)">
                 <div class="card-grid">
                   <div class="title-div">
-                    <ion-card-header
-                      ><ion-card-title class="card-title">
-                        {{ result.name }}</ion-card-title
-                      ></ion-card-header
-                    >
+                    <ion-label>{{ result.name }}</ion-label>
+                    
                   </div>
                   <div class="img-div">
                     <img
@@ -53,8 +50,7 @@ import {
   IonPage,
   IonSearchbar,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
+  IonLabel,
 } from "@ionic/vue";
 import TheFooter from "./reusable/TheFooter.vue";
 import { ref, onBeforeMount } from "vue";
@@ -69,8 +65,7 @@ export default defineComponent({
     TheFooter,
     IonSearchbar,
     IonCard,
-    IonCardHeader,
-    IonCardTitle,
+    IonLabel,
     ExerciseDetail,
   },
   setup() {
@@ -80,8 +75,8 @@ export default defineComponent({
       exerciseList = await getExerciseList();
       results.value = exerciseList;
       proplist.value = results.value;
-      console.log("proplist");
-      console.log(proplist);
+      console.log("result list page");
+      console.log(results.value);
     }
 
     onBeforeMount(() => init());
@@ -159,11 +154,20 @@ ion-card {
 .card-grid {
   height: 100%;
   display: grid;
-  grid-template-columns: 70% 30%;
+  grid-template-columns: [column0-start] 10% [column1-start]60% [column1-end] 30% [column2-start];
 }
 
-.card-title {
+.title-div {
   color: black !important;
+  grid-column: column1-start / column1-end;
+  align-self: center;
+  justify-self: start;
+  font-size: large;
+  
+}
+
+.img-div {
+  grid-column: column1-end / column2-start;
 }
 .exercise-img {
   height: 100%;
