@@ -7,7 +7,7 @@
       ></ion-searchbar>
     </div>
     <div class="close-icon">
-      <ion-icon
+      <ion-icon class="icon-cancel"
         @click="$emit('closeExerciselist')"
         :icon="closeCircleOutline"
       ></ion-icon>
@@ -18,13 +18,13 @@
           <ion-card>
             <div class="card-grid">
               <div class="info-div">
-                <ion-icon
+                <ion-icon class="icon-info"
                   @click="showDetails(index)"
                   :icon="informationCircleOutline"
                 ></ion-icon>
               </div>
               <div class="add-div">
-                <ion-icon
+                <ion-icon class="icon-add"
                   @click="addExercises(index)"
                   :icon="addOutline"
                 ></ion-icon>
@@ -196,8 +196,22 @@ ul {
   margin-top: 0px;
 }
 
-ion-icon {
-  font-size: 42px;
+
+
+.icon-info {
+  font-size: 28px;
+  vertical-align: text-bottom;
+
+}
+
+.icon-add {
+  font-size: 36px;
+  vertical-align: text-bottom;
+
+}
+
+.icon-cancel {
+  font-size: 36px;
   color: var(--ion-color-danger);
   vertical-align: text-bottom;
 }
@@ -215,11 +229,13 @@ ion-icon {
   height: 100%;
   display: grid;
   grid-template-columns: [column0-start] 10% [column1-start]60% [column1-end] 30% [column2-start];
+  grid-template-rows: [row1-start] 100% [row1-end];
 }
 
 .title-div {
   color: black !important;
   grid-column: column1-start / column1-end;
+  grid-row: row1-start /row1-end;
   align-self: center;
   justify-self: start;
   font-size: large;
@@ -227,12 +243,14 @@ ion-icon {
 
 .info-div {
   grid-column: column0-start / column1-start;
+  grid-row: row1-start /row1-end;
   align-self: center;
-  justify-self: start;
+  justify-self: center;
 }
 
 .add-div {
   grid-column: column1-start / column1-end;
+  grid-row: row1-start /row1-end;
   align-self: center;
   justify-self: end;
 }
@@ -243,6 +261,8 @@ ion-icon {
 
 .img-div {
   grid-column: column1-end / column2-start;
+  grid-row: row1-start /row1-end;
+
 }
 .exercise-img {
   height: 100%;
