@@ -101,7 +101,7 @@ async function loadAll() {
 
   await ExerciseStorage.setItem("Reverse Crunch", {
     name: "Reverse Crunch",
-    img: "@/assets/exercises/Leg Lower.png",
+    img: "@/assets/exercises/Reverse Crunch.png",
     difficulty: 3,
     description: "blablablablablabla",
     muscleGroup: "lower-abs",
@@ -130,7 +130,7 @@ async function loadAll() {
 
   await ExerciseStorage.setItem("Scissors", {
     name: "Scissors",
-    img: "@/assets/exercises/Heel Taps.png",
+    img: "@/assets/exercises/Scissors.png",
     difficulty: 3,
     description: "blablablablablabla",
     muscleGroup: "lower-abs"
@@ -139,16 +139,16 @@ async function loadAll() {
 
   await ExerciseStorage.setItem("Sit-Up", {
     name: "Sit-Up",
-    img: "@/assets/exercises/Heel Taps.png",
+    img: "@/assets/exercises/Sit-Up.png",
     difficulty: 3,
     description: "blablablablablabla",
     muscleGroup: "upper-abs"
 
   });
 
-  await ExerciseStorage.setItem("Cross-Crunches", {
-    name: "Cross-Crunches",
-    img: "@/assets/exercises/Heel Taps.png",
+  await ExerciseStorage.setItem("Cross Crunches", {
+    name: "Cross Crunches",
+    img: "@/assets/exercises/Cross Crunches.png",
     difficulty: 3,
     description: "blablablablablabla",
     muscleGroup: "side-abs"
