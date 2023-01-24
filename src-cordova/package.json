@@ -15,8 +15,7 @@
   "devDependencies": {
     "cordova-android": "~10.1.2",
     "cordova-browser": "~6.0.0",
-    "cordova-ios": "^6.2.0",
-    "cordova-plugin-insomnia": "github:EddyVerbruggen/Insomnia-PhoneGap-Plugin"
+    "cordova-ios": "^6.2.0"
   },
   "cordova": {
     "platforms": [
@@ -24,14 +23,14 @@
       "android",
       "ios"
     ],
-    "plugins": {
-      "cordova-plugin-insomnia": {}
-    }
+    "plugins": {}
   },
   "dependencies": {
     "@awesome-cordova-plugins/background-mode": "^6.2.0",
     "@ionic-native/insomnia": "^5.36.0",
+    "@ionic-native/native-audio": "^5.36.0",
     "cordova-plugin-background-mode": "^0.7.3",
+    "cordova-plugin-nativeaudio2": "^3.0.11",
     "vue-insomnia": "^0.1.0"
   }
 }

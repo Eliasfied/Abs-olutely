@@ -2,6 +2,7 @@
   <ion-page>
     <ion-content color="tertiary" :fullscreen="true">
       <the-footer v-if="!showExerciseList" title="Workout Editor"></the-footer>
+      
       <div
         v-if="showExerciseList && !showTimeSelect"
         class="align-exercise-list"
@@ -14,6 +15,7 @@
           :currentWorkout="currentWorkout"
         ></exercise-list>
       </div>
+   
       <div class="grid-page">
         <div v-if="!showExerciseList" class="grid-top">
           <div class="back-icon">
@@ -868,4 +870,7 @@ button.alert-button.alert-button-confirm {
   border-bottom-right-radius: 13px;
   border-top-right-radius: 13px;
 }
+
+
+
 </style>

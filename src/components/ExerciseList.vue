@@ -7,38 +7,45 @@
       ></ion-searchbar>
     </div>
     <div class="close-icon">
-      <ion-icon class="icon-cancel"
+      <ion-icon
+        class="icon-cancel"
         @click="$emit('closeExerciselist')"
         :icon="closeCircleOutline"
       ></ion-icon>
     </div>
     <div class="exercise-list">
-      <ul>
-        <li v-for="(exercise, index) in results" :key="exercise">
-          <ion-card>
-            <div class="card-grid">
-              <div class="info-div">
-                <ion-icon class="icon-info"
-                  @click="showDetails(index)"
-                  :icon="informationCircleOutline"
-                ></ion-icon>
+        <ul>
+          <li v-for="(exercise, index) in results" :key="exercise">
+            <ion-card :class="{ addAnimation: exerciseAdded }">
+              <div class="card-grid">
+                <div class="info-div">
+                  <ion-icon
+                    class="icon-info"
+                    @click="showDetails(index)"
+                    :icon="informationCircleOutline"
+                  ></ion-icon>
+                </div>
+                <div class="add-div">
+                  <ion-icon
+                    class="icon-add"
+                    @click="addExercises(index)"
+                    :icon="addOutline"
+                  ></ion-icon>
+                </div>
+                <div class="title-div">
+                  <ion-label>{{ exercise.name }}</ion-label>
+                </div>
+                <div class="img-div">
+                  <img
+                    class="exercise-img"
+                    :src="getExerciseURL(index)"
+                    alt=""
+                  />
+                </div>
               </div>
-              <div class="add-div">
-                <ion-icon class="icon-add"
-                  @click="addExercises(index)"
-                  :icon="addOutline"
-                ></ion-icon>
-              </div>
-              <div class="title-div">
-                <ion-label>{{ exercise.name }}</ion-label>
-              </div>
-              <div class="img-div">
-                <img class="exercise-img" :src="getExerciseURL(index)" alt="" />
-              </div>
-            </div>
-          </ion-card>
-        </li>
-      </ul>
+            </ion-card>
+          </li>
+        </ul>
     </div>
     <div v-if="showModal" class="alignCard">
       <exercise-detail
@@ -106,11 +113,20 @@ export default defineComponent({
       showModal.value = !showModal.value;
       propIndex.value = index;
     }
+
+    function resetAdded() {
+      exerciseAdded.value = false;
+    }
+
     function closeModal() {
       showModal.value = !showModal.value;
     }
 
+    //value for CSS animation
+    let exerciseAdded = ref(false);
     function addExercises(index) {
+      exerciseAdded.value = true;
+      setTimeout(resetAdded, 500);
       console.log("addExercises function!");
       exerciseList = JSON.parse(JSON.stringify(results.value));
       console.log(exerciseList);
@@ -123,7 +139,7 @@ export default defineComponent({
     function getExerciseURL(index) {
       return require("../assets/exercises/" +
         results.value[index].name +
-        ".png");
+        ".gif");
     }
 
     function handleChange(event) {
@@ -148,6 +164,7 @@ export default defineComponent({
       showDetails,
       closeModal,
       addOutline,
+      exerciseAdded,
     };
   },
 });
@@ -184,7 +201,7 @@ ion-card {
   grid-row: row1-start / row1-end;
   grid-column: column1-end / column2-start;
   align-self: center;
-  justify-self: center;
+  justify-self: start;
 }
 
 ul {
@@ -194,20 +211,35 @@ ul {
   height: 95%;
   margin-bottom: 0px;
   margin-top: 0px;
+  border-top: 1px solid grey;
+  animation: list-in 0.5s ease-out forwards;
 }
 
+@keyframes list-in {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.9);
+  }
 
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+}
 
 .icon-info {
   font-size: 28px;
   vertical-align: text-bottom;
-
 }
 
 .icon-add {
   font-size: 36px;
   vertical-align: text-bottom;
+}
 
+.addAnimation:active {
+  border: 3px solid var(--ion-color-success);
 }
 
 .icon-cancel {
@@ -235,7 +267,7 @@ ul {
 .title-div {
   color: black !important;
   grid-column: column1-start / column1-end;
-  grid-row: row1-start /row1-end;
+  grid-row: row1-start / row1-end;
   align-self: center;
   justify-self: start;
   font-size: large;
@@ -243,14 +275,14 @@ ul {
 
 .info-div {
   grid-column: column0-start / column1-start;
-  grid-row: row1-start /row1-end;
+  grid-row: row1-start / row1-end;
   align-self: center;
   justify-self: center;
 }
 
 .add-div {
   grid-column: column1-start / column1-end;
-  grid-row: row1-start /row1-end;
+  grid-row: row1-start / row1-end;
   align-self: center;
   justify-self: end;
 }
@@ -261,8 +293,7 @@ ul {
 
 .img-div {
   grid-column: column1-end / column2-start;
-  grid-row: row1-start /row1-end;
-
+  grid-row: row1-start / row1-end;
 }
 .exercise-img {
   height: 100%;
@@ -277,4 +308,21 @@ ul {
   left: 50%;
   transform: translateX(-50%);
 }
+
+ion-searchbar {
+}
+
+/* .v-enter-from {
+  opacity: 0;
+  transform: translateY(-150px);
+}
+
+.v-enter-active {
+  transition: all 1.3s ease-out;
+}
+
+.v-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+} */
 </style>

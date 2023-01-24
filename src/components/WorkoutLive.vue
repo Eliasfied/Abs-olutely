@@ -51,7 +51,7 @@ import FinishedPage from "../components/FinishedPage.vue";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { KeepAwake } from "@capacitor-community/keep-awake";
 import { StatusBar, Style } from "@capacitor/status-bar";
-import { NativeAudio } from '@awesome-cordova-plugins/native-audio';
+import { NativeAudio } from "@ionic-native/native-audio";
 import {
   playBack,
   playForward,
@@ -76,13 +76,18 @@ export default defineComponent({
 
     onMounted(() => startWorkout());
 
-
     //audio
-
-    NativeAudio.preloadSimple('fiveSecondsBeep', '../src/assets/audio/fiveSecondBeep.mp3');
-    
-
-
+    NativeAudio.preloadSimple(
+      "fiveSecondBeep",
+      "public/audio/fiveSecondBeep.mp3"
+    ).then(
+      (data) => {
+        console.log("success", data);
+      },
+      (data) => {
+        console.log("error", data);
+      }
+    );
     // only in landscape mode (plugin)
     window.screen.orientation.lock("landscape");
 
@@ -147,14 +152,13 @@ export default defineComponent({
     function getImgUrl() {
       return isPrepare.value
         ? require("../assets/exercises/Prepare.png")
-        : require("../assets/exercises/" + currentExercise.value + ".png");
+        : require("../assets/exercises/" + currentExercise.value + ".gif");
     }
 
     //PREPARE FOR WORKOUT
     async function prepareForWorkout() {
       counter.value = 5;
       currentExercise.value = exerciseValuePrepare;
-      
 
       while (counter.value > 0) {
         if (counter.value < 10) {
@@ -162,10 +166,11 @@ export default defineComponent({
         } else {
           nextExercise.value = "";
         }
+
         while (pauseStartToggle.value == true) {
           await asyncTimeout(500);
         }
-        NativeAudio.play('fiveSecondsBeep');
+
         await asyncTimeout(1000);
         counter.value = counter.value - 1;
         console.log(counter.value);
@@ -224,6 +229,9 @@ export default defineComponent({
           } else {
             nextExercise.value = "";
           }
+          if (counter.value == 5) {
+            NativeAudio.play("fiveSecondBeep");
+          }
           while (pauseStartToggle.value == true) {
             await asyncTimeout(500);
           }
@@ -243,6 +251,9 @@ export default defineComponent({
             nextExercise.value = "Next: " + list?.exercises[index + 1].name;
           } else {
             nextExercise.value = "";
+          }
+          if (counter.value == 5) {
+            NativeAudio.play("fiveSecondBeep");
           }
           while (pauseStartToggle.value == true) {
             await asyncTimeout(500);
