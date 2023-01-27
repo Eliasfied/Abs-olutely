@@ -174,7 +174,7 @@ export default defineComponent({
     function getExerciseURL(index) {
       return require("../assets/exercises/" +
         list.exercises[index].name +
-        ".png");
+        ".gif");
     }
 
     function startWorkout() {
