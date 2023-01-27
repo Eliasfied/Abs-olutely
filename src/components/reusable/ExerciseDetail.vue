@@ -109,10 +109,16 @@ ion-card {
 }
 
 .ionImage {
+
   background-size: cover;
   text-align: center;
   grid-row: row1-start / row2-start;
   grid-column: line1-1 / line2-1;
+  /* margin: 5%; */
+}
+
+img {
+  height: 100%;
 }
 
 .close-icon {

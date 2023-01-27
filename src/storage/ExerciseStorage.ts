@@ -5,7 +5,7 @@ const ExerciseStorage = localForage.createInstance({ name: "Exercises" });
 
 async function loadAll() {
 
-  await ExerciseStorage.clear();
+  // await ExerciseStorage.clear();
 
   await ExerciseStorage.setItem("Plank", {
     name: "Plank",
@@ -15,13 +15,13 @@ async function loadAll() {
     muscleGroup: "core",
   });
 
-  // await ExerciseStorage.setItem("Crunch", {
-  //   name: "Crunch",
-  //   img: "@/assets/exercises/Crunch.gif",
-  //   difficulty: 3,
-  //   description: "Put your body to your belly lalalala",
-  //   muscleGroup: "upper-abs",
-  // });
+  await ExerciseStorage.setItem("Crunch", {
+    name: "Crunch",
+    img: "@/assets/exercises/Crunch.gif",
+    difficulty: 3,
+    description: "Put your body to your belly lalalala",
+    muscleGroup: "upper-abs",
+  });
 
   await ExerciseStorage.setItem("Grab-Toe", {
     name: "Grab-Toe",

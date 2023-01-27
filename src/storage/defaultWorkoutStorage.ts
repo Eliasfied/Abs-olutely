@@ -6,30 +6,30 @@ let hold;
 let crunch;
 let grabToe;
 let mountainClimber;
-let pushUp;
 let russianTwist;
 let sidePlank;
-let legLower;
 let VUp;
 let reverseCrunch;
 let heelTaps;
 let bicycle;
 let breakExercise;
 async function loadAll() {
+
+  
+
   plank = await getExercise("Plank");
   hold = await getExercise("Hold");
   crunch = await getExercise("Crunch");
   grabToe = await getExercise("Grab-Toe");
   mountainClimber = await getExercise("Mountain Climber");
-  pushUp = await getExercise("Push-Up");
   russianTwist = await getExercise("Russian Twist");
   sidePlank = await getExercise("Side-Plank");
-  legLower = await getExercise("Leg Lower");
   VUp = await getExercise("V-Up");
   reverseCrunch = await getExercise("Reverse Crunch");
   heelTaps = await getExercise("Heel Taps");
   bicycle = await getExercise("Bicycle");
   breakExercise = await getExercise("Break");
+
 
   await defaultWorkouts.setItem("beginner", {
     name: "beginner",
@@ -74,13 +74,11 @@ async function loadAll() {
       hold,
       bicycle,
       plank,
-      legLower,
       crunch,
       heelTaps,
       hold,
       bicycle,
       plank,
-      legLower,
       sidePlank,
       sidePlank,
       russianTwist,

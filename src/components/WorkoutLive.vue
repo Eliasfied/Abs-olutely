@@ -377,9 +377,9 @@ export default defineComponent({
 
 .item-exerciseName {
   justify-self: center;
-  align-self: center;
+  align-self: end;
   grid-column: line2 / line3;
-  grid-row: row1-end / row2-start;
+  grid-row: row1-start / row1-end;
   color: var(--ion-color-primary);
   font-weight: bold;
   font-size: 28px;
