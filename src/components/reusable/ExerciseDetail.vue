@@ -16,9 +16,6 @@
           <ion-card-title color="primary">{{
             props.proplist[props.index].name
           }}</ion-card-title>
-          <ion-card-subtitle class="subtitle"
-            >Difficulty: {{ props.proplist[props.index].difficulty }}
-          </ion-card-subtitle>
         </ion-card-header>
       </div>
       <div>
@@ -82,7 +79,7 @@ export default defineComponent({
   width: 100%;
   background-size: cover;
   display: grid;
-  grid-template-rows: [row1-start] 15% [row1-end] 35% [row2-start] 20% [row2-end]30% [row3-start];
+  grid-template-rows: [row1-start] 15% [row1-end] 35% [row2-start] 15% [row2-end]35% [row3-start];
   grid-template-columns: [line1-1] 100% [line2-1];
 }
 
@@ -92,6 +89,13 @@ ion-card {
   border: 3px solid black;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   animation: card-in 0.3s ease-out forwards;
+  overflow: scroll;
+}
+
+ion-card-title {
+  font-weight: bold;
+  
+  
 }
 
 @keyframes card-in {

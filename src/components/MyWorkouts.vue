@@ -318,7 +318,7 @@ ion-card {
   height: 100%;
   /* border: 1px solid black; */
 
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 20px, rgba(0, 0, 0, 0.1) 0px 6px 6px;
 }
 
 .add-workout {

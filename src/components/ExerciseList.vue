@@ -33,7 +33,7 @@
                   ></ion-icon>
                 </div>
                 <div class="title-div">
-                  <ion-label>{{ exercise.name }}</ion-label>
+                  <ion-label>{{ exercise.number + " " + exercise.name }}</ion-label>
                 </div>
                 <div class="img-div">
                   <img
@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { IonCard, IonIcon, IonSearchbar } from "@ionic/vue";
+import { IonCard, IonIcon, IonSearchbar, IonLabel } from "@ionic/vue";
 import { useRoute } from "vue-router";
 import {
   closeCircleOutline,
@@ -80,6 +80,7 @@ export default defineComponent({
     IonIcon,
     IonSearchbar,
     ExerciseDetail,
+    IonLabel,
   },
   setup(props, { emit }) {
     //ROUTE
@@ -176,6 +177,10 @@ ion-card {
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
+ion-label {
+  font-weight: bold;
+}
+
 .grid-exercise-list {
   height: 100%;
   display: grid;
@@ -231,11 +236,13 @@ ul {
 .icon-info {
   font-size: 28px;
   vertical-align: text-bottom;
+  color: orange;
 }
 
 .icon-add {
   font-size: 36px;
   vertical-align: text-bottom;
+  color: lightskyblue;
 }
 
 .addAnimation:active {

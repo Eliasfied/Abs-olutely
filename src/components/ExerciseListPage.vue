@@ -16,7 +16,7 @@
               <ion-card @click="showDetails(index)">
                 <div class="card-grid">
                   <div class="title-div">
-                    <ion-label>{{ result.name }}</ion-label>
+                    <ion-label>{{  result.number + " " + result.name  }}</ion-label>
                     
                   </div>
                   <div class="img-div">
@@ -144,11 +144,15 @@ ol {
 }
 
 li {
-  height: 10%;
+  height: 12.5%;
 }
 
 ion-card {
   height: 100%;
+}
+
+ion-label {
+  font-weight: bold;
 }
 
 .card-grid {
