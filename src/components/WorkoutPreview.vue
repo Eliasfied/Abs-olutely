@@ -5,6 +5,9 @@
         class="grid-style-top"
         :style="{ 'background-image': 'url(' + getImgUrl() + ')' }"
       >
+      <div class="back-button-div">
+        <ion-icon @click="backToMenu" :icon="arrowBackOutline" size="large" ></ion-icon>
+      </div>
         <div class="exercise-name-div">
           <ion-label class="exercise-name-label">{{ list.name }}</ion-label>
         </div>
@@ -125,7 +128,7 @@ import { computed } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { ref } from "vue";
-import { play, barbellOutline, timeOutline } from "ionicons/icons";
+import { play, barbellOutline, timeOutline, arrowBackOutline } from "ionicons/icons";
 import ExerciseDetail from "../components/reusable/ExerciseDetail.vue";
 import WorkoutSelect from "./reusable/WorkoutSelect.vue";
 
@@ -194,6 +197,10 @@ export default defineComponent({
       showModal.value = !showModal.value;
     }
 
+    function backToMenu () {
+      router.push("/home");
+    }
+
     //UI DATA
 
     let exerciseOptions = [20, 30, 35, 40];
@@ -254,6 +261,8 @@ export default defineComponent({
       startWorkout,
       barbellOutline,
       timeOutline,
+      arrowBackOutline,
+      backToMenu
     };
   },
 });
@@ -295,6 +304,14 @@ export default defineComponent({
   grid-column: line1 / line3;
   justify-self: center;
   align-self: center;
+}
+
+.back-button-div {
+  grid-row: row1-start / row1-end;
+  grid-column: line1 /line2;
+  justify-self: start;
+  align-self: center;
+
 }
 
 .exercise-name-label {
