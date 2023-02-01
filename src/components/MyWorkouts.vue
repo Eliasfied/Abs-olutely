@@ -1,7 +1,6 @@
 <template>
   <ion-page>
     <the-footer title="My Workouts"></the-footer>
-
     <ion-content color="tertiary" :fullscreen="true">
       <div class="grid-style-workouts">
         <div class="add-workout">
