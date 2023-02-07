@@ -1,8 +1,9 @@
 import myWorkoutStorage from "../storage/myWorkoutStorage";
 
-const data: any[] = [];
+let data: any[] = [];
 
 export async function getWorkoutList() {
+  data = [];
   const length = await myWorkoutStorage.length();
 
   for (let i = 0; i < length; i++) {
