@@ -5,8 +5,7 @@ m
       <div class="grid-page">
         <div></div>
 
-        <div class="icon-div" v-if="!showList"><ion-icon :icon="constructSharp"></ion-icon></div>
-        <div class="workout-list-div" v-else ><workoutlist @close-workout-list="closeWorkoutList"></workoutlist></div>
+        <div class="icon-div"><ion-icon :icon="constructSharp"></ion-icon></div>
         <div class="text-div"><p>Customize</p></div>
         <div class="label-div">
           <ion-label position="floating"
@@ -15,9 +14,11 @@ m
         </div>
         <div class="list-div">
           <ul>
-            <li v-for="week in weekArray" :key="week">
-              <ion-card class="list-card" @click="addWorkout">
-                {{ week }}
+            <li v-for="(week, index) in weekArray" :key="index">
+              <ion-card class="list-card" @click="addWorkout(index)">
+                {{ week.name }}
+                {{ week.workout }}
+                {{ week.days }}
               </ion-card>
             </li>
           </ul>
@@ -35,11 +36,11 @@ import { ref } from "vue";
 import { constructSharp } from "ionicons/icons";
 import { IonContent, IonPage, IonLabel, IonIcon, IonCard } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
-import Workoutlist from "../components/WorkoutList.vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "WorkoutPlan",
-  components: { IonContent, IonPage, IonLabel, IonIcon, IonCard, Workoutlist },
+  components: { IonContent, IonPage, IonLabel, IonIcon, IonCard },
   setup() {
     let planStore = useMyPlanStore();
     let name = planStore.planName;
@@ -47,20 +48,26 @@ export default defineComponent({
     console.log(name);
     let days = planStore.planDays;
     let weeks = planStore.planWeeks;
-    let showList = ref(false);
-
-    let weekArray = [] as any;
+    let router = useRouter();
+    let weekArray = ref([]) as any;
+    planStore.setArray(weekArray);
+    console.log(weekArray);
+    let index1 = ref(0) as any;
 
     for (let i = 1; i < weeks + 1; i++) {
-      weekArray.push("Week" + i);
+      planStore.pushArray({ name: "Week" + i, workout: "no workout added yet", days: days + " Days per Week" });
     }
+    
 
-    function addWorkout() {
-      showList.value = true;
-    }
-
-    function closeWorkoutList() {
-      showList.value = false;
+    function addWorkout(index) {
+      console.log("kommt noch");
+      index1.value = index;
+      console.log("index:");
+      console.log(index);
+      console.log("index1:");
+      console.log(index1);
+      planStore.setCurrentIndex(index1);
+      router.push("/workoutList");
     }
 
     return {
@@ -70,9 +77,9 @@ export default defineComponent({
       weeks,
       planStore,
       weekArray,
-      showList,
       addWorkout,
-      closeWorkoutList,
+      router,
+      index1,
     };
   },
 });

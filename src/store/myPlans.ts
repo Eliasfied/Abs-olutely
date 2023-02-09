@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+import { ref } from "vue";
+
 
 export const useMyPlanStore = defineStore("myPlans", {
   state: () => ({
@@ -6,12 +8,14 @@ export const useMyPlanStore = defineStore("myPlans", {
     planName: "",
     planWeeks: 0,
     planDays: 0,
-    
+    weekArray: [] as any[],
+    currentIndex: 0,
   }),
 
   actions: {
-   
     setPlanName(name: any) {
+      console.log("planName before in store");
+      console.log(name);
       this.planName = name;
       console.log("planName in store");
       console.log(this.planName);
@@ -20,8 +24,34 @@ export const useMyPlanStore = defineStore("myPlans", {
       this.planWeeks = weeks;
     },
     setPlanDays(days) {
+      console.log("days number?:");
+      console.log(days);
       this.planDays = days;
-    }
+      console.log("days after?:");
+      console.log(this.planDays);
+    },
+    setArray(array) {
+      this.weekArray = array;
+    },
+    pushArray(week) {
+      
+      this.weekArray.push(week);
+      
+    },
+    async workoutToArray(index, workoutname) {
+      console.log("der index:");
+      console.log(index);
+      this.weekArray[index].workout = workoutname;
+      console.log("this is the array:");
+      console.log(this.weekArray);
+    },
+    setCurrentIndex(index: any) {
+      console.log("index number");
+      console.log(index);
+      this.currentIndex = index;
+      console.log("currentIndex in myPlans");
+      console.log(this.currentIndex);
+    },
   },
 
   getters: {
@@ -33,6 +63,12 @@ export const useMyPlanStore = defineStore("myPlans", {
     },
     planDays() {
       return this.planDays;
-    }
-  }
+    },
+    weekArray() {
+      return this.weekArray;
+    },
+    currentIndex() {
+      return this.currentIndex;
+    },
+  },
 });

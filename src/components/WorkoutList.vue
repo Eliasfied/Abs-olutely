@@ -1,40 +1,55 @@
 <template>
-  <div class="grid-exercise-list">
-    <div class="close-icon">
-      <ion-icon
-        class="icon-cancel"
-        @click="$emit('closeWorkoutList')"
-        :icon="closeCircleOutline"
-      ></ion-icon>
-    </div>
-    <div class="exercise-list">
-      <ul>
-        <li v-for="workout in results" :key="workout">
-          <ion-card>
-            <div class="card-grid">
-              <div class="info-div">
-                <ion-icon
-                  class="icon-info"
-                  :icon="informationCircleOutline"
-                ></ion-icon>
-              </div>
-              <div class="add-div">
-                <ion-icon class="icon-add" :icon="addOutline"></ion-icon>
-              </div>
-              <div class="title-div">
-                <ion-label> {{ workout.name }}</ion-label>
-              </div>
-            </div>
-          </ion-card>
-        </li>
-      </ul>
-    </div>
-  </div>
+  <ion-page>
+    <ion-content>
+      <div class="grid-exercise-list">
+        <div class="close-icon">
+          <ion-icon
+            class="icon-cancel"
+            @click="closeList"
+            :icon="closeCircleOutline"
+          ></ion-icon>
+        </div>
+        <div class="exercise-list">
+          <ul>
+            <li v-for="(workout, index) in results" :key="workout">
+              <ion-card>
+                <div class="card-grid">
+                  <div class="info-div">
+                    <ion-icon
+                      class="icon-info"
+                      :icon="informationCircleOutline"
+                    ></ion-icon>
+                  </div>
+                  <div class="add-div">
+                    <ion-icon
+                      class="icon-add"
+                      :icon="addOutline"
+                      @click="addWorkout(index, workout.name)"
+                    ></ion-icon>
+                  </div>
+                  <div class="title-div">
+                    <ion-label> {{ workout.name }}</ion-label>
+                  </div>
+                </div>
+              </ion-card>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </ion-content>
+  </ion-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { IonCard, IonIcon, IonSearchbar, IonLabel } from "@ionic/vue";
+import {
+  IonCard,
+  IonIcon,
+  IonSearchbar,
+  IonLabel,
+  IonPage,
+  IonContent,
+} from "@ionic/vue";
 import { useRoute } from "vue-router";
 import {
   closeCircleOutline,
@@ -43,6 +58,8 @@ import {
 } from "ionicons/icons";
 import { ref, onBeforeMount } from "vue";
 import { getWorkoutList } from "@/composables/getMyWorkoutList";
+import { useMyPlanStore } from "../store/myPlans";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "WorkoutList",
@@ -51,9 +68,13 @@ export default defineComponent({
     IonCard,
     IonIcon,
     IonLabel,
+    IonPage,
+    IonContent,
   },
   setup(props, { emit }) {
     //ROUTE
+    let planStore = useMyPlanStore();
+    let currentIndex = planStore.currentIndex;
 
     let workoutList: any[] = [];
     let results = ref();
@@ -74,9 +95,16 @@ export default defineComponent({
     let propIndex = ref(0);
     let showModal = ref(false);
     //ADD AND DELETE ITEMS
+    let router = useRouter();
 
-    function closeModal() {
-      showModal.value = !showModal.value;
+    function closeList() {
+      router.go(-1);
+    }
+
+    async function addWorkout(index, workoutname) {
+      console.log("in addWorkout");
+      await planStore.workoutToArray(currentIndex, workoutname);
+      router.go(-1);
     }
 
     //value for CSS animation
@@ -89,8 +117,9 @@ export default defineComponent({
       propIndex,
       showModal,
       informationCircleOutline,
-      closeModal,
+      closeList,
       addOutline,
+      addWorkout,
     };
   },
 });
@@ -143,6 +172,10 @@ ul {
   margin-top: 0px;
   border-top: 1px solid grey;
   animation: list-in 0.5s ease-out forwards;
+}
+
+li {
+  height: 15%;
 }
 
 @keyframes list-in {

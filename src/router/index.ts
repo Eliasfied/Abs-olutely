@@ -13,6 +13,7 @@ import createPlanName from "../components/createPlanName.vue";
 import createPlanWeeks from "../components/createPlanWeeks.vue";
 import createPlanDays from "../components/createPlanDays.vue";
 import createPlanCustomize from "../components/createPlanCustomize.vue";
+import WorkoutList from "../components/WorkoutList.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -68,6 +69,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "createPlanCustomize",
     component: createPlanCustomize,
   },
+  {
+    path: "/workoutList",
+    name: "workoutList",
+    component: WorkoutList,
+  },
+
   {
     path: "/exerciseList",
     name: "ExerciseListPage",
