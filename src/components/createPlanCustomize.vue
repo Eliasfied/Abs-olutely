@@ -23,7 +23,9 @@ m
             </li>
           </ul>
         </div>
-        <div class="button-div"><ion-button>Next</ion-button></div>
+        <div class="button-div">
+          <ion-button @click="goToPreview">Finish</ion-button>
+        </div>
         <div class="point-div"></div>
       </div>
     </ion-content>
@@ -50,14 +52,23 @@ export default defineComponent({
     let weeks = planStore.planWeeks;
     let router = useRouter();
     let weekArray = ref([]) as any;
+    let dayArray = [] as any;
     planStore.setArray(weekArray);
     console.log(weekArray);
     let index1 = ref(0) as any;
 
-    for (let i = 1; i < weeks + 1; i++) {
-      planStore.pushArray({ name: "Week" + i, workout: "no workout added yet", days: days + " Days per Week" });
+    for (let i = 1; i < days + 1; i++) {
+      dayArray.push({ day: "Workout " + i });
     }
-    
+
+    for (let i = 1; i < weeks + 1; i++) {
+      planStore.pushArray({
+        name: "Week" + i,
+        workout: "no workout added yet",
+        days: days + " Days per Week",
+        dayArray: dayArray,
+      });
+    }
 
     function addWorkout(index) {
       console.log("kommt noch");
@@ -70,6 +81,11 @@ export default defineComponent({
       router.push("/workoutList");
     }
 
+    function goToPreview() {
+      console.log("go to" + name);
+      router.push("/planPreview/" + name);
+    }
+
     return {
       name,
       constructSharp,
@@ -80,6 +96,7 @@ export default defineComponent({
       addWorkout,
       router,
       index1,
+      goToPreview,
     };
   },
 });

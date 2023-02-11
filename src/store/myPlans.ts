@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-
 export const useMyPlanStore = defineStore("myPlans", {
   state: () => ({
     planList: [] as any[],
@@ -13,6 +12,10 @@ export const useMyPlanStore = defineStore("myPlans", {
   }),
 
   actions: {
+    setDayInArray() {
+      this.weekArray[2].dayArray[1].day = "test";
+    },
+
     setPlanName(name: any) {
       console.log("planName before in store");
       console.log(name);
@@ -34,9 +37,7 @@ export const useMyPlanStore = defineStore("myPlans", {
       this.weekArray = array;
     },
     pushArray(week) {
-      
       this.weekArray.push(week);
-      
     },
     async workoutToArray(index, workoutname) {
       console.log("der index:");
