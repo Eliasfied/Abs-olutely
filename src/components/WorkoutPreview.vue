@@ -79,7 +79,7 @@
             class="add-button"
             shape="round"
             @click="startWorkout"
-            color="success"
+            color="warning"
             ><ion-icon
               size="large"
               slot="start"
@@ -296,7 +296,7 @@ export default defineComponent({
 .li-card {
   /* border: 1px solid black; */
   height: 100%;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  box-shadow: rgba(0, 0, 0, 0.01) 0px 10px 20px, rgba(0, 0, 0, 0.05) 0px 6px 6px;
 }
 
 .exercise-name-div {

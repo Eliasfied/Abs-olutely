@@ -27,7 +27,7 @@
             ></ion-icon>
           </div>
           <div class="input-workoutname">
-            <ion-item lines="none">
+            <ion-item color="medium" lines="none">
               <ion-label class="input-label" position="stacked">Name</ion-label>
               <ion-input
                 :maxlength="20"
@@ -110,11 +110,12 @@
                             ><ion-icon
                               class="reorder-icon"
                               :icon="reorderTwoOutline"
+                              color="secondary"
                             ></ion-icon
                           ></ion-reorder>
                         </div>
                         <div class="label-workoutnameCard">
-                          <ion-label class="center-workoutname">{{
+                          <ion-label color="secondary" class="center-workoutname">{{
                             exercise.name
                           }}</ion-label>
                         </div>
@@ -151,7 +152,7 @@
             class="add-button"
             shape="round"
             @click="getList"
-            color="success"
+            color="warning"
             ><ion-icon
               size="large"
               slot="start"
@@ -524,6 +525,7 @@ export default defineComponent({
   grid-template-rows: [row1-start] 40% [row1-end] 60% [row2-start];
   grid-template-columns: [column1-start] 50% [column1-end] 20% [column2-start] 20% [column2-end] 10% [column3-start];
   border-radius: 0px 0px 20px 20px;
+  background-color:  skyblue;
 }
 
 .exercise-time {
@@ -534,13 +536,13 @@ export default defineComponent({
 }
 
 .exercise-time ion-icon {
-  color: gray;
+  color: white;
   vertical-align: middle;
   padding: 5px;
 }
 
 .exercise-time ion-label {
-  color: gray;
+  color: white;
   vertical-align: text-top;
 }
 
@@ -552,13 +554,13 @@ export default defineComponent({
 }
 
 .break-time ion-icon {
-  color: gray;
+  color: white;
   vertical-align: middle;
   padding: 5px;
 }
 
 .break-time ion-label {
-  color: gray;
+  color: white;
   vertical-align: text-top;
 }
 
@@ -570,7 +572,7 @@ export default defineComponent({
 }
 
 .edit-time ion-icon {
-  color: gray;
+  color: white;
   vertical-align: bottom;
 }
 
@@ -582,7 +584,7 @@ export default defineComponent({
 }
 
 .safeExercise ion-icon {
-  color: gray;
+  color: white;
   vertical-align: middle;
 }
 
@@ -592,11 +594,15 @@ export default defineComponent({
 
 .input-label {
   font-weight: lighter;
-  color: grey;
+  color: white;
+
 }
 ion-item {
   border: none;
   outline: none;
+  
+ 
+
 }
 
 .item-has-focus ion-label {
@@ -604,8 +610,9 @@ ion-item {
 }
 ion-input {
   font-weight: bold;
-  color: black;
-  caret-color: black;
+  color: white;
+  caret-color: white;
+  
 }
 
 .back-icon {
@@ -670,6 +677,7 @@ ion-input {
   grid-column: column1-start / column1-end;
   align-self: center;
   justify-self: start;
+  background-color: skyblue;
 }
 
 .select-exercise-length {
@@ -763,7 +771,7 @@ ul {
 }
 
 ion-card {
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  
 }
 .list-exercises {
   width: 100%;
@@ -775,6 +783,7 @@ ion-card {
   display: grid;
   grid-template-rows: [row1] 100% [row2];
   grid-template-columns: [colmumn1-start] 10% [column1-end] 70% [column2-start] 20% [column2-end];
+  height: 100%;
 }
 
 .reorder-div {
@@ -804,7 +813,9 @@ ion-card {
 .ion-card-content {
   /* color: var(--ion-color-primary); */
   font-size: medium;
+  height: 100%;
   /* font-weight: bold; */
+  
 }
 
 .icon-trash {
@@ -836,7 +847,12 @@ ion-card {
 }
 
 .li-card {
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  background-color: lightpink;
+  height: 100%;
+}
+
+li {
+  
 }
 
 ion-alert.custom-alert {

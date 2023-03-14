@@ -13,7 +13,8 @@ export const useMyPlanStore = defineStore("myPlans", {
 
   actions: {
     setDayInArray() {
-      this.weekArray[2].dayArray[1].day = "test";
+      console.log(this.weekArray[2].array[1].day);
+      this.weekArray[2].array[1].day = "test";
     },
 
     setPlanName(name: any) {

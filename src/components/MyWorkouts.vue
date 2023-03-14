@@ -3,12 +3,7 @@
     <the-footer title="My Workouts"></the-footer>
     <ion-content color="tertiary" :fullscreen="true">
       <div class="grid-style-workouts">
-        <div class="add-workout">
-          <ion-button expand="block" @click="newWorkout" color="secondary"
-            ><ion-icon slot="start" color="success" :icon="addCircle"></ion-icon
-            ><ion-label color="primary"> Add Workout</ion-label>
-          </ion-button>
-        </div>
+        <div class="quickstart-text-div"><p>my Workouts</p></div>
         <div class="workout-list">
           <div v-if="isEmpty" class="no-workouts-text">
             <p>No Workouts yet...</p>
@@ -18,6 +13,12 @@
               <router-link class="routerLink" :to="'/preview/' + workout.name">
                 <ion-card>
                   <div class="grid-style-li">
+                    <div class="workout-icon">
+                      <ion-icon
+                        class="add-icon"
+                        :icon="bodyOutline"
+                      ></ion-icon>
+                    </div>
                     <div class="label-workoutname">
                       <ion-label>{{ workout.name }}</ion-label>
                     </div>
@@ -66,7 +67,7 @@
             @click="newWorkout"
             class="add-button"
             shape="round"
-            color="success"
+            color="warning"
             ><ion-icon
               size="large"
               slot="start"
@@ -85,7 +86,7 @@
 import { defineComponent } from "vue";
 import TheFooter from "../components/reusable/TheFooter.vue";
 import { useRouter } from "vue-router";
-import { IonPage, IonContent, IonCard, IonIcon, IonFooter } from "@ionic/vue";
+import { IonPage, IonContent, IonCard, IonIcon, IonFooter, IonLabel } from "@ionic/vue";
 import {
   addCircle,
   clipboardOutline,
@@ -95,6 +96,8 @@ import {
   hourglassOutline,
   barbellOutline,
   timeOutline,
+  receiptOutline,
+  bodyOutline,
 } from "ionicons/icons";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { ref, watch } from "vue";
@@ -108,6 +111,7 @@ export default defineComponent({
     IonCard,
     IonIcon,
     IonFooter,
+    IonLabel,
   },
   setup() {
     // STORE DATA
@@ -185,6 +189,8 @@ export default defineComponent({
       workoutLength,
       timePreview,
       getWorkoutLength,
+      receiptOutline,
+      bodyOutline,
     };
   },
 });
@@ -194,29 +200,53 @@ export default defineComponent({
 .grid-style-workouts {
   display: grid;
   height: 90%;
-  grid-template-rows: [row1-start] 10% [row1-end] 90% [row2-start];
+  grid-template-rows: [row1-start] 5% [row1-end] 95% [row2-start];
 }
 
 .grid-style-li {
   display: grid;
   height: 100%;
   grid-template-rows: [row1-start] 50% [row1-end] 50% [row2-start];
-  grid-template-columns: [column1-start] 50% [column1-end] 20% [column2-start] 15% [column2-end] 15% [column3-start];
+  grid-template-columns: [column1-start] 25% [column1-end] 40% [column2-start] 17.5% [column2-end] 17.5% [column3-start];
 }
+
+.quickstart-text-div {
+  width: 100%;
+  grid-row: row1-start / row1-end;
+}
+
+p {
+  color: black;
+  font-weight: bold;
+  margin-left: 3%;
+}
+
+.workout-icon {
+  grid-row: row1-start / row2-end;
+  grid-column: column1-start / column1-end;
+  align-self: center;
+  justify-self: center;
+}
+
+.add-icon {
+  font-size: 64px;
+  color: white;
+}
+
 .label-workoutname {
   grid-row: row1-start / row1-end;
-  grid-column: column1-start / column1-end;
+  grid-column: column1-end / column2-start;
   align-self: end;
   justify-self: start;
   padding: 5%;
   color: var(--ion-color-primary);
   font-weight: bold;
-  font-size: larger;
+  font-size: 18px;
 }
 
 .workout-time {
   grid-row: row1-end / row2-start;
-  grid-column: column1-start / column1-end;
+  grid-column: column1-end / column2-start;
   align-self: start;
   justify-self: start;
   padding: 5%;
@@ -245,23 +275,15 @@ export default defineComponent({
 .style-time {
   margin-right: 5px;
   vertical-align: middle;
-  color: gray;
+  color: white;
 }
 
 .style-label {
   vertical-align: text-top;
-  color: gray;
+  color: white;
 }
 
 .exercise-time {
-  grid-row: row1-start / row1-end;
-  grid-column: column1-end / column2-start;
-  align-self: center;
-  justify-self: center;
-  padding: 5%;
-}
-
-.break-time {
   grid-row: row1-start / row1-end;
   grid-column: column2-start / column2-end;
   align-self: center;
@@ -269,24 +291,32 @@ export default defineComponent({
   padding: 5%;
 }
 
+.break-time {
+  grid-row: row1-start / row1-end;
+  grid-column: column2-end / column3-start;
+  align-self: center;
+  justify-self: center;
+  padding: 5%;
+}
+
 .exercise-time ion-icon {
-  color: gray;
+  color: white;
   vertical-align: middle;
   padding: 5px;
 }
 
 .exercise-time ion-label {
-  color: gray;
+  color: white;
   vertical-align: text-top;
 }
 
 .break-time ion-icon {
-  color: gray;
+  color: white;
   vertical-align: middle;
 }
 
 .break-time ion-label {
-  color: gray;
+  color: white;
   vertical-align: middle;
 }
 
@@ -303,7 +333,7 @@ ion-icon {
 
 li {
   width: 100%;
-  height: 15%;
+  height: 17.5%;
 }
 
 ul {
@@ -315,9 +345,11 @@ ul {
 
 ion-card {
   height: 100%;
-  /* border: 1px solid black; */
+  background-color: skyblue;
+}
 
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 20px, rgba(0, 0, 0, 0.1) 0px 6px 6px;
+ion-label {
+  color: white;
 }
 
 .add-workout {
@@ -381,5 +413,6 @@ ion-footer {
   bottom: 7%;
   left: 50%;
   transform: translateX(-50%);
+  color: burlywood;
 }
 </style>

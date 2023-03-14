@@ -42,8 +42,8 @@ export default defineComponent({
     console.log(weekArray[0]);
 
     let selectedWeek = computed(() => {
-      console.log(weekArray[selectedDay.value].dayArray);
-      return weekArray[selectedDay.value].dayArray;
+      console.log(weekArray[selectedDay.value].array);
+      return weekArray[selectedDay.value].array;
     });
 
     function changeWeek(index) {

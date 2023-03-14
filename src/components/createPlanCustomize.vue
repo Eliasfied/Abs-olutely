@@ -66,7 +66,7 @@ export default defineComponent({
         name: "Week" + i,
         workout: "no workout added yet",
         days: days + " Days per Week",
-        dayArray: dayArray,
+        array: JSON.parse(JSON.stringify(dayArray)),
       });
     }
 
