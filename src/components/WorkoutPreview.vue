@@ -43,7 +43,7 @@
               >
                 <div class="card-grid">
                   <div class="title-div">
-                    <ion-card-header
+                    <ion-card-header class="card-header"
                       ><ion-card-title class="card-title">
                         {{ exercise.name }}</ion-card-title
                       ></ion-card-header
@@ -386,11 +386,17 @@ li {
 }
 
 .card-title {
-  color: black !important;
+  color: #80abca !important;
 }
 .exercise-img {
   height: 100%;
   width: 100%;
+}
+
+
+.title-div {
+  align-self: center;
+
 }
 
 .card-label {
@@ -438,6 +444,8 @@ ion-footer {
   left: 50%;
   transform: translateX(-50%);
 }
+
+
 
 .time-calculate {
   grid-row: row1-end / row2-start;

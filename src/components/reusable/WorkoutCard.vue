@@ -107,7 +107,7 @@ export default defineComponent({
 }
 
 ion-card {
-  background-color: skyblue;
+  background-color: #bce3f7;
   color: white;
 }
 

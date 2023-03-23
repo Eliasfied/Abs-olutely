@@ -262,7 +262,7 @@ export default defineComponent({
   justify-content: flex-start;
   align-items: center;
   gap: 5%;
-  background-color: lightpink;
+  background-color: #dbbfdd;
   padding: 5%;
 }
 .myPlans-card {
@@ -271,7 +271,7 @@ export default defineComponent({
   justify-content: flex-start;
   align-items: center;
   gap: 5%;
-  background-color: burlywood;
+  background-color: #80abca;
   padding: 5%;
 }
 .myWorkouts-card {
@@ -280,7 +280,7 @@ export default defineComponent({
   justify-content: flex-start;
   align-items: center;
   gap: 5%;
-  background-color: burlywood;
+  background-color: #80abca;
   padding: 5%;
 }
 .settings-card {
@@ -289,7 +289,7 @@ export default defineComponent({
   justify-content: flex-start;
   align-items: center;
   gap: 5%;
-  background-color: lightslategray;
+  background-color: #80abca;
   padding: 5%;
 }
 p {

@@ -44,13 +44,13 @@
         <div class="top-list">
           <ul>
             <li v-for="(item, index) in list" :key="item.index">
-              <ion-card>
+              <ion-card color="medium">
                 <div class="grid-style-li">
                   <div class="workout-name">
-                    <ion-label>{{ item.workoutname }}</ion-label>
+                    <ion-label color="secondary">{{ item.workoutname }}</ion-label>
                   </div>
                   <div class="workout-time">
-                    <ion-icon class="style-time" :icon="timeOutline"></ion-icon>
+                    <ion-icon color="secondary" class="style-time" :icon="timeOutline"></ion-icon>
                     <ion-label class="style-label"
                       >{{ item.minutes }} Min.</ion-label
                     >
@@ -250,6 +250,7 @@ li {
 
 ion-card {
   height: 100%;
+  color: var(--ion-color-medium);
 }
 
 .grid-style-li {
@@ -301,7 +302,7 @@ ion-card {
 
 .style-label {
   vertical-align: middle;
-  color: gray;
+  color: white;
 }
 
 .calendar-div {

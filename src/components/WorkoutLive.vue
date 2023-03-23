@@ -9,7 +9,7 @@
         <div class="item-nextExercise">{{ nextExercise }}</div>
 
         <div class="item-arrowLeft">
-          <ion-button :disabled="disabled" @click="backToLastExercise">
+          <ion-button color="light" :disabled="disabled" @click="backToLastExercise">
             <ion-icon color="secondary" :icon="playBack"></ion-icon
           ></ion-button>
         </div>
@@ -17,12 +17,12 @@
           <img :src="getImgUrl()" alt="" />
         </div>
         <div class="item-arrowRight">
-          <ion-button :disabled="disabled" @click="forwardToNextExercise">
+          <ion-button color="light" :disabled="disabled" @click="forwardToNextExercise">
             <ion-icon color="secondary" :icon="playForward"></ion-icon
           ></ion-button>
         </div>
         <div class="item-pauseButton">
-          <ion-button :disabled="disabled" @click="pauseWorkout">
+          <ion-button color="light" :disabled="disabled" @click="pauseWorkout">
             <ion-icon color="secondary" :icon="togglePauseButton"></ion-icon
           ></ion-button>
         </div>
@@ -355,12 +355,16 @@ export default defineComponent({
   grid-template-columns: [line1] 25% [line2] 50% [line3] 25% [line4];
 }
 
+ion-button {
+  color: #80abca;
+}
+
 .item-timer {
   justify-self: center;
   align-self: center;
   grid-column: line1 / line2;
   grid-row: row1-start / row1-end;
-  color: var(--ion-color-primary);
+  color: var(--ion-color-light);
   font-weight: bold;
   font-size: 28px;
 }
@@ -370,7 +374,7 @@ export default defineComponent({
   align-self: center;
   grid-column: line3 / line4;
   grid-row: row1-start / row1-end;
-  color: var(--ion-color-primary);
+  color: var(--ion-color-light);
   font-weight: bold;
   font-size: 28px;
 }
@@ -380,7 +384,7 @@ export default defineComponent({
   align-self: end;
   grid-column: line2 / line3;
   grid-row: row1-start / row1-end;
-  color: var(--ion-color-primary);
+  color: var(--ion-color-light);
   font-weight: bold;
   font-size: 28px;
 }

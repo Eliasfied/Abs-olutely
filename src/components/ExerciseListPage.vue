@@ -16,7 +16,7 @@
               <ion-card @click="showDetails(index)">
                 <div class="card-grid">
                   <div class="title-div">
-                    <ion-label>{{  result.number + " " + result.name  }}</ion-label>
+                    <ion-label color="light">{{  result.number + " " + result.name  }}</ion-label>
                     
                   </div>
                   <div class="img-div">

@@ -33,7 +33,7 @@
                   ></ion-icon>
                 </div>
                 <div class="title-div">
-                  <ion-label>{{ exercise.number + " " + exercise.name }}</ion-label>
+                  <ion-label color="light">{{ exercise.number + " " + exercise.name }}</ion-label>
                 </div>
                 <div class="img-div">
                   <img

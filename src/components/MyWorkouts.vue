@@ -345,7 +345,7 @@ ul {
 
 ion-card {
   height: 100%;
-  background-color: skyblue;
+  background-color: #bce3f7;
 }
 
 ion-label {
@@ -413,6 +413,6 @@ ion-footer {
   bottom: 7%;
   left: 50%;
   transform: translateX(-50%);
-  color: burlywood;
+  color: #dbbfdd;
 }
 </style>

@@ -110,12 +110,12 @@
                             ><ion-icon
                               class="reorder-icon"
                               :icon="reorderTwoOutline"
-                              color="secondary"
+                              color="light"
                             ></ion-icon
                           ></ion-reorder>
                         </div>
                         <div class="label-workoutnameCard">
-                          <ion-label color="secondary" class="center-workoutname">{{
+                          <ion-label color="light" class="center-workoutname">{{
                             exercise.name
                           }}</ion-label>
                         </div>
@@ -525,7 +525,7 @@ export default defineComponent({
   grid-template-rows: [row1-start] 40% [row1-end] 60% [row2-start];
   grid-template-columns: [column1-start] 50% [column1-end] 20% [column2-start] 20% [column2-end] 10% [column3-start];
   border-radius: 0px 0px 20px 20px;
-  background-color:  skyblue;
+  background-color:  #bce3f7;
 }
 
 .exercise-time {
@@ -677,7 +677,7 @@ ion-input {
   grid-column: column1-start / column1-end;
   align-self: center;
   justify-self: start;
-  background-color: skyblue;
+  background-color: #bce3f7;
 }
 
 .select-exercise-length {
@@ -847,7 +847,7 @@ ion-card {
 }
 
 .li-card {
-  background-color: lightpink;
+  background-color: white;
   height: 100%;
 }
 
