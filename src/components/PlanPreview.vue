@@ -1,6 +1,7 @@
 <template>
-  <ion-page
-    ><ion-content>
+  <ion-page>
+    <the-footer title="Planpreview"> </the-footer>
+    <ion-content>
       <div class="grid-page">
         <div class="weeks-div">
           <ul class="week-list">
@@ -9,50 +10,58 @@
               v-for="(week, index) in weekArray"
               :key="week"
             >
-              <ion-card @click="changeWeek(index)">{{ week.name }}</ion-card>
+              <ion-card 
+                :class="{ 'selected-card': index === selectedCardIndex }" 
+                @click="changeWeek(index)"
+              >
+                {{ week.name }}
+              </ion-card>
             </li>
           </ul>
         </div>
         <div class="days-div">
           <ul>
             <li v-for="day in selectedWeek" :key="day">
-              <ion-card>{{ day.day }}</ion-card>
+              <ion-card>
+                {{ day.day }} {{ weekArray[weekIndex].workout }}
+              </ion-card>
             </li>
           </ul>
         </div>
       </div>
-    </ion-content></ion-page
-  >
+    </ion-content>
+  </ion-page>
 </template>
-
 <script lang="ts">
 import { defineComponent } from "vue";
 import { IonContent, IonPage } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
 import { computed, ref } from "vue";
+import TheFooter from "../components/reusable/TheFooter.vue";
+
 
 export default defineComponent({
   name: "WorkoutPlan",
-  components: { IonContent, IonPage },
+  components: { IonContent, IonPage, TheFooter },
   setup() {
     let planStore = useMyPlanStore();
     let selectedDay = ref(1);
+    let weekIndex = ref(0);
+    let selectedCardIndex = ref(0);
 
     let weekArray = planStore.weekArray;
-    console.log(weekArray[0]);
 
     let selectedWeek = computed(() => {
-      console.log(weekArray[selectedDay.value].array);
       return weekArray[selectedDay.value].array;
     });
 
     function changeWeek(index) {
-      planStore.setDayInArray();
+      selectedCardIndex.value = index;
+      weekIndex.value = index;
       selectedDay.value = index;
-      console.log(weekArray);
     }
 
-    return { weekArray, selectedDay, selectedWeek, changeWeek };
+    return { weekArray, selectedDay, selectedWeek, changeWeek, weekIndex, selectedCardIndex };
   },
 });
 </script>
@@ -65,5 +74,9 @@ export default defineComponent({
 
 .week-listitem {
   display: inline-block;
+}
+
+.selected-card {
+  background-color: green;
 }
 </style>

@@ -39,6 +39,7 @@ import { constructSharp } from "ionicons/icons";
 import { IonContent, IonPage, IonLabel, IonIcon, IonCard } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
 import { useRouter } from "vue-router";
+import planStorage from "../storage/myPlanStorage";
 
 export default defineComponent({
   name: "WorkoutPlan",
@@ -54,7 +55,7 @@ export default defineComponent({
     let weekArray = ref([]) as any;
     let dayArray = [] as any;
     planStore.setArray(weekArray);
-    console.log(weekArray);
+    console.log("this is weekarray:" + weekArray);
     let index1 = ref(0) as any;
 
     for (let i = 1; i < days + 1; i++) {
@@ -83,6 +84,9 @@ export default defineComponent({
 
     function goToPreview() {
       console.log("go to" + name);
+      let sendArray = JSON.parse(JSON.stringify(weekArray.value));
+      console.log("das ist sendArray" + sendArray);
+      planStorage.setItem(name, sendArray);
       router.push("/planPreview/" + name);
     }
 

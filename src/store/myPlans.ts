@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { getPlanList } from "@/composables/getMyPlanList";
 
 export const useMyPlanStore = defineStore("myPlans", {
   state: () => ({
@@ -9,9 +10,15 @@ export const useMyPlanStore = defineStore("myPlans", {
     planDays: 0,
     weekArray: [] as any[],
     currentIndex: 0,
+    
+
   }),
 
   actions: {
+
+    async loadWorkoutsFromStore() {
+      this.planList = await getPlanList();
+    },
     setDayInArray() {
       console.log(this.weekArray[2].array[1].day);
       this.weekArray[2].array[1].day = "test";

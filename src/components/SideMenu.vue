@@ -15,7 +15,7 @@
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item
-            router-link="/workoutplan"
+            router-link="/myPlans"
             class="list-item"
             color="secondary"
             ><ion-icon slot="start" :icon="readerOutline"></ion-icon>

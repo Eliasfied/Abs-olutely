@@ -169,7 +169,7 @@ export default defineComponent({
 
 
     function toMyPlans() {
-      router.push("/workoutPlan");
+      router.push("/myPlans");
     }
     function toMyWorkouts() {
       router.push("/myworkouts");
