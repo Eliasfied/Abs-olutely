@@ -167,9 +167,9 @@ export default defineComponent({
     let proplist;
     if (page == "beginner" || page == "advanced" || page == "champ") {
       store = useWorkoutsStore();
+    } else {
+      store = useMyWorkoutsStore();
     }
-
-    store = useMyWorkoutsStore();
     console.log(store);
     list = store.workoutList.find((element) => element.name == page);
     console.log("LIST: ");

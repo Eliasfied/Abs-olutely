@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <the-footer title="Planpreview"> </the-footer>
-    <ion-content>
+    <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-page">
         <div class="weeks-div">
           <ul class="week-list">
@@ -21,8 +21,9 @@
         </div>
         <div class="days-div">
           <ul>
-            <li v-for="day, in selectedWeek" :key="day">
+            <li v-for="(day) in selectedWeek" :key="day">
               <ion-card @click="goToWorkout(weekIndex)">
+                <!-- {{ weekArray.weeks[weekIndex].array[0].dayInt }} -->
                 {{ weekArray.weeks[weekIndex].weekWorkout }}
               </ion-card>
             </li>
