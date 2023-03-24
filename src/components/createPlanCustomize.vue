@@ -16,9 +16,8 @@ m
           <ul>
             <li v-for="(week, index) in weekArray" :key="index">
               <ion-card class="list-card" @click="addWorkout(index)">
-                {{ week.name }}
-                {{ week.workout }}
-                {{ week.days }}
+                {{ week.weekInt }}
+                {{ week.weekWorkout }}
               </ion-card>
             </li>
           </ul>
@@ -59,14 +58,13 @@ export default defineComponent({
     let index1 = ref(0) as any;
 
     for (let i = 1; i < days + 1; i++) {
-      dayArray.push({ day: "Workout " + i });
+      dayArray.push({ dayInt: i });
     }
 
     for (let i = 1; i < weeks + 1; i++) {
       planStore.pushArray({
-        name: "Week" + i,
-        workout: "no workout added yet",
-        days: days + " Days per Week",
+        weekInt: i,
+        weekWorkout: "no workout added yet",
         array: JSON.parse(JSON.stringify(dayArray)),
       });
     }
@@ -84,8 +82,17 @@ export default defineComponent({
 
     function goToPreview() {
       console.log("go to" + name);
-      let sendArray = JSON.parse(JSON.stringify(weekArray.value));
+      let parseArray = JSON.parse(JSON.stringify(weekArray.value));
+      let sendArray = {
+        planName: name,
+        currentDay: 1,
+        currentWeek: 1,
+        totalDays: weeks * days,
+        weeks: parseArray,
+
+      }
       console.log("das ist sendArray" + sendArray);
+      //sendArray.name = name;
       planStorage.setItem(name, sendArray);
       router.push("/planPreview/" + name);
     }

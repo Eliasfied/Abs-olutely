@@ -15,6 +15,7 @@ let bicycle;
 let breakExercise;
 async function loadAll() {
 
+ // await defaultWorkouts.clear();
   
 
   plank = await getExercise("Plank");

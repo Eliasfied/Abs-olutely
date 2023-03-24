@@ -2,12 +2,14 @@
   <ion-page>
     <the-footer title="myPlans"> </the-footer>
     <ion-content>
-      <div>
-        <ul>
-          <li v-for="plan in plans" :key="plan">
-            {{ plan }}
-          </li>
-        </ul>
+      <div class="list-container">
+        <ion-card class="plan-card" v-for="plan in plans" :key="plan" @click="goToPlanPreview(plan.planName)">
+          <ion-card-content>
+            <ion-label>
+              {{ plan.planName }}
+            </ion-label>
+          </ion-card-content>
+        </ion-card>
       </div>
     </ion-content>
   </ion-page>
@@ -20,8 +22,6 @@ import {
   IonPage,
   IonContent,
   IonCard,
-  IonIcon,
-  IonFooter,
   IonLabel,
 } from "@ionic/vue";
 import { ref, watch } from "vue";
@@ -35,22 +35,54 @@ export default defineComponent({
     IonPage,
     IonContent,
     TheFooter,
+    IonCard,
+    IonLabel,
   },
   setup() {
-    let plans: any = ref([]);
+    const router = useRouter();
+    const plans:any = ref([]);
 
     async function loadStore() {
       const store = useMyPlanStore();
-      await store.loadWorkoutsFromStore();
+      await store.loadPlansFromStore();
       plans.value = store.planList;
     }
+
+    function goToPlanPreview(planName: string) {
+      router.push("/planPreview/" + planName);
+    }
+
     loadStore();
-    console.log("plans final: ");
-    console.log(plans);
 
     return {
       plans,
+      goToPlanPreview,
     };
   },
 });
 </script>
+<style scoped>
+.list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.plan-card {
+  width: 90%;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.plan-card ion-card-content {
+  display: flex;
+  justify-content: center;
+}
+
+.plan-card ion-label {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333333;
+}
+</style>

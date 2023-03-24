@@ -87,7 +87,7 @@ export default defineComponent({
       (data) => {
         console.log("error", data);
       }
-    );
+    ); 
     // only in landscape mode (plugin)
     window.screen.orientation.lock("landscape");
 

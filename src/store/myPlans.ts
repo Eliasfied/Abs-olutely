@@ -16,7 +16,7 @@ export const useMyPlanStore = defineStore("myPlans", {
 
   actions: {
 
-    async loadWorkoutsFromStore() {
+    async loadPlansFromStore() {
       this.planList = await getPlanList();
     },
     setDayInArray() {
@@ -50,7 +50,7 @@ export const useMyPlanStore = defineStore("myPlans", {
     async workoutToArray(index, workoutname) {
       console.log("der index:");
       console.log(index);
-      this.weekArray[index].workout = workoutname;
+      this.weekArray[index].weekWorkout = workoutname;
       console.log("this is the array:");
       console.log(this.weekArray);
     },

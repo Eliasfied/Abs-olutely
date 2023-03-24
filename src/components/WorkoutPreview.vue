@@ -5,9 +5,13 @@
         class="grid-style-top"
         :style="{ 'background-image': 'url(' + getImgUrl() + ')' }"
       >
-      <div class="back-button-div">
-        <ion-icon @click="backToMenu" :icon="arrowBackOutline" size="large" ></ion-icon>
-      </div>
+        <div class="back-button-div">
+          <ion-icon
+            @click="backToMenu"
+            :icon="arrowBackOutline"
+            size="large"
+          ></ion-icon>
+        </div>
         <div class="exercise-name-div">
           <ion-label class="exercise-name-label">{{ list.name }}</ion-label>
         </div>
@@ -128,7 +132,12 @@ import { computed } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { ref } from "vue";
-import { play, barbellOutline, timeOutline, arrowBackOutline } from "ionicons/icons";
+import {
+  play,
+  barbellOutline,
+  timeOutline,
+  arrowBackOutline,
+} from "ionicons/icons";
 import ExerciseDetail from "../components/reusable/ExerciseDetail.vue";
 import WorkoutSelect from "./reusable/WorkoutSelect.vue";
 
@@ -153,18 +162,19 @@ export default defineComponent({
     const page = route.params.course;
     console.log("page");
     console.log(page);
+    let list;
     let store;
+    let proplist;
     if (page == "beginner" || page == "advanced" || page == "champ") {
       store = useWorkoutsStore();
-    } else {
-      store = useMyWorkoutsStore();
     }
-    console.log(store);
 
-    const list = store.workoutList.find((element) => element.name == page);
+    store = useMyWorkoutsStore();
+    console.log(store);
+    list = store.workoutList.find((element) => element.name == page);
     console.log("LIST: ");
     console.log(list);
-    let proplist = list.exercises;
+    proplist = list.exercises;
 
     function getImgUrl() {
       if (page == "beginner" || page == "advanced" || page == "champ") {
@@ -197,7 +207,7 @@ export default defineComponent({
       showModal.value = !showModal.value;
     }
 
-    function backToMenu () {
+    function backToMenu() {
       router.push("/home");
     }
 
@@ -262,7 +272,7 @@ export default defineComponent({
       barbellOutline,
       timeOutline,
       arrowBackOutline,
-      backToMenu
+      backToMenu,
     };
   },
 });
@@ -308,10 +318,9 @@ export default defineComponent({
 
 .back-button-div {
   grid-row: row1-start / row1-end;
-  grid-column: line1 /line2;
+  grid-column: line1 / line2;
   justify-self: start;
   align-self: center;
-
 }
 
 .exercise-name-label {
@@ -393,10 +402,8 @@ li {
   width: 100%;
 }
 
-
 .title-div {
   align-self: center;
-
 }
 
 .card-label {
@@ -444,8 +451,6 @@ ion-footer {
   left: 50%;
   transform: translateX(-50%);
 }
-
-
 
 .time-calculate {
   grid-row: row1-end / row2-start;

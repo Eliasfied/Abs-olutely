@@ -7,23 +7,23 @@
           <ul class="week-list">
             <li
               class="week-listitem"
-              v-for="(week, index) in weekArray"
+              v-for="(week, index) in weekArray.weeks"
               :key="week"
             >
-              <ion-card 
-                :class="{ 'selected-card': index === selectedCardIndex }" 
+              <ion-card
+                :class="{ 'selected-card': index === selectedCardIndex }"
                 @click="changeWeek(index)"
               >
-                {{ week.name }}
+                {{ week.weekInt }}
               </ion-card>
             </li>
           </ul>
         </div>
         <div class="days-div">
           <ul>
-            <li v-for="day in selectedWeek" :key="day">
-              <ion-card>
-                {{ day.day }} {{ weekArray[weekIndex].workout }}
+            <li v-for="day, in selectedWeek" :key="day">
+              <ion-card @click="goToWorkout(weekIndex)">
+                {{ weekArray.weeks[weekIndex].weekWorkout }}
               </ion-card>
             </li>
           </ul>
@@ -36,23 +36,38 @@
 import { defineComponent } from "vue";
 import { IonContent, IonPage } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
+import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { computed, ref } from "vue";
 import TheFooter from "../components/reusable/TheFooter.vue";
+import { useRoute, useRouter } from "vue-router";
 
 
 export default defineComponent({
   name: "WorkoutPlan",
   components: { IonContent, IonPage, TheFooter },
   setup() {
+    const router = useRouter();
+    const route = useRoute();
+    const page = route.params.plan;
+    const store = useMyWorkoutsStore();
+    store.loadWorkoutsFromStore();
     let planStore = useMyPlanStore();
-    let selectedDay = ref(1);
+    planStore.loadPlansFromStore();
+    console.log(planStore);
+    console.log("page " + page);
+
+    let weekArray = planStore.planList.find(
+      (element) => element.planName == page
+    );
+
+    let selectedDay = ref(0);
     let weekIndex = ref(0);
     let selectedCardIndex = ref(0);
 
-    let weekArray = planStore.weekArray;
-
     let selectedWeek = computed(() => {
-      return weekArray[selectedDay.value].array;
+      console.log("check");
+      console.log(weekArray);
+      return weekArray.weeks[selectedDay.value];
     });
 
     function changeWeek(index) {
@@ -61,7 +76,20 @@ export default defineComponent({
       selectedDay.value = index;
     }
 
-    return { weekArray, selectedDay, selectedWeek, changeWeek, weekIndex, selectedCardIndex };
+    function goToWorkout(index) {
+      let workoutName = weekArray.weeks[index].weekWorkout;
+      router.push("/preview/" + workoutName);
+    }
+
+    return {
+      weekArray,
+      selectedDay,
+      selectedWeek,
+      changeWeek,
+      weekIndex,
+      selectedCardIndex,
+      goToWorkout,
+    };
   },
 });
 </script>
