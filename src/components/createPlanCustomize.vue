@@ -1,6 +1,7 @@
 m
 <template>
   <ion-page>
+    <the-footer title="customize"> </the-footer>
     <ion-content color="tertiary">
       <div class="grid-page">
         <div></div>
@@ -39,12 +40,18 @@ import { IonContent, IonPage, IonLabel, IonIcon, IonCard } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
 import { useRouter } from "vue-router";
 import planStorage from "../storage/myPlanStorage";
+import TheFooter from "../components/reusable/TheFooter.vue";
 
 export default defineComponent({
   name: "WorkoutPlan",
-  components: { IonContent, IonPage, IonLabel, IonIcon, IonCard },
+  components: { IonContent, IonPage, IonLabel, IonIcon, IonCard, TheFooter },
   setup() {
-    let planStore = useMyPlanStore();
+    let planStore;
+    planStore = useMyPlanStore();
+    async function loadStore() {
+      await planStore.loadPlansFromStore();
+    }
+
     let name = planStore.planName;
     console.log("name plan");
     console.log(name);
@@ -80,7 +87,7 @@ export default defineComponent({
       router.push("/workoutList");
     }
 
-    function goToPreview() {
+    async function goToPreview() {
       console.log("go to" + name);
       let parseArray = JSON.parse(JSON.stringify(weekArray.value));
       let sendArray = {
@@ -89,11 +96,11 @@ export default defineComponent({
         currentWeek: 1,
         totalDays: weeks * days,
         weeks: parseArray,
-
-      }
+      };
       console.log("das ist sendArray" + sendArray);
       //sendArray.name = name;
-      planStorage.setItem(name, sendArray);
+      await planStorage.setItem(name, sendArray);
+      await loadStore();
       router.push("/planPreview/" + name);
     }
 

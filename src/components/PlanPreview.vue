@@ -3,6 +3,11 @@
     <the-footer title="Planpreview"> </the-footer>
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-page">
+        <div class="plan-name">
+          <ion-label color="primary">
+            {{ weekArray.planName }}
+          </ion-label>
+        </div>
         <div class="weeks-div">
           <ul class="week-list">
             <li
@@ -21,7 +26,7 @@
         </div>
         <div class="days-div">
           <ul>
-            <li v-for="(day) in selectedWeek" :key="day">
+            <li v-for="day in selectedWeek" :key="day">
               <ion-card @click="goToWorkout(weekIndex)">
                 <!-- {{ weekArray.weeks[weekIndex].array[0].dayInt }} -->
                 {{ weekArray.weeks[weekIndex].weekWorkout }}
@@ -35,17 +40,16 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import { IonContent, IonPage } from "@ionic/vue";
+import { IonContent, IonPage, IonLabel } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { computed, ref } from "vue";
 import TheFooter from "../components/reusable/TheFooter.vue";
 import { useRoute, useRouter } from "vue-router";
 
-
 export default defineComponent({
   name: "WorkoutPlan",
-  components: { IonContent, IonPage, TheFooter },
+  components: { IonContent, IonPage, TheFooter, IonLabel },
   setup() {
     const router = useRouter();
     const route = useRoute();
@@ -54,6 +58,7 @@ export default defineComponent({
     store.loadWorkoutsFromStore();
     let planStore = useMyPlanStore();
     planStore.loadPlansFromStore();
+
     console.log(planStore);
     console.log("page " + page);
 
@@ -95,6 +100,24 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+.grid-page {
+  display: grid;
+  height: 90%;
+  grid-template-rows: [row1-start] 10% [row1-end] 20% [row2-start] 70% [row2-end];
+}
+
+.plan-name {
+  grid-template-rows: row1-start / row1-end;
+}
+
+.weeks-div {
+  grid-template-rows: row1-end / row2-start;
+}
+
+.days-div {
+  grid-template-rows: row2-start / row2-end;
+}
+
 .week-list {
   overflow-x: scroll;
   overflow-y: hidden;
