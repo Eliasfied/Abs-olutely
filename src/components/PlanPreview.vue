@@ -3,10 +3,16 @@
     <the-footer title="Planpreview"> </the-footer>
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-page">
+        <div class="plan-headline-name">
+         <p>Plan Name</p>
+        </div>
         <div class="plan-name">
-          <ion-label color="primary">
+          <ion-label class="plan-name-label" color="primary">
             {{ weekArray.planName }}
           </ion-label>
+        </div>
+        <div class="weeks-headline">
+          <p>Weeks</p>
         </div>
         <div class="weeks-div">
           <ul class="week-list">
@@ -16,19 +22,22 @@
               :key="week"
             >
               <ion-card
+                class="week-card"
                 :class="{ 'selected-card': index === selectedCardIndex }"
                 @click="changeWeek(index)"
               >
-                {{ week.weekInt }}
+                Week {{ week.weekInt }}
               </ion-card>
             </li>
           </ul>
         </div>
+        <div class="days-headline">
+          <p>Workouts this Week</p>
+        </div>
         <div class="days-div">
-          <ul>
-            <li v-for="day in selectedWeek" :key="day">
-              <ion-card @click="goToWorkout(weekIndex)">
-                <!-- {{ weekArray.weeks[weekIndex].array[0].dayInt }} -->
+          <ul class="days-ul">
+            <li class="days-li" v-for="day in selectedWeek" :key="day">
+              <ion-card class="days-card" @click="goToWorkout(weekIndex)">
                 {{ weekArray.weeks[weekIndex].weekWorkout }}
               </ion-card>
             </li>
@@ -72,14 +81,16 @@ export default defineComponent({
 
     let selectedWeek = computed(() => {
       console.log("check");
-      console.log(weekArray);
-      return weekArray.weeks[selectedDay.value];
+      console.log(weekArray.weeks);
+      return weekArray.weeks[selectedDay.value].array;
     });
 
     function changeWeek(index) {
       selectedCardIndex.value = index;
       weekIndex.value = index;
       selectedDay.value = index;
+      console.log("selectedWeek:" + selectedWeek.value);
+
     }
 
     function goToWorkout(index) {
@@ -100,35 +111,98 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+ul {
+  list-style: none;
+  padding: 0;
+}
+p {
+  color: black;
+  font-weight: bold;
+  margin-left: 3%;
+}
 .grid-page {
   display: grid;
   height: 90%;
-  grid-template-rows: [row1-start] 10% [row1-end] 20% [row2-start] 70% [row2-end];
+  grid-template-rows: [row1-start] 5% [row1-end] 10% [row2-start] 5% [row2-end]15% [row3-start]5% [row3-end]60% [row4-start];
+
+}
+
+.plan-headline-name {
+  grid-template-rows: row1-start / row1-end;
+
 }
 
 .plan-name {
-  grid-template-rows: row1-start / row1-end;
-}
-
-.weeks-div {
   grid-template-rows: row1-end / row2-start;
+  align-self: center;
+  justify-self: center;
 }
 
-.days-div {
+.plan-name-label {
+  font-size: x-large;
+  font-weight: bold;
+}
+.weeks-headline {
   grid-template-rows: row2-start / row2-end;
+  
+}
+.weeks-div {
+  grid-template-rows: row2-end / row3-start;
+  align-self: center;
+  justify-self: center;
+  height: 100%;
+  width: 100%;
+  
+}
+
+.days-headline {
+  grid-template-rows: row3-start / row3-end;
+
+}
+.days-div {
+  grid-template-rows: row3-end / row4-start;
+}
+
+.days-ul{
+height: 90%;
+}
+
+.days-li {
+height: 20%;
+}
+
+.days-card {
+height: 100%;
+background-color: var(--ion-color-medium);
 }
 
 .week-list {
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
+  height: 100%;
+  width: 100%;
+  
 }
 
 .week-listitem {
   display: inline-block;
+  height: 40%;
+  width: 20%;
+  margin: 10px;  
+}
+
+.week-card {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+background-color: var(--ion-color-warning);
+
+  
+
 }
 
 .selected-card {
-  background-color: green;
+  border: 2px solid black;
 }
 </style>
