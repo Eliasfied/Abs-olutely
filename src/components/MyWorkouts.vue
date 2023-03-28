@@ -14,10 +14,7 @@
                 <ion-card>
                   <div class="grid-style-li">
                     <div class="workout-icon">
-                      <ion-icon
-                        class="add-icon"
-                        :icon="bodyOutline"
-                      ></ion-icon>
+                      <ion-icon class="add-icon" :icon="bodyOutline"></ion-icon>
                     </div>
                     <div class="label-workoutname">
                       <ion-label>{{ workout.name }}</ion-label>
@@ -86,7 +83,14 @@
 import { defineComponent } from "vue";
 import TheFooter from "../components/reusable/TheFooter.vue";
 import { useRouter } from "vue-router";
-import { IonPage, IonContent, IonCard, IonIcon, IonFooter, IonLabel } from "@ionic/vue";
+import {
+  IonPage,
+  IonContent,
+  IonCard,
+  IonIcon,
+  IonFooter,
+  IonLabel,
+} from "@ionic/vue";
 import {
   addCircle,
   clipboardOutline,
