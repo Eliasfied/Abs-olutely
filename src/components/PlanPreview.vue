@@ -280,7 +280,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: start;
-  flex: 1;
+  flex: 6;
   height: 100%;
 }
 
