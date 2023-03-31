@@ -12,15 +12,17 @@
               {{ weekArray.planName }}
             </ion-label>
           </div>
-          <div id="app">
-            <div class="progress-ring">
-              <div class="progress-ring-circle">
-                <div class="progress-ring-fill" :style="{transform: 'rotate(' + percentageToDegrees(completedPercentage) + 'deg)', clip: 'rect(0, ' + fillSize + 'px, ' + size + 'px, ' + halfSize + 'px)'}"></div>
-              </div>
-            </div>
-            <div class="percentage">
-              <ion-label class="progress-label">{{percentage}}%</ion-label>
-            </div>
+
+          <div class="progress-bar-div">
+            <CircleProgressBar
+              class="progress-bar"
+              :value="7"
+              :max="10"
+              percentage="true"
+              animationDuration="1s"
+              :colorUnfilled="colorUnfilled"
+              :colorFilled="colorFilled"
+            />
           </div>
         </div>
 
@@ -56,17 +58,25 @@
         <div class="days-headline">
           <p>Workouts this Week</p>
         </div>
-        <div class="days-div" :class="{ shake: disabled }">
+        <div class="days-div" :class="{ fade: disabled }">
           <ul class="days-ul">
             <li
               class="days-li"
               v-for="(day, index) in selectedWeek"
               :key="index"
             >
-              <ion-card class="days-card" @click="goToWorkout(weekIndex)">
+              <ion-card
+                v-if="workouts"
+                class="days-card"
+                :class="dayState(index)"
+                @click="goToWorkout(weekIndex)"
+              >
                 <div class="grid-style-li">
                   <div class="workout-icon">
-                    <ion-icon class="add-icon" :icon="bodyOutline"></ion-icon>
+                    <ion-icon
+                      class="add-icon"
+                      :icon="barbellOutline"
+                    ></ion-icon>
                   </div>
                   <div class="label-workoutname">
                     <ion-label color="secondary">
@@ -90,9 +100,11 @@ import { defineComponent } from "vue";
 import { IonContent, IonPage, IonLabel } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import TheFooter from "../components/reusable/TheFooter.vue";
 import { useRoute, useRouter } from "vue-router";
+import { CircleProgressBar } from "vue3-m-circle-progress-bar";
+//import "vue3-m-circle-progress-bar/style.css";
 
 import {
   addCircle,
@@ -109,7 +121,7 @@ import {
 
 export default defineComponent({
   name: "WorkoutPlan",
-  components: { IonContent, IonPage, TheFooter, IonLabel },
+  components: { IonContent, IonPage, TheFooter, IonLabel, CircleProgressBar },
   setup() {
     const disabled = ref(false);
 
@@ -118,38 +130,12 @@ export default defineComponent({
     const page = route.params.plan;
     let workouts: any = ref([]);
     let isEmpty = ref(true);
-    let completedPercentage = ref(15);
-    let total = ref(15);
-    const size = ref(100)
-    const halfSize = computed(() => {
-      return size.value / 2
-    })
+
+    //progress-Kreis
+    let colorUnfilled = "#80abca";
+    let colorFilled = "green";
 
 
-    const percentage = computed(() => {
-      return Math.floor((completedPercentage.value / total.value) * 100)
-    })
-
-    const fillSize = computed(() => {
-      return Math.PI * size.value * (percentage.value / 100) * 2
-    })
-
-    function percentageToDegrees(percentage) {
-      return percentage / 100 * 360
-    }
-
-    watch(
-      workouts.value.length,
-      () => {
-        console.log("geht in watcher rein");
-        if (workouts.value.length > 0) {
-          isEmpty.value = false;
-        } else {
-          isEmpty.value = true;
-        }
-      },
-      { deep: true, immediate: true }
-    );
 
     let planStore = useMyPlanStore();
     planStore.loadPlansFromStore();
@@ -159,8 +145,9 @@ export default defineComponent({
       await store.loadWorkoutsFromStore();
       workouts.value = store.workoutList;
     }
-
-    loadStore();
+    onMounted(() => {
+      loadStore();
+    });
 
     console.log("workouts final: ");
     console.log(workouts);
@@ -185,6 +172,14 @@ export default defineComponent({
     let selectedDay = ref(0);
     let weekIndex = ref(0);
     let selectedCardIndex = ref(0);
+    let selectedDayIndex = ref(0);
+    console.log("dayState:");
+    const dayState = computed(() => (index) => ({
+  'workout-done': weekArray.weeks[selectedCardIndex.value].array[index].state == 'done',
+  'workout-today': weekArray.weeks[selectedCardIndex.value].array[index].state == 'today',
+  'workout-open': weekArray.weeks[selectedCardIndex.value].array[index].state == 'open'
+
+}));
 
     let selectedWeek = computed(() => {
       console.log("check");
@@ -197,6 +192,9 @@ export default defineComponent({
       weekIndex.value = index;
       selectedDay.value = index;
       console.log("selectedWeek:" + selectedWeek.value);
+      // weekArray.weeks[2].array[0].state = "done";
+      // weekArray.weeks[1].array[2].state = "today";
+
       disabled.value = true;
       setTimeout(() => {
         disabled.value = false;
@@ -228,14 +226,11 @@ export default defineComponent({
       bodyOutline,
       showWorkoutLength,
       disabled,
-      completedPercentage,
-      total,
-      percentage,
-      percentageToDegrees,
-      halfSize,
-      size,
-      fillSize,
-
+      colorUnfilled,
+      colorFilled,
+      selectedDayIndex,
+      dayState,
+      workouts,
     };
   },
 });
@@ -317,42 +312,15 @@ p {
   margin-left: 3%;
 }
 
-.progress-label {
-  color: var(--ion-color-light);
-  font-weight: bold;
-}
-
-.progress-ring {
-  position: relative;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto;
-  transform: rotate(-90deg);
-}
-
-.progress-ring-circle {
-  width: 100%;
+.progress-bar-div {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  flex: 3;
   height: 100%;
-  border-radius: 50%;
-  background-color: #eee;
-  position: relative;
 }
-
-.progress-ring-fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: #80abca;
-  clip: rect(0, 50px, 100px, 0);
-}
-
-.percentage {
-  margin-top: 10px;
-  font-size: 16px;
-  text-align: center;
+.progress-bar {
+  color: #80abca;
 }
 
 .weeks-headline {
@@ -377,31 +345,23 @@ p {
   height: 90%;
 }
 
-.shake {
-  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-  transform: translate3d(0, 0, 0);
+.fade {
+  animation: fade 0.5s ease-in;
+  opacity: 1;
 }
 
-@keyframes shake {
-  10%,
-  90% {
-    transform: translate3d(-1px, 0, 0);
+@keyframes fade {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
   }
-
-  20%,
-  80% {
-    transform: translate3d(2px, 0, 0);
+  50% {
+    opacity: 0.5;
+    transform: translateY(0);
   }
-
-  30%,
-  50%,
-  70% {
-    transform: translate3d(-4px, 0, 0);
-  }
-
-  40%,
-  60% {
-    transform: translate3d(4px, 0, 0);
+  100% {
+    opacity: 1;
+    transform: translateY(-2px);
   }
 }
 .days-li {
@@ -437,6 +397,16 @@ p {
 
 .selected-card {
   background-color: #ba8cbf;
+}
+
+.workout-done {
+  background-color: #d3e6f0;
+}
+.workout-today {
+  background-color: yellow;
+}
+.workout-open {
+  background-color: #bce3f7;
 }
 
 .grid-style-li {

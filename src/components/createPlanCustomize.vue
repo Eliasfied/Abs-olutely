@@ -65,7 +65,7 @@ export default defineComponent({
     let index1 = ref(0) as any;
 
     for (let i = 1; i < days + 1; i++) {
-      dayArray.push({ dayInt: i });
+      dayArray.push({ dayInt: i, state: "open" });
     }
 
     for (let i = 1; i < weeks + 1; i++) {

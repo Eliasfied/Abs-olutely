@@ -14,7 +14,7 @@
                 <ion-card>
                   <div class="grid-style-li">
                     <div class="workout-icon">
-                      <ion-icon class="add-icon" :icon="bodyOutline"></ion-icon>
+                      <ion-icon class="add-icon" :icon="barbellOutline"></ion-icon>
                     </div>
                     <div class="label-workoutname">
                       <ion-label>{{ workout.name }}</ion-label>
