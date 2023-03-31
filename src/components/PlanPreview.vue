@@ -7,11 +7,20 @@
           <p>Plan Name</p>
         </div>
         <div class="plan-name-container">
-          <div class="plan-icon"><ion-icon :icon="clipboard"></ion-icon></div>
           <div class="plan-name">
             <ion-label class="plan-name-label" color="secondary">
               {{ weekArray.planName }}
             </ion-label>
+          </div>
+          <div id="app">
+            <div class="progress-ring">
+              <div class="progress-ring-circle">
+                <div class="progress-ring-fill" :style="{transform: 'rotate(' + percentageToDegrees(completedPercentage) + 'deg)', clip: 'rect(0, ' + fillSize + 'px, ' + size + 'px, ' + halfSize + 'px)'}"></div>
+              </div>
+            </div>
+            <div class="percentage">
+              <ion-label class="progress-label">{{percentage}}%</ion-label>
+            </div>
           </div>
         </div>
 
@@ -47,9 +56,13 @@
         <div class="days-headline">
           <p>Workouts this Week</p>
         </div>
-        <div class="days-div">
+        <div class="days-div" :class="{ shake: disabled }">
           <ul class="days-ul">
-            <li class="days-li" v-for="(day, index) in selectedWeek" :key="day">
+            <li
+              class="days-li"
+              v-for="(day, index) in selectedWeek"
+              :key="index"
+            >
               <ion-card class="days-card" @click="goToWorkout(weekIndex)">
                 <div class="grid-style-li">
                   <div class="workout-icon">
@@ -98,11 +111,32 @@ export default defineComponent({
   name: "WorkoutPlan",
   components: { IonContent, IonPage, TheFooter, IonLabel },
   setup() {
+    const disabled = ref(false);
+
     const router = useRouter();
     const route = useRoute();
     const page = route.params.plan;
     let workouts: any = ref([]);
     let isEmpty = ref(true);
+    let completedPercentage = ref(15);
+    let total = ref(15);
+    const size = ref(100)
+    const halfSize = computed(() => {
+      return size.value / 2
+    })
+
+
+    const percentage = computed(() => {
+      return Math.floor((completedPercentage.value / total.value) * 100)
+    })
+
+    const fillSize = computed(() => {
+      return Math.PI * size.value * (percentage.value / 100) * 2
+    })
+
+    function percentageToDegrees(percentage) {
+      return percentage / 100 * 360
+    }
 
     watch(
       workouts.value.length,
@@ -134,32 +168,12 @@ export default defineComponent({
     function showWorkoutLength(name) {
       console.log(workouts.value);
       const newArray = workouts.value.filter((element) => element.name == name);
-      //   let witzig = Math.round(
-      //   (newArray.value[0].exerciseTime *
-      //   newArray.value[0].exercises.length +
-      //     (newArray.value[0].breakTime *
-      //     newArray.value[0].exercises.length -
-      //     newArray.value[0].breakTime)) /
-      //     60
-      // );
 
       console.log("newArray");
       console.log(newArray);
-      //console.log(witzig);
-      //return calculateWorkouttime(newArray[0]);
+
       return newArray;
     }
-
-    //  function calculateWorkouttime(index) {
-    //   return Math.round(
-    //     (workouts.value[index].exerciseTime *
-    //       workouts.value[index].exercises.length +
-    //       (workouts.value[index].breakTime *
-    //         workouts.value[index].exercises.length -
-    //         workouts.value[index].breakTime)) /
-    //       60
-    //   );
-    // }
 
     console.log(planStore);
     console.log("page " + page);
@@ -183,6 +197,10 @@ export default defineComponent({
       weekIndex.value = index;
       selectedDay.value = index;
       console.log("selectedWeek:" + selectedWeek.value);
+      disabled.value = true;
+      setTimeout(() => {
+        disabled.value = false;
+      }, 1000);
     }
 
     function goToWorkout(index) {
@@ -209,7 +227,15 @@ export default defineComponent({
       receiptOutline,
       bodyOutline,
       showWorkoutLength,
-      //calculateWorkouttime,
+      disabled,
+      completedPercentage,
+      total,
+      percentage,
+      percentageToDegrees,
+      halfSize,
+      size,
+      fillSize,
+
     };
   },
 });
@@ -284,21 +310,49 @@ p {
   height: 100%;
 }
 
-.plan-icon {
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  flex: 1;
-  height: 100%;
-  font-size: 32px;
-  color: var(--ion-color-light);
-  margin-left: 10%;
-}
-
 .plan-name-label {
   font-size: x-large;
   font-weight: bold;
   color: var(--ion-color-light);
+  margin-left: 3%;
+}
+
+.progress-label {
+  color: var(--ion-color-light);
+  font-weight: bold;
+}
+
+.progress-ring {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #eee;
+  position: relative;
+}
+
+.progress-ring-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #80abca;
+  clip: rect(0, 50px, 100px, 0);
+}
+
+.percentage {
+  margin-top: 10px;
+  font-size: 16px;
+  text-align: center;
 }
 
 .weeks-headline {
@@ -323,6 +377,33 @@ p {
   height: 90%;
 }
 
+.shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
 .days-li {
   height: 20%;
 }
@@ -355,7 +436,7 @@ p {
 }
 
 .selected-card {
-  border: 2px solid purple;
+  background-color: #ba8cbf;
 }
 
 .grid-style-li {

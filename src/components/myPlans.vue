@@ -38,6 +38,7 @@
             class="add-button"
             shape="round"
             color="warning"
+            @click="addPlan()"
             ><ion-icon
               size="large"
               slot="start"
@@ -97,6 +98,10 @@ export default defineComponent({
       router.push("/planPreview/" + planName);
     }
 
+    function addPlan() {
+      router.push("/workoutPlan")
+    }
+
     loadStore();
 
     return {
@@ -113,6 +118,7 @@ export default defineComponent({
       receiptOutline,
       bodyOutline,
       readerOutline,
+      addPlan,
     };
   },
 });
