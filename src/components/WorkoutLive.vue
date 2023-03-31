@@ -52,6 +52,9 @@ import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { KeepAwake } from "@capacitor-community/keep-awake";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { NativeAudio } from "@ionic-native/native-audio";
+import { useMyPlanStore } from "../store/myPlans";
+import planStorage from "../storage/myPlanStorage";
+
 import {
   playBack,
   playForward,
