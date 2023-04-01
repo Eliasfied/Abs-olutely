@@ -69,7 +69,7 @@
                 v-if="workouts"
                 class="days-card"
                 :class="dayState(index)"
-                @click="goToWorkout(weekIndex)"
+                @click="goToWorkout(weekIndex, index)"
               >
                 <div class="grid-style-li">
                   <div class="workout-icon">
@@ -104,7 +104,7 @@ import { computed, ref, watch, onMounted } from "vue";
 import TheFooter from "../components/reusable/TheFooter.vue";
 import { useRoute, useRouter } from "vue-router";
 import { CircleProgressBar } from "vue3-m-circle-progress-bar";
-//import "vue3-m-circle-progress-bar/style.css";
+import { useWorkoutPlanData } from "../store/workoutPlanData";
 
 import {
   addCircle,
@@ -135,7 +135,7 @@ export default defineComponent({
     let colorUnfilled = "#80abca";
     let colorFilled = "green";
 
-
+    const workoutPlanDataStore = useWorkoutPlanData();
 
     let planStore = useMyPlanStore();
     planStore.loadPlansFromStore();
@@ -144,6 +144,8 @@ export default defineComponent({
       const store = useMyWorkoutsStore();
       await store.loadWorkoutsFromStore();
       workouts.value = store.workoutList;
+      console.log("workouts");
+      console.log(workouts.value);
     }
     onMounted(() => {
       loadStore();
@@ -175,11 +177,13 @@ export default defineComponent({
     let selectedDayIndex = ref(0);
     console.log("dayState:");
     const dayState = computed(() => (index) => ({
-  'workout-done': weekArray.weeks[selectedCardIndex.value].array[index].state == 'done',
-  'workout-today': weekArray.weeks[selectedCardIndex.value].array[index].state == 'today',
-  'workout-open': weekArray.weeks[selectedCardIndex.value].array[index].state == 'open'
-
-}));
+      "workout-done":
+        weekArray.weeks[selectedCardIndex.value].array[index].state == "done",
+      "workout-today":
+        weekArray.weeks[selectedCardIndex.value].array[index].state == "today",
+      "workout-open":
+        weekArray.weeks[selectedCardIndex.value].array[index].state == "open",
+    }));
 
     let selectedWeek = computed(() => {
       console.log("check");
@@ -191,17 +195,21 @@ export default defineComponent({
       selectedCardIndex.value = index;
       weekIndex.value = index;
       selectedDay.value = index;
-      console.log("selectedWeek:" + selectedWeek.value);
-      // weekArray.weeks[2].array[0].state = "done";
-      // weekArray.weeks[1].array[2].state = "today";
-
+      console.log("selectedWeek:");
+      console.log(selectedWeek.value);
       disabled.value = true;
       setTimeout(() => {
         disabled.value = false;
       }, 1000);
     }
 
-    function goToWorkout(index) {
+
+
+    function goToWorkout(index, index2) {
+      console.log(weekIndex.value);
+      console.log(index2);
+      workoutPlanDataStore.weekNumber = weekIndex.value;
+      workoutPlanDataStore.dayNumber = index2;
       let workoutName = weekArray.weeks[index].weekWorkout;
       router.push("/preview/" + workoutName);
     }

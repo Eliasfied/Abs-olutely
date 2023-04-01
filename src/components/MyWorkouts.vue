@@ -135,7 +135,7 @@ export default defineComponent({
           isEmpty.value = true;
         }
       },
-      { deep: true, immediate: true }
+      { deep: true, immediate: true } 
     );
 
     async function loadStore() {

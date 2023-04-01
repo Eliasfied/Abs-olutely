@@ -25,7 +25,7 @@ import { useStatisticsStore } from "../store/statisticsStore";
 import { async } from "rxjs/internal/scheduler/async";
 import { useMyPlanStore } from "../store/myPlans";
 import planStorage from "../storage/myPlanStorage";
-
+import { useWorkoutPlanData } from "../store/workoutPlanData";
 
 export default defineComponent({
   name: "FinishedPage",
@@ -50,6 +50,12 @@ export default defineComponent({
     let myPlan: any = [];
     let isPlanWorkout = true;
 
+    let weekNumber = 4000;
+    let dayNumber = 4000;
+
+    const workoutPlanDataStore = useWorkoutPlanData();
+    weekNumber = workoutPlanDataStore.weekNumber;
+    dayNumber = workoutPlanDataStore.dayNumber;
 
     async function loadPlanStore() {
       const planStore = useMyPlanStore();
@@ -57,13 +63,21 @@ export default defineComponent({
       myPlan = planStore.planList[0];
     }
     loadPlanStore();
- 
-  
+
+    async function reloadPlanStore() {
+      const planStore = useMyPlanStore();
+      await planStore.loadPlansFromStore();
+    }
+
     async function updatePlan() {
-      if (isPlanWorkout == false) {
+      if (weekNumber == 4000 || dayNumber == 4000) {
         return;
       }
-      myPlan.weeks[1].array[2].state = "done";
+      console.log(myPlan);
+      console.log(weekNumber);
+      console.log(dayNumber);
+      myPlan.weeks[weekNumber].array[dayNumber].state = "done";
+      //myPlan.weeks[1+1].array[2+1].state = "today";
       let parseArray = JSON.parse(JSON.stringify(myPlan.weeks));
       let sendArray = {
         planName: myPlan.planName,
@@ -73,18 +87,15 @@ export default defineComponent({
         weeks: parseArray,
       };
       console.log("myplan.week1array2");
-      console.log( myPlan.weeks[1].array[2]);
+      console.log(myPlan.weeks[weekNumber].array[dayNumber]);
       console.log(myPlan);
       console.log(sendArray);
-      console.log();
       await planStorage.removeItem(myPlan.planName);
       await planStorage.setItem(sendArray.planName, sendArray);
-      loadPlanStore();
-
-
-
+      await reloadPlanStore()
+      //const planStore = useMyPlanStore();
+      // await planStore.workoutToArray
     }
-
 
     async function workoutToStatistics() {
       statisticStorage.setItem(id, {
@@ -93,7 +104,12 @@ export default defineComponent({
         calendarDate: today,
         minutes: props.proptime,
       });
-      await store.addToStatisticsList({workoutname: props.page, date: date, calendarDate: today, minutes: props.proptime});
+      await store.addToStatisticsList({
+        workoutname: props.page,
+        date: date,
+        calendarDate: today,
+        minutes: props.proptime,
+      });
     }
 
     watch(
@@ -101,8 +117,8 @@ export default defineComponent({
       (newValue) => {
         console.log(newValue);
         if (newValue == true) {
-          workoutToStatistics();
           updatePlan();
+          workoutToStatistics();
         }
       },
       { deep: true }
