@@ -393,6 +393,8 @@ export default defineComponent({
         console.log("listvalue");
         console.log(list.value);
         list.value.name = workoutName.value;
+        console.log("workout");
+        console.log(workout);
         await WorkoutStorage.setItem(workoutName.value, workout);
         //store.loadWorkoutsFromStore;
         router.push("/myworkouts");

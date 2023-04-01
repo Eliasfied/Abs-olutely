@@ -9,7 +9,11 @@
         <div class="item-nextExercise">{{ nextExercise }}</div>
 
         <div class="item-arrowLeft">
-          <ion-button color="light" :disabled="disabled" @click="backToLastExercise">
+          <ion-button
+            color="light"
+            :disabled="disabled"
+            @click="backToLastExercise"
+          >
             <ion-icon color="secondary" :icon="playBack"></ion-icon
           ></ion-button>
         </div>
@@ -17,7 +21,11 @@
           <img :src="getImgUrl()" alt="" />
         </div>
         <div class="item-arrowRight">
-          <ion-button color="light" :disabled="disabled" @click="forwardToNextExercise">
+          <ion-button
+            color="light"
+            :disabled="disabled"
+            @click="forwardToNextExercise"
+          >
             <ion-icon color="secondary" :icon="playForward"></ion-icon
           ></ion-button>
         </div>
@@ -75,9 +83,20 @@ export default defineComponent({
   },
 
   setup() {
+    let myPlan: any = ref([]);
+
     //onMounted
 
     onMounted(() => startWorkout());
+
+    async function loadPlanStore() {
+      const planStore = useMyPlanStore();
+      await planStore.loadPlansFromStore();
+      myPlan = planStore.planList[0];
+      console.log("myPlan:");
+      console.log(myPlan);
+    }
+    loadPlanStore();
 
     //audio
     NativeAudio.preloadSimple(
@@ -90,7 +109,7 @@ export default defineComponent({
       (data) => {
         console.log("error", data);
       }
-    ); 
+    );
     // only in landscape mode (plugin)
     window.screen.orientation.lock("landscape");
 

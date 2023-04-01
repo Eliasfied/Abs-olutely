@@ -19,9 +19,12 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { IonCard, IonButton } from "@ionic/vue";
-import { computed, watch } from "vue";
+import { computed, watch, ref } from "vue";
 import statisticStorage from "../storage/statisticsStorage";
 import { useStatisticsStore } from "../store/statisticsStore";
+import { async } from "rxjs/internal/scheduler/async";
+import { useMyPlanStore } from "../store/myPlans";
+import planStorage from "../storage/myPlanStorage";
 
 
 export default defineComponent({
@@ -44,6 +47,45 @@ export default defineComponent({
     console.log("date:");
     console.log(date);
 
+    let myPlan: any = [];
+    let isPlanWorkout = true;
+
+
+    async function loadPlanStore() {
+      const planStore = useMyPlanStore();
+      await planStore.loadPlansFromStore();
+      myPlan = planStore.planList[0];
+    }
+    loadPlanStore();
+ 
+  
+    async function updatePlan() {
+      if (isPlanWorkout == false) {
+        return;
+      }
+      myPlan.weeks[1].array[2].state = "done";
+      let parseArray = JSON.parse(JSON.stringify(myPlan.weeks));
+      let sendArray = {
+        planName: myPlan.planName,
+        currentDay: 1,
+        currentWeek: 1,
+        totalDays: 5 * 5,
+        weeks: parseArray,
+      };
+      console.log("myplan.week1array2");
+      console.log( myPlan.weeks[1].array[2]);
+      console.log(myPlan);
+      console.log(sendArray);
+      console.log();
+      await planStorage.removeItem(myPlan.planName);
+      await planStorage.setItem(sendArray.planName, sendArray);
+      loadPlanStore();
+
+
+
+    }
+
+
     async function workoutToStatistics() {
       statisticStorage.setItem(id, {
         workoutname: props.page,
@@ -60,6 +102,7 @@ export default defineComponent({
         console.log(newValue);
         if (newValue == true) {
           workoutToStatistics();
+          updatePlan();
         }
       },
       { deep: true }
