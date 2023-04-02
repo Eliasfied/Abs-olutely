@@ -16,8 +16,8 @@
           <div class="progress-bar-div">
             <CircleProgressBar
               class="progress-bar"
-              :value="7"
-              :max="10"
+              :value="workoutsDone"
+              :max="totalWorkouts"
               percentage="true"
               animationDuration="1s"
               :colorUnfilled="colorUnfilled"
@@ -127,7 +127,7 @@ export default defineComponent({
 
     const router = useRouter();
     const route = useRoute();
-    const page :any = route.params.plan;
+    const page: any = route.params.plan;
     let workouts: any = ref([]);
     let isEmpty = ref(true);
 
@@ -156,6 +156,13 @@ export default defineComponent({
         console.log("a change happened");
         console.log(mutation, state);
         weekArray = state.planList.find((element) => element.planName == page);
+        if (weekArray != undefined) {
+          workoutsDone.value =
+            weekArray.currentWeek * weekArray.weeks[0].array.length +
+            weekArray.currentDay;
+          totalWorkouts.value = weekArray.totalDays;
+          selectedCardIndex.value = weekArray.currentWeek;
+        }
       },
       { detached: true }
     );
@@ -181,18 +188,44 @@ export default defineComponent({
     );
 
     let selectedDay = ref(0);
-    let weekIndex = ref(0);
+    let weekIndex = ref(weekArray.currentWeek);
     let selectedCardIndex = ref(weekArray.currentWeek);
     let selectedDayIndex = ref(0);
     console.log("dayState:");
-    const dayState = computed(() => (index) => ({
-      "workout-done":
-        weekArray.weeks[selectedCardIndex.value].array[index].state == "done",
-      "workout-today":
-        weekArray.weeks[selectedCardIndex.value].array[index].state == "today",
-      "workout-open":
-        weekArray.weeks[selectedCardIndex.value].array[index].state == "open",
-    }));
+
+    let workoutsDone = ref(
+      weekArray.currentWeek * weekArray.weeks[0].array.length +
+        weekArray.currentDay
+    );
+    let totalWorkouts = ref(weekArray.totalDays);
+    console.log("totalWorkouts");
+    console.log(totalWorkouts);
+    // const dayState = computed(() => (index) => ({
+    //   "workout-done":
+    //     weekArray.weeks[selectedCardIndex.value].array[index].state == "done",
+    //   "workout-today":
+    //     weekArray.weeks[selectedCardIndex.value].array[index].state == "today",
+    //   "workout-open":
+    //     weekArray.weeks[selectedCardIndex.value].array[index].state == "open",
+    // }));
+
+    const dayState = computed(() => (index) => {
+      if (weekArray) {
+        return {
+          "workout-done":
+            weekArray.weeks[selectedCardIndex.value].array[index].state ==
+            "done",
+          "workout-today":
+            weekArray.weeks[selectedCardIndex.value].array[index].state ==
+            "today",
+          "workout-open":
+            weekArray.weeks[selectedCardIndex.value].array[index].state ==
+            "open",
+        };
+      } else {
+        return {};
+      }
+    });
 
     let selectedWeek = computed(() => {
       console.log("check");
@@ -247,6 +280,8 @@ export default defineComponent({
       selectedDayIndex,
       dayState,
       workouts,
+      workoutsDone,
+      totalWorkouts,
     };
   },
 });
@@ -337,6 +372,7 @@ p {
 }
 .progress-bar {
   color: #80abca;
+  font-weight: bold;
 }
 
 .weeks-headline {

@@ -77,14 +77,14 @@ const routes: Array<RouteRecordRaw> = [
     component: WorkoutList,
   },
   {
-    path: "/planPreview/:plan",
-    name: "PlanPreview",
-    component: PlanPreview,
-  },
-  {
     path: "/myPlans",
     name: "myPlans",
     component: myPlans
+  },
+  {
+    path: "/planPreview/:plan",
+    name: "PlanPreview",
+    component: PlanPreview,
   },
   {
     path: "/exerciseList",

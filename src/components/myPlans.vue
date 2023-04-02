@@ -7,11 +7,12 @@
         <div class="plan-list">
           <ul>
             <li
-              v-for="plan in plans"
+              v-for="(plan, index) in plans"
               :key="plan"
-              @click="goToPlanPreview(plan.planName)"
             >
-              <ion-card>
+              <ion-card 
+              @click="goToPlanPreview(plan.planName)"
+              >
                 <div class="grid-style-li">
                   <div class="plan-icon">
                     <ion-icon class="add-icon" :icon="readerOutline"></ion-icon>
@@ -22,7 +23,7 @@
 
                   <div class="icon-edit"></div>
                   <div class="icon-trash">
-                    <ion-icon class="icon-color-trash" :icon="trash"></ion-icon>
+                    <ion-icon @click.stop="deletePlan(index)" class="icon-color-trash" :icon="trash"></ion-icon>
                   </div>
                 </div>
               </ion-card>
@@ -56,7 +57,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
-import { IonPage, IonContent, IonCard, IonLabel } from "@ionic/vue";
+import { IonPage, IonContent, IonCard, IonLabel, IonIcon } from "@ionic/vue";
 import {
   addCircle,
   clipboardOutline,
@@ -83,6 +84,7 @@ export default defineComponent({
     TheFooter,
     IonCard,
     IonLabel,
+    IonIcon
   },
   setup() {
     const router = useRouter();
@@ -90,19 +92,24 @@ export default defineComponent({
     let store;
 
     async function loadStore() {
-       store = useMyPlanStore();
+      store = useMyPlanStore();
       await store.loadPlansFromStore();
       plans.value = store.planList;
     }
-
-    
 
     function goToPlanPreview(planName: string) {
       router.push("/planPreview/" + planName);
     }
 
     function addPlan() {
-      router.push("/workoutPlan")
+      router.push("/workoutPlan");
+    }
+
+    async function deletePlan(index) {
+      await planStorage.removeItem(plans.value[index].planName);
+      console.log("index workout: ");
+      console.log(index);
+      plans.value.splice(index, 1);
     }
 
     loadStore();
@@ -130,6 +137,7 @@ export default defineComponent({
       bodyOutline,
       readerOutline,
       addPlan,
+      deletePlan,
     };
   },
 });

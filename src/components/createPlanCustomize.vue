@@ -64,16 +64,34 @@ export default defineComponent({
     console.log("this is weekarray:" + weekArray);
     let index1 = ref(0) as any;
 
+    let dayArrayFirst = [] as any;
+
     for (let i = 1; i < days + 1; i++) {
       dayArray.push({ dayInt: i, state: "open" });
     }
 
+    for (let i = 1; i < days + 1; i++) {
+      if (i == 1) {
+        dayArrayFirst.push({ dayInt: i, state: "today" });
+      } else {
+        dayArrayFirst.push({ dayInt: i, state: "open" });
+      }
+    }
+
     for (let i = 1; i < weeks + 1; i++) {
-      planStore.pushArray({
-        weekInt: i,
-        weekWorkout: "no workout added yet",
-        array: JSON.parse(JSON.stringify(dayArray)),
-      });
+      if (i == 1) {
+        planStore.pushArray({
+          weekInt: i,
+          weekWorkout: "no workout added yet",
+          array: JSON.parse(JSON.stringify(dayArrayFirst)),
+        });
+      } else {
+        planStore.pushArray({
+          weekInt: i,
+          weekWorkout: "no workout added yet",
+          array: JSON.parse(JSON.stringify(dayArray)),
+        });
+      }
     }
 
     function addWorkout(index) {
