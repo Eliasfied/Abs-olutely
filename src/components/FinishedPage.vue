@@ -52,15 +52,19 @@ export default defineComponent({
 
     let weekNumber = 4000;
     let dayNumber = 4000;
+    let currentPlanName = "";
 
     const workoutPlanDataStore = useWorkoutPlanData();
     weekNumber = workoutPlanDataStore.weekNumber;
     dayNumber = workoutPlanDataStore.dayNumber;
+    currentPlanName = workoutPlanDataStore.currentPlanName;
 
     async function loadPlanStore() {
       const planStore = useMyPlanStore();
       await planStore.loadPlansFromStore();
-      myPlan = planStore.planList[0];
+      myPlan = planStore.planList.find(
+        (element) => element.planName == currentPlanName
+      );
     }
     loadPlanStore();
 
@@ -73,26 +77,30 @@ export default defineComponent({
       if (weekNumber == 4000 || dayNumber == 4000) {
         return;
       }
-      console.log(myPlan);
-      console.log(weekNumber);
-      console.log(dayNumber);
+
       myPlan.weeks[weekNumber].array[dayNumber].state = "done";
       //myPlan.weeks[1+1].array[2+1].state = "today";
+
+      if (myPlan.currentDay < myPlan.weeks[weekNumber].array.length - 1) {
+        myPlan.currentDay++;
+      } else {
+        myPlan.currentWeek++;
+        myPlan.currentDay = 0;
+      }
+      myPlan.weeks[myPlan.currentWeek].array[myPlan.currentDay].state = "today";
       let parseArray = JSON.parse(JSON.stringify(myPlan.weeks));
+
       let sendArray = {
         planName: myPlan.planName,
-        currentDay: 1,
-        currentWeek: 1,
-        totalDays: 5 * 5,
+        currentDay: myPlan.currentDay,
+        currentWeek: myPlan.currentWeek,
+        totalDays: myPlan.totalDays,
         weeks: parseArray,
       };
-      console.log("myplan.week1array2");
-      console.log(myPlan.weeks[weekNumber].array[dayNumber]);
-      console.log(myPlan);
-      console.log(sendArray);
+
       await planStorage.removeItem(myPlan.planName);
       await planStorage.setItem(sendArray.planName, sendArray);
-      await reloadPlanStore()
+      await reloadPlanStore();
       //const planStore = useMyPlanStore();
       // await planStore.workoutToArray
     }
@@ -115,7 +123,6 @@ export default defineComponent({
     watch(
       () => props.isFinished,
       (newValue) => {
-        console.log(newValue);
         if (newValue == true) {
           updatePlan();
           workoutToStatistics();
@@ -125,7 +132,6 @@ export default defineComponent({
     );
 
     const finishedImage = computed(() => {
-      console.log(props.page);
       return props.page == "beginner" ||
         props.page == "advanced" ||
         props.page == "champ"

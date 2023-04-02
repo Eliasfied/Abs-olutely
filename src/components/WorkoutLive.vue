@@ -89,14 +89,15 @@ export default defineComponent({
 
     onMounted(() => startWorkout());
 
-    async function loadPlanStore() {
-      const planStore = useMyPlanStore();
-      await planStore.loadPlansFromStore();
-      myPlan = planStore.planList[0];
-      console.log("myPlan:");
-      console.log(myPlan);
-    }
-    loadPlanStore();
+    // async function loadPlanStore() {
+    //   const planStore = useMyPlanStore();
+    //   await planStore.loadPlansFromStore();
+    //   myPlan = planStore.planList.find((element) => element.planName == page);
+
+    //   console.log("myPlan:");
+    //   console.log(myPlan);
+    // }
+    // loadPlanStore();
 
     //audio
     NativeAudio.preloadSimple(

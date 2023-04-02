@@ -127,7 +127,7 @@ export default defineComponent({
 
     const router = useRouter();
     const route = useRoute();
-    const page = route.params.plan;
+    const page :any = route.params.plan;
     let workouts: any = ref([]);
     let isEmpty = ref(true);
 
@@ -151,6 +151,15 @@ export default defineComponent({
       loadStore();
     });
 
+    planStore.$subscribe(
+      (mutation, state) => {
+        console.log("a change happened");
+        console.log(mutation, state);
+        weekArray = state.planList.find((element) => element.planName == page);
+      },
+      { detached: true }
+    );
+
     console.log("workouts final: ");
     console.log(workouts);
 
@@ -173,7 +182,7 @@ export default defineComponent({
 
     let selectedDay = ref(0);
     let weekIndex = ref(0);
-    let selectedCardIndex = ref(0);
+    let selectedCardIndex = ref(weekArray.currentWeek);
     let selectedDayIndex = ref(0);
     console.log("dayState:");
     const dayState = computed(() => (index) => ({
@@ -203,13 +212,12 @@ export default defineComponent({
       }, 1000);
     }
 
-
-
     function goToWorkout(index, index2) {
       console.log(weekIndex.value);
       console.log(index2);
       workoutPlanDataStore.weekNumber = weekIndex.value;
       workoutPlanDataStore.dayNumber = index2;
+      workoutPlanDataStore.currentPlanName = page;
       let workoutName = weekArray.weeks[index].weekWorkout;
       router.push("/preview/" + workoutName);
     }
@@ -411,7 +419,8 @@ p {
   background-color: #d3e6f0;
 }
 .workout-today {
-  background-color: yellow;
+  /* background-color: #e6bcf7; */
+  border: 2px solid #e6bcf7;
 }
 .workout-open {
   background-color: #bce3f7;

@@ -17,7 +17,7 @@ async function loadAll() {
   //     { week: 4, workout: "myWorkout4" },
   //   ],
   // });
-  //planStorage.clear();
+//planStorage.clear();
 }
 loadAll();
 

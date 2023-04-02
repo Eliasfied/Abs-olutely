@@ -92,8 +92,8 @@ export default defineComponent({
       let parseArray = JSON.parse(JSON.stringify(weekArray.value));
       let sendArray = {
         planName: name,
-        currentDay: 1,
-        currentWeek: 1,
+        currentDay: 0,
+        currentWeek: 0,
         totalDays: weeks * days,
         weeks: parseArray,
       };

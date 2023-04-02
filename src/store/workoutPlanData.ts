@@ -4,6 +4,7 @@ export const useWorkoutPlanData = defineStore("workoutPlanData", {
     state: () => ({
       weekNumber: 500,
       dayNumber: 500,
+      currentPlanName: ""
     }),
   
     actions: {
@@ -12,6 +13,9 @@ export const useWorkoutPlanData = defineStore("workoutPlanData", {
       },
       setDayNumber(day: any) {
         this.dayNumber = day;
+      },
+      setCurrentPlanName(name: any) {
+        this.currentPlanName = name;
       },
     },
 

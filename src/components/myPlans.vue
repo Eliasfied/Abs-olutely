@@ -87,12 +87,15 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const plans: any = ref([]);
+    let store;
 
     async function loadStore() {
-      const store = useMyPlanStore();
+       store = useMyPlanStore();
       await store.loadPlansFromStore();
       plans.value = store.planList;
     }
+
+    
 
     function goToPlanPreview(planName: string) {
       router.push("/planPreview/" + planName);
@@ -103,6 +106,14 @@ export default defineComponent({
     }
 
     loadStore();
+    store.$subscribe(
+      (mutation, state) => {
+        console.log("a change happened");
+        console.log(mutation, state);
+        plans.value = state.planList;
+      },
+      { detached: true }
+    );
 
     return {
       plans,
