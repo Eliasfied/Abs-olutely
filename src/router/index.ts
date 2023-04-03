@@ -52,22 +52,22 @@ const routes: Array<RouteRecordRaw> = [
     component: WorkoutLive,
   },
   {
-    path: "/workoutplan",
+    path: "/workoutplan/:id/createPlanName",
     name: "WorkoutPlan",
     component: createPlanName,
   },
   {
-    path: "/createPlanWeeks",
+    path: "/workoutplan/:id/createPlanWeeks",
     name: "createPlanWeeks",
     component: createPlanWeeks,
   },
   {
-    path: "/createPlanDays",
+    path: "/workoutplan/:id/createPlanDays",
     name: "createPlanDays",
     component: createPlanDays,
   },
   {
-    path: "/createPlanCustomize",
+    path: "/workoutplan/:id/createPlanCustomize",
     name: "createPlanCustomize",
     component: createPlanCustomize,
   },

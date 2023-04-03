@@ -21,7 +21,9 @@ m
             :value="4"
           ></ion-range>
         </div>
-        <div class="button-div"><ion-button @click="goToDays">Next</ion-button></div>
+        <div class="button-div">
+          <ion-button @click="goToDays">Next</ion-button>
+        </div>
         <div class="point-div"></div>
       </div>
     </ion-content>
@@ -35,7 +37,7 @@ import { calendarSharp } from "ionicons/icons";
 import { useRouter } from "vue-router";
 import { IonContent, IonPage, IonLabel, IonRange, IonIcon } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
-
+import useRouteId from "../composables/getPlanRouteID";
 
 export default defineComponent({
   name: "WorkoutPlan",
@@ -44,11 +46,16 @@ export default defineComponent({
     let planStore = useMyPlanStore();
     let name = ref("");
     let planDuration = ref(4);
+    let routeID = useRouteId();
 
     let router = useRouter();
     function goToDays() {
       planStore.setPlanWeeks(planDuration);
-      router.push("/createPlanDays");
+    console.log(routeID);
+      router.push({
+        path: "/workoutplan/" + routeID.currentRouteId + "/createPlanDays",
+        replace: true,
+      });
     }
 
     return {

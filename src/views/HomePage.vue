@@ -63,9 +63,7 @@
           <ion-card @click="toMyPlans" class="myPlans-card">
             <ion-icon class="add-icon" :icon="readerOutline"></ion-icon>
             <div class="label-flex-div">
-              <ion-label class="create-plan-label-headline"
-                >my Plans</ion-label
-              >
+              <ion-label class="create-plan-label-headline">my Plans</ion-label>
               <ion-label class="create-plan-label-text"
                 >my custom Plans</ion-label
               >
@@ -85,17 +83,17 @@
             </div>
           </ion-card>
         </div>
-        <div class="statistics-div"><ion-card @click="toMyWorkouts" class="settings-card">
+        <div class="statistics-div">
+          <ion-card @click="toMyWorkouts" class="settings-card">
             <ion-icon class="add-icon" :icon="settingsOutline"></ion-icon>
             <div class="label-flex-div">
-              <ion-label class="create-plan-label-headline"
-                >Settings</ion-label
-              >
+              <ion-label class="create-plan-label-headline">Settings</ion-label>
               <ion-label class="create-plan-label-text"
                 >check your Settings</ion-label
               >
             </div>
-          </ion-card></div>
+          </ion-card>
+        </div>
       </div>
     </ion-content>
   </ion-page>
@@ -109,9 +107,14 @@ import TheFooter from "../components/reusable/TheFooter.vue";
 import { ref } from "vue";
 import { onIonViewWillLeave } from "@ionic/vue";
 import WorkoutCard from "../../src/components/reusable/WorkoutCard.vue";
-import { addSharp, bookOutline, readerOutline, barbellOutline, settingsOutline } from "ionicons/icons";
+import {
+  addSharp,
+  bookOutline,
+  readerOutline,
+  barbellOutline,
+  settingsOutline,
+} from "ionicons/icons";
 import { useRouter } from "vue-router";
-
 
 export default defineComponent({
   name: "HomePage",
@@ -167,15 +170,20 @@ export default defineComponent({
 
     const router = useRouter();
 
-
     function toMyPlans() {
       router.push("/myPlans");
     }
     function toMyWorkouts() {
       router.push("/myworkouts");
     }
+    let routeID;
     function toCreatePlans() {
-      router.push("/workoutPlan");
+      routeID = Math.floor(Math.random() * 1000);
+
+      router.push({
+        path: "/workoutplan/" + routeID + "/createPlanName",
+        replace: true,
+      });
     }
 
     return {
@@ -193,7 +201,7 @@ export default defineComponent({
       toMyWorkouts,
       toMyPlans,
       toCreatePlans,
-      settingsOutline
+      settingsOutline,
     };
   },
 });

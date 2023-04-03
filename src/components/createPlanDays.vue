@@ -35,6 +35,7 @@ import { todaySharp } from "ionicons/icons";
 import { useRouter } from "vue-router";
 import { IonContent, IonPage, IonLabel, IonRange, IonIcon } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
+import useRouteId from "../composables/getPlanRouteID";
 
 
 export default defineComponent({
@@ -44,11 +45,13 @@ export default defineComponent({
     let planStore = useMyPlanStore();
     let name = ref("");
     let workoutsWeek = ref(3);
+    let routeID = useRouteId();
 
     let router = useRouter();
     function goToCustomize() {
       planStore.setPlanDays(workoutsWeek);
-      router.push("/createPlanCustomize");
+      router.push({path: "/workoutplan/" + routeID.currentRouteId + "/createPlanCustomize", replace: true});
+
     }
 
     return {

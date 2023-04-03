@@ -8,7 +8,9 @@
         <div class="label-div">
           <ion-label position="floating">Enter a Name for your Plan:</ion-label>
         </div>
-        <div class="input-div"><ion-input v-model="name" placeholder="my First Plan"></ion-input></div>
+        <div class="input-div">
+          <ion-input v-model="name" placeholder="my First Plan"></ion-input>
+        </div>
         <div class="button-div">
           <ion-button @click="goToWeeks">Next</ion-button>
         </div>
@@ -22,10 +24,10 @@
 import { defineComponent } from "vue";
 import { ref } from "vue";
 import { bookOutline, bookSharp } from "ionicons/icons";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { IonContent, IonPage, IonLabel, IonInput, IonIcon } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
-
+import useRouteId from "../composables/getPlanRouteID";
 
 export default defineComponent({
   name: "WorkoutPlan",
@@ -35,15 +37,15 @@ export default defineComponent({
     let planStore = useMyPlanStore();
     let name = ref("") as any;
 
+    let routeID = useRouteId();
 
     function goToWeeks() {
       planStore.setPlanName(name);
-      router.push("/createPlanWeeks");
+      router.push({
+        path: "/workoutplan/" + routeID.currentRouteId + "/createPlanWeeks",
+        replace: true,
+      });
     }
-
-
-
-
 
     return {
       name,

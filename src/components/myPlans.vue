@@ -6,13 +6,8 @@
         <div class="quickstart-text-div"><p>my Plans</p></div>
         <div class="plan-list">
           <ul>
-            <li
-              v-for="(plan, index) in plans"
-              :key="plan"
-            >
-              <ion-card 
-              @click="goToPlanPreview(plan.planName)"
-              >
+            <li v-for="(plan, index) in plans" :key="plan">
+              <ion-card @click="goToPlanPreview(plan.planName)">
                 <div class="grid-style-li">
                   <div class="plan-icon">
                     <ion-icon class="add-icon" :icon="readerOutline"></ion-icon>
@@ -23,7 +18,11 @@
 
                   <div class="icon-edit"></div>
                   <div class="icon-trash">
-                    <ion-icon @click.stop="deletePlan(index)" class="icon-color-trash" :icon="trash"></ion-icon>
+                    <ion-icon
+                      @click.stop="deletePlan(index)"
+                      class="icon-color-trash"
+                      :icon="trash"
+                    ></ion-icon>
                   </div>
                 </div>
               </ion-card>
@@ -84,7 +83,7 @@ export default defineComponent({
     TheFooter,
     IonCard,
     IonLabel,
-    IonIcon
+    IonIcon,
   },
   setup() {
     const router = useRouter();
@@ -101,8 +100,13 @@ export default defineComponent({
       router.push("/planPreview/" + planName);
     }
 
+    let routeID;
     function addPlan() {
-      router.push("/workoutPlan");
+      routeID = Math.floor(Math.random() * 1000);
+      router.push({
+        path: "/workoutplan/" + routeID + "/createPlanName",
+        replace: true,
+      });
     }
 
     async function deletePlan(index) {

@@ -7,10 +7,8 @@
         <img :src="finishedImage" alt="" />
       </div>
       <div class="finish-buttons">
-        <router-link to="/statistics" replace
-          ><ion-button @click="$emit('resetAll')" color="primary"
-            >Back To Menu</ion-button
-          ></router-link
+        ><ion-button @click="navigateBack()" color="primary"
+          >Back To Menu</ion-button
         >
       </div>
     </div>
@@ -22,16 +20,17 @@ import { IonCard, IonButton } from "@ionic/vue";
 import { computed, watch, ref } from "vue";
 import statisticStorage from "../storage/statisticsStorage";
 import { useStatisticsStore } from "../store/statisticsStore";
-import { async } from "rxjs/internal/scheduler/async";
 import { useMyPlanStore } from "../store/myPlans";
 import planStorage from "../storage/myPlanStorage";
 import { useWorkoutPlanData } from "../store/workoutPlanData";
+import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
   name: "FinishedPage",
   components: { IonCard, IonButton },
   props: ["page", "proptime", "isFinished"],
-  setup(props) {
+  emits: ["resetAll"],
+  setup(props, { emit }) {
     let finishText = "Good Job!";
     let finishSubtext = "Workout completed: " + props.page;
     let id = Date.now().toString();
@@ -39,6 +38,9 @@ export default defineComponent({
     var dd = String(today.getDate()).padStart(2, "0");
     var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
     var yyyy = today.getFullYear();
+
+    //routing
+    const router = useRouter();
 
     let store = useStatisticsStore();
 
@@ -48,7 +50,6 @@ export default defineComponent({
     console.log(date);
 
     let myPlan: any = [];
-    let isPlanWorkout = true;
 
     let weekNumber = 4000;
     let dayNumber = 4000;
@@ -74,7 +75,10 @@ export default defineComponent({
     }
 
     async function updatePlan() {
-      if (weekNumber == 4000 || dayNumber == 4000) {
+      console.log("numbers");
+      console.log(weekNumber);
+      console.log(dayNumber);
+      if (weekNumber == 500 || weekNumber == 4000) {
         return;
       }
 
@@ -139,7 +143,24 @@ export default defineComponent({
         : require("../assets/HomePageWorkoutImages/beginner.png");
     });
 
-    return { props, finishText, finishSubtext, finishedImage, date };
+    function navigateBack() {
+      if (weekNumber == 500 || weekNumber == 4000) {
+        router.push({ path: "/statistics", replace: true });
+        emit("resetAll");
+      } else {
+        router.push({ path: "/myPlans", replace: true });
+        emit("resetAll");
+      }
+    }
+
+    return {
+      props,
+      finishText,
+      finishSubtext,
+      finishedImage,
+      date,
+      navigateBack,
+    };
   },
 });
 </script>
