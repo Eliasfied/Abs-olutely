@@ -52,8 +52,23 @@ const routes: Array<RouteRecordRaw> = [
     component: WorkoutLive,
   },
   {
+    path: "/workoutList",
+    name: "workoutList",
+    component: WorkoutList,
+  },
+  {
+    path: "/myPlans",
+    name: "myPlans",
+    component: myPlans,
+  },
+  {
+    path: "/planPreview/:plan",
+    name: "PlanPreview",
+    component: PlanPreview,
+  },
+  {
     path: "/workoutplan/:id/createPlanName",
-    name: "WorkoutPlan",
+    name: "createPlanName",
     component: createPlanName,
   },
   {
@@ -70,21 +85,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/workoutplan/:id/createPlanCustomize",
     name: "createPlanCustomize",
     component: createPlanCustomize,
-  },
-  {
-    path: "/workoutList",
-    name: "workoutList",
-    component: WorkoutList,
-  },
-  {
-    path: "/myPlans",
-    name: "myPlans",
-    component: myPlans
-  },
-  {
-    path: "/planPreview/:plan",
-    name: "PlanPreview",
-    component: PlanPreview,
   },
   {
     path: "/exerciseList",

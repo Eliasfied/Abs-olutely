@@ -182,7 +182,6 @@ export default defineComponent({
 
       router.push({
         path: "/workoutplan/" + routeID + "/createPlanName",
-        replace: true,
       });
     }
 

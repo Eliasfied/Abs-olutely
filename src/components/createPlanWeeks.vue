@@ -21,27 +21,50 @@ m
             :value="4"
           ></ion-range>
         </div>
-        <div class="button-div">
-          <ion-button @click="goToDays">Next</ion-button>
-        </div>
-        <div class="point-div"></div>
       </div>
     </ion-content>
+    <ion-footer>
+      <div class="footer-grid">
+        <div class="addExercise">
+          <ion-button
+            class="add-button"
+            shape="round"
+            color="warning"
+            @click="goToDays()"
+          >
+            <ion-label color="secondary">Continue</ion-label>
+            <ion-icon
+              size="large"
+              slot="start"
+              color="secondary"
+              :icon="arrowForwardOutline"
+            ></ion-icon
+          ></ion-button>
+        </div>
+      </div>
+    </ion-footer>
   </ion-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { ref } from "vue";
-import { calendarSharp } from "ionicons/icons";
+import { calendarSharp, arrowForwardOutline } from "ionicons/icons";
 import { useRouter } from "vue-router";
-import { IonContent, IonPage, IonLabel, IonRange, IonIcon } from "@ionic/vue";
+import {
+  IonContent,
+  IonPage,
+  IonLabel,
+  IonRange,
+  IonIcon,
+  IonFooter,
+} from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
 import useRouteId from "../composables/getPlanRouteID";
 
 export default defineComponent({
-  name: "WorkoutPlan",
-  components: { IonContent, IonPage, IonLabel, IonRange, IonIcon },
+  name: "createPlanWeek",
+  components: { IonContent, IonPage, IonLabel, IonRange, IonIcon, IonFooter },
   setup() {
     let planStore = useMyPlanStore();
     let name = ref("");
@@ -51,16 +74,16 @@ export default defineComponent({
     let router = useRouter();
     function goToDays() {
       planStore.setPlanWeeks(planDuration);
-    console.log(routeID);
+      console.log(routeID);
       router.push({
         path: "/workoutplan/" + routeID.currentRouteId + "/createPlanDays",
-        replace: true,
       });
     }
 
     return {
       name,
       calendarSharp,
+      arrowForwardOutline,
       planDuration,
       goToDays,
     };
@@ -72,7 +95,7 @@ export default defineComponent({
 .grid-page {
   height: 100%;
   display: grid;
-  grid-template-rows: [row1-start]10%[row1-end] 30% [row2-start] 10% [row2-end] 5% [row3-start] 10% [row3-end] 5% [row4-start] 5% [row4-end];
+  grid-template-rows: [row1-start]10%[row1-end] 30% [row2-start] 15% [row2-end] 10% [row3-start] 15% [row3-end];
 }
 
 .icon-div {
@@ -83,16 +106,17 @@ export default defineComponent({
 
 ion-icon {
   font-size: 256px;
-  color: skyblue;
+  color: #dbbfdd;
 }
 
 .text-div {
   grid-row: row2-start / row2-end;
   justify-self: center;
+  align-self: center;
 }
 
 p {
-  color: black;
+  color: #80abca;
   font-size: 32px;
   font-weight: bold;
   margin: 0;
@@ -113,7 +137,7 @@ p {
 
 ion-label {
   font-size: 24px;
-  color: grey;
+  color: #80abca;
   text-align: center;
 }
 
@@ -123,9 +147,11 @@ ion-label {
   align-self: center;
   justify-self: center;
 }
-
-ion-input {
-  border: 2px solid black;
+ion-range::part(bar) {
+  background: #dbbfdd;
+}
+ion-range::part(bar-active) {
+  background: #80abca;
 }
 
 .button-div {
@@ -134,6 +160,31 @@ ion-input {
   justify-self: center;
 }
 
-ion-button {
+ion-footer {
+  height: 20%;
+}
+.footer-grid {
+  display: grid;
+  grid-template-rows: [row1-start] 20% [row1-end] 80% [row2-start];
+  grid-template-columns: [column1-start] 100% [column1-end];
+
+  height: 100%;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  border-top: 0.5px solid lightgray;
+}
+
+.addExercise {
+  grid-row: row1-start / row1-end;
+  width: 100%;
+  text-align: center;
+}
+
+.add-button {
+  position: fixed;
+  bottom: 17.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #dbbfdd;
 }
 </style>

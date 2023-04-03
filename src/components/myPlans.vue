@@ -105,7 +105,6 @@ export default defineComponent({
       routeID = Math.floor(Math.random() * 1000);
       router.push({
         path: "/workoutplan/" + routeID + "/createPlanName",
-        replace: true,
       });
     }
 

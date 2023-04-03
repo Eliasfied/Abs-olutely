@@ -83,7 +83,6 @@ export default defineComponent({
   },
 
   setup() {
-    let myPlan: any = ref([]);
 
     //onMounted
 
@@ -173,8 +172,11 @@ export default defineComponent({
     let i = 0;
     //image url
     function getImgUrl() {
+      console.log("currentExercise.value");
+      console.log(currentExercise.value);
       return isPrepare.value
-        ? require("../assets/exercises/Prepare.png")
+        //? require("../assets/exercises/Prepare.png")
+        ? require("../assets/exercises/" + list?.exercises[0].name + ".gif")
         : require("../assets/exercises/" + currentExercise.value + ".gif");
     }
 

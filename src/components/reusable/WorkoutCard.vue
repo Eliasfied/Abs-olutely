@@ -78,8 +78,8 @@ export default defineComponent({
 .card-grid{
   height: 100%;
   display: grid;
-  grid-template-rows: [row1-start] 20% [row1-end] 20% [row2-start] 60% [row2-end];
-  grid-template-columns: [column1-start] 5% [column1-end] 10% [column2-start] 10% [column2-end] 10% [column3-start] 65% [column3-end];
+  grid-template-rows: [row1-start] 25% [row1-end] 20% [row2-start] 55% [row2-end];
+  grid-template-columns: [column1-start] 5% [column1-end] 15% [column2-start] 15% [column2-end] 15% [column3-start] 50% [column3-end];
 }
 
 .workout-name{
@@ -112,6 +112,7 @@ ion-card {
 }
 
 ion-icon {
+  font-size: x-large;
   color: yellow;
 }
 
