@@ -4,22 +4,35 @@ m
     <the-footer title="customize"> </the-footer>
     <ion-content color="tertiary">
       <div class="grid-page">
-        <div></div>
-
-        <div class="icon-div"><ion-icon :icon="constructSharp"></ion-icon></div>
-        <div class="text-div"><p>Customize</p></div>
-        <div class="label-div">
-          <ion-label position="floating"
-            >Assign Workouts to {{ name }}
-          </ion-label>
+        <div class="icon-div">
+          <ion-icon class="customize-icon" :icon="constructSharp"></ion-icon>
         </div>
+        <div class="headline-div">
+          <div class="week-headline-icon">
+            <ion-icon class="icon-weeks" :icon="calendarSharp"></ion-icon>
+          </div>
+          <div class="week-headline-label">
+            <ion-label class="headline-label">workouts</ion-label>
+          </div>
+        </div>
+
         <div class="list-div">
           <ul>
-            <li v-for="(week, index) in weekArray" :key="index">
-              <ion-card class="list-card" @click="addWorkout(index)">
-                <ion-label class="card-label" color="secondary">{{ week.weekInt + ")" }}</ion-label>
-                <ion-label class="card-label" color="secondary">{{ week.weekWorkout }}</ion-label>
-              </ion-card>
+            <li class="li-grid" v-for="(week, index) in weekArray" :key="index">
+              <div class="day-div">
+                <ion-label class="day-label">{{ index + 1 }}</ion-label>
+              </div>
+              <div class="">
+                <ion-card class="list-card" @click="addWorkout(index)">
+                  <div class="card-div">
+                    <ion-label class="card-label" color="secondary">{{
+                      week.weekWorkout
+                    }}</ion-label>
+
+                    <ion-icon class="card-icon" :icon="helpOutline"></ion-icon>
+                  </div>
+                </ion-card>
+              </div>
             </li>
           </ul>
         </div>
@@ -34,12 +47,12 @@ m
             color="warning"
             @click="goToPreview()"
           >
-            <ion-label color="secondary">Continue</ion-label>
+            <ion-label color="secondary">Save</ion-label>
             <ion-icon
               size="large"
               slot="start"
               color="secondary"
-              :icon="arrowForwardOutline"
+              :icon="saveOutline"
             ></ion-icon
           ></ion-button>
         </div>
@@ -51,7 +64,13 @@ m
 <script lang="ts">
 import { defineComponent } from "vue";
 import { ref } from "vue";
-import { constructSharp, arrowForwardOutline } from "ionicons/icons";
+import {
+  constructSharp,
+  arrowForwardOutline,
+  calendarSharp,
+  saveOutline,
+  helpOutline,
+} from "ionicons/icons";
 import {
   IonContent,
   IonPage,
@@ -113,13 +132,13 @@ export default defineComponent({
       if (i == 1) {
         planStore.pushArray({
           weekInt: i,
-          weekWorkout: "no workout added yet",
+          weekWorkout: "empty",
           array: JSON.parse(JSON.stringify(dayArrayFirst)),
         });
       } else {
         planStore.pushArray({
           weekInt: i,
-          weekWorkout: "no workout added yet",
+          weekWorkout: "empty",
           array: JSON.parse(JSON.stringify(dayArray)),
         });
       }
@@ -165,6 +184,9 @@ export default defineComponent({
       router,
       index1,
       goToPreview,
+      calendarSharp,
+      saveOutline,
+      helpOutline,
     };
   },
 });
@@ -174,25 +196,37 @@ export default defineComponent({
 .grid-page {
   height: 100%;
   display: grid;
-  grid-template-rows: [row1-start]5%[row1-end] 30% [row2-start] 10% [row2-end] 5% [row3-start] 50% [row3-end];
+  grid-template-rows: [row1-start]5%[row1-end] 10% [row2-start] 15% [row2-end] 10% [row3-start] 60% [row3-end];
 }
 
 .icon-div {
-  grid-row: row1-end / row2-start;
+  grid-row: row1-end / row2-end;
+  align-self: center;
+  justify-self: center;
   align-self: center;
   justify-self: center;
 }
 
-ion-icon {
-  font-size: 256px;
+.customize-icon {
+  font-size: 96px;
   color: #dbbfdd;
-
 }
 
 .text-div {
   grid-row: row2-start / row2-end;
   justify-self: center;
   align-self: center;
+}
+
+.headline-div {
+  height: 100%;
+  width: 100%;
+  grid-row: row2-end / row3-start;
+  align-self: start;
+  justify-self: center;
+  display: grid;
+  grid-template-rows: [row1-start] 100% [row1-end];
+  grid-template-columns: [column1-start] 15% [column1-end] 85% [column2-start];
 }
 
 p {
@@ -209,10 +243,28 @@ p {
   text-align: center;
 }
 
-.label-div {
-  grid-row: row2-end / row3-start;
-  align-self: start;
+.week-headline-icon {
+  grid-row: row1-start / row1-end;
+  grid-column: column1-start / column1-end;
+  align-self: end;
   justify-self: center;
+}
+
+.week-headline-label {
+  grid-row: row1-start / row1-end;
+  grid-column: column1-end / column2-start;
+  align-self: end;
+  justify-self: start;
+}
+
+.icon-weeks {
+  font-size: 40px;
+  color: black;
+}
+
+.headline-label {
+  color: black;
+  font-weight: bold;
 }
 
 ion-label {
@@ -232,23 +284,62 @@ ion-label {
 ul {
   height: 100%;
   list-style: none;
-  padding: 5%;
+  padding: 0;
   margin: 0;
   overflow-y: auto;
 }
 
-li {
-  height: 20%;
+.li-grid {
+  height: 15%;
+  display: grid;
+  grid-template-rows: [row1-start] 100% [row1-end];
+  grid-template-columns: [column1-start] 15% [column1-end] 85% [column2-start];
+  margin: 5%;
+  margin-left: 0;
 }
+
+.day-div {
+  grid-row: row1-start / row1-end;
+  grid-column: column1-start / column1-end;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.day-label {
+  display: block;
+  text-align: center;
+}
+
+.card-div {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-icon {
+  display: block;
+  text-align: center;
+  color: white;
+  font-size: 32px;
+  margin-right: 5%;
+}
+
 .list-card {
+  grid-row: row1-start / row1-end;
+  grid-column: column1-end / column2-start;
   height: 100%;
   background-color: skyblue;
   color: black;
   font-weight: bold;
+  margin: 0px;
 }
 
 .card-label {
-  margin: 5px;
+  display: block;
+  text-align: center;
+  color: white;
+  margin-left: 5%;
 }
 
 ion-input {
@@ -282,6 +373,7 @@ ion-footer {
 }
 
 .add-button {
+  width: 60%;
   position: fixed;
   bottom: 17.5%;
   left: 50%;

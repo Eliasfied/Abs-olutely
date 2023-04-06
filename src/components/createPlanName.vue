@@ -6,7 +6,7 @@
         <div class="icon-div"><ion-icon :icon="bookSharp"></ion-icon></div>
         <div class="text-div"><p>Start your journey now</p></div>
         <div class="label-div">
-          <ion-label position="floating">Enter a name for your plan:</ion-label>
+          <ion-label position="floating">give your plan a name</ion-label>
         </div>
         <div class="input-div">
           <ion-input v-model="name" placeholder="my planname"></ion-input>
@@ -127,8 +127,10 @@ ion-label {
 
 .input-div {
   grid-row: row3-start / row3-end;
-  align-self: center;
+  align-self: end;
   justify-self: center;
+  height: 60%;
+  width: 80%;
 }
 
 ion-input {
@@ -136,6 +138,9 @@ ion-input {
   border-radius: 15px;
   color: white;
   background-color: #bce3f7;
+  height: 100%;
+  width: 100%;
+  font-size: larger;
 }
 
 .button-div {

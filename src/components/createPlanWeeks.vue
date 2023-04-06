@@ -123,7 +123,7 @@ p {
 }
 
 .p-duration {
-  font-size: 16px;
+  font-size: 24px;
   grid-row: row2-end / row3-start;
   justify-self: center;
   text-align: center;
