@@ -1,7 +1,6 @@
-m
 <template>
   <ion-page>
-    <the-footer title="customize"> </the-footer>
+    <!-- <the-footer title="customize"> </the-footer> -->
     <ion-content color="tertiary">
       <div class="grid-page">
         <div class="icon-div">
@@ -25,11 +24,14 @@ m
               <div class="">
                 <ion-card class="list-card" @click="addWorkout(index)">
                   <div class="card-div">
-                    <ion-label class="card-label" color="secondary">{{
+                    <ion-label :class="labelStyle(index)" color="secondary">{{
                       week.weekWorkout
                     }}</ion-label>
 
-                    <ion-icon class="card-icon" :icon="helpOutline"></ion-icon>
+                    <ion-icon
+                      class="card-icon"
+                      :icon="cardIcon(index)"
+                    ></ion-icon>
                   </div>
                 </ion-card>
               </div>
@@ -62,7 +64,7 @@ m
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import { ref } from "vue";
 import {
   constructSharp,
@@ -70,6 +72,8 @@ import {
   calendarSharp,
   saveOutline,
   helpOutline,
+  barChartOutline,
+  barbellOutline,
 } from "ionicons/icons";
 import {
   IonContent,
@@ -92,7 +96,7 @@ export default defineComponent({
     IonLabel,
     IonIcon,
     IonCard,
-    TheFooter,
+    // TheFooter,
     IonFooter,
   },
   setup() {
@@ -172,6 +176,25 @@ export default defineComponent({
       router.push("/planPreview/" + name);
     }
 
+    let cardIcon = computed(() => (index) => {
+      console.log(weekArray);
+      console.log(index);
+      console.log(weekArray.value[index].weekWorkout);
+      if (weekArray.value[index].weekWorkout == "empty") {
+        return helpOutline;
+      } else {
+        return barbellOutline;
+      }
+    });
+
+    let labelStyle = computed(() => (index) => {
+      if (weekArray.value[index].weekWorkout == "empty") {
+        return "card-label";
+      } else {
+        return "card-label-filled";
+      }
+    });
+
     return {
       name,
       constructSharp,
@@ -187,6 +210,9 @@ export default defineComponent({
       calendarSharp,
       saveOutline,
       helpOutline,
+      barChartOutline,
+      cardIcon,
+      labelStyle,
     };
   },
 });
@@ -208,7 +234,7 @@ export default defineComponent({
 }
 
 .customize-icon {
-  font-size: 96px;
+  font-size: 120px;
   color: #dbbfdd;
 }
 
@@ -340,6 +366,15 @@ ul {
   text-align: center;
   color: white;
   margin-left: 5%;
+  opacity: 0.5;
+}
+
+.card-label-filled {
+  display: block;
+  text-align: center;
+  color: white;
+  margin-left: 5%;
+  opacity: 1;
 }
 
 ion-input {

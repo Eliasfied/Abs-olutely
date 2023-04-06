@@ -3,15 +3,22 @@
     <ion-content color="tertiary">
       <div class="grid-page">
         <div></div>
-        <div class="icon-div"><ion-icon :icon="bookSharp"></ion-icon></div>
-        <div class="text-div"><p>Start your journey now</p></div>
-        <div class="label-div">
-          <ion-label position="floating">give your plan a name</ion-label>
+        <div class="icon-div">
+          <ion-icon :icon="bookSharp" class="customize-icon"></ion-icon>
+        </div>
+        <div class="headline-div">
+          <div class="week-headline-label">
+            <ion-label class="headline-label">Plan name</ion-label>
+          </div>
         </div>
         <div class="input-div">
           <ion-input v-model="name" placeholder="my planname"></ion-input>
         </div>
-        <div class="point-div"></div>
+        <div class="explain-text">
+          <ion-label class="explain-label">
+            give your plan a name
+          </ion-label>
+        </div>
       </div>
     </ion-content>
     <ion-footer>
@@ -86,18 +93,18 @@ export default defineComponent({
 .grid-page {
   height: 100%;
   display: grid;
-  grid-template-rows: [row1-start]10%[row1-end] 30% [row2-start] 15% [row2-end] 10% [row3-start] 15% [row3-end];
+  grid-template-rows: [row1-start]5%[row1-end] 10% [row2-start] 15% [row2-end] 10% [row3-start] 30% [row3-end] 10% [row4-start];
   background-color: #f8f9f9;
 }
 
 .icon-div {
-  grid-row: row1-end / row2-start;
+  grid-row: row1-end / row2-end;
   align-self: center;
   justify-self: center;
 }
 
-ion-icon {
-  font-size: 256px;
+.customize-icon {
+  font-size: 120px;
   color: #dbbfdd;
 }
 
@@ -120,16 +127,40 @@ p {
   justify-self: center;
 }
 
-ion-label {
-  font-size: 24px;
+.headline-div {
+  height: 100%;
+  width: 100%;
+  grid-row: row2-end / row3-start;
+  align-self: start;
+  justify-self: center;
+  display: grid;
+  grid-template-rows: [row1-start] 100% [row1-end];
+  grid-template-columns: [column1-start] 15% [column1-end] 85% [column2-start];
+}
+
+.week-headline-label {
+  grid-row: row1-start / row1-end;
+  grid-column: column1-start / column2-start;
+  align-self: center;
+  justify-self: center;
+}
+
+.icon-weeks {
+  font-size: 40px;
+  color: black;
+}
+
+.headline-label {
   color: #80abca;
+  font-weight: bold;
+  font-size: 32px;
 }
 
 .input-div {
   grid-row: row3-start / row3-end;
-  align-self: end;
+  align-self: center;
   justify-self: center;
-  height: 60%;
+  height: 40%;
   width: 80%;
 }
 
@@ -140,7 +171,23 @@ ion-input {
   background-color: #bce3f7;
   height: 100%;
   width: 100%;
-  font-size: larger;
+  font-size: x-large;
+}
+
+
+.explain-text {
+  grid-row: row3-end / row4-start;
+  align-self: start;
+  justify-self: center;
+  margin: 10%;
+  margin-top: 0;
+}
+
+.explain-label {
+  font-size: 16px;
+  color: grey;
+  opacity: 0.7;
+  
 }
 
 .button-div {

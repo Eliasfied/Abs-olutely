@@ -1,13 +1,14 @@
-m
 <template>
   <ion-page>
     <ion-content color="tertiary">
       <div class="grid-page">
-        <div></div>
-        <div class="icon-div"><ion-icon :icon="calendarSharp"></ion-icon></div>
-        <div class="text-div"><p>Plan Duration</p></div>
-        <div class="label-div">
-          <ion-label position="floating">Amount of weeks?</ion-label>
+        <div class="icon-div">
+          <ion-icon :icon="calendarSharp" class="customize-icon"></ion-icon>
+        </div>
+        <div class="headline-div">
+          <div class="week-headline-label">
+            <ion-label class="headline-label">Plan duration</ion-label>
+          </div>
         </div>
         <div class="range-div">
           <p class="p-duration">{{ planDuration }}</p>
@@ -17,9 +18,14 @@ m
             :ticks="true"
             :snaps="true"
             :min="1"
-            :max="8"
-            :value="4"
+            :max="7"
+            :value="3"
           ></ion-range>
+        </div>
+        <div class="explain-text">
+          <ion-label class="explain-label">
+            set the length of your plan in weeks
+          </ion-label>
         </div>
       </div>
     </ion-content>
@@ -95,13 +101,18 @@ export default defineComponent({
 .grid-page {
   height: 100%;
   display: grid;
-  grid-template-rows: [row1-start]10%[row1-end] 30% [row2-start] 15% [row2-end] 10% [row3-start] 15% [row3-end];
+  grid-template-rows: [row1-start]5%[row1-end] 10% [row2-start] 15% [row2-end] 10% [row3-start] 30% [row3-end] 10% [row4-start];
 }
 
 .icon-div {
-  grid-row: row1-end / row2-start;
+  grid-row: row1-end / row2-end;
   align-self: center;
   justify-self: center;
+}
+
+.customize-icon {
+  font-size: 120px;
+  color: #dbbfdd;
 }
 
 ion-icon {
@@ -127,6 +138,8 @@ p {
   grid-row: row2-end / row3-start;
   justify-self: center;
   text-align: center;
+  margin-bottom: 5%;
+  margin-top: 5%;
 }
 
 .label-div {
@@ -141,17 +154,62 @@ ion-label {
   text-align: center;
 }
 
-.range-div {
+.headline-div {
+  height: 100%;
   width: 100%;
-  grid-row: row3-start / row3-end;
+  grid-row: row2-end / row3-start;
+  align-self: start;
+  justify-self: center;
+  display: grid;
+  grid-template-rows: [row1-start] 100% [row1-end];
+  grid-template-columns: [column1-start] 15% [column1-end] 85% [column2-start];
+}
+
+
+.week-headline-label {
+  grid-row: row1-start / row1-end;
+  grid-column: column1-start / column2-start;
   align-self: center;
   justify-self: center;
 }
+
+.icon-weeks {
+  font-size: 40px;
+  color: black;
+}
+
+.headline-label {
+  color: #80abca;
+  font-weight: bold;
+  font-size: 32px;
+}
+.range-div {
+  width: 100%;
+  grid-row: row3-start / row3-end;
+  align-self: start;
+  justify-self: center;
+}
+
 ion-range::part(bar) {
   background: #dbbfdd;
 }
 ion-range::part(bar-active) {
   background: #80abca;
+}
+
+.explain-text {
+  grid-row: row3-end / row4-start;
+  align-self: start;
+  justify-self: center;
+  margin: 10%;
+  margin-top: 0;
+}
+
+.explain-label {
+  font-size: 16px;
+  color: grey;
+  opacity: 0.7;
+  
 }
 
 .button-div {
@@ -181,6 +239,7 @@ ion-footer {
 }
 
 .add-button {
+  width: 60%;
   position: fixed;
   bottom: 17.5%;
   left: 50%;
