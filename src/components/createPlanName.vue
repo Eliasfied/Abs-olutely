@@ -160,8 +160,8 @@ p {
   grid-row: row3-start / row3-end;
   align-self: center;
   justify-self: center;
-  height: 40%;
-  width: 80%;
+  height: 30%;
+  width: 60%;
 }
 
 ion-input {

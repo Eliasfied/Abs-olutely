@@ -7,9 +7,9 @@
       >
         <div class="back-button-div">
           <ion-icon
+          class="back-icon"
             @click="backToMenu"
             :icon="arrowBackOutline"
-            size="large"
           ></ion-icon>
         </div>
         <div class="exercise-name-div">
@@ -137,6 +137,7 @@ import {
   barbellOutline,
   timeOutline,
   arrowBackOutline,
+  cafe,
 } from "ionicons/icons";
 import ExerciseDetail from "../components/reusable/ExerciseDetail.vue";
 import WorkoutSelect from "./reusable/WorkoutSelect.vue";
@@ -208,7 +209,7 @@ export default defineComponent({
     }
 
     function backToMenu() {
-      router.push("/home");
+      router.go(-1);
     }
 
     //UI DATA
@@ -273,6 +274,7 @@ export default defineComponent({
       timeOutline,
       arrowBackOutline,
       backToMenu,
+      cafe,
     };
   },
 });
@@ -321,6 +323,11 @@ export default defineComponent({
   grid-column: line1 / line2;
   justify-self: start;
   align-self: center;
+}
+
+.back-icon {
+  margin-left: 10px;
+  font-size: xx-large;
 }
 
 .exercise-name-label {

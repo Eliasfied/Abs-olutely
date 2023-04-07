@@ -86,6 +86,16 @@
                   <div class="day-workout">
                     <ion-label color="light">Day {{ index + 1 }}</ion-label>
                   </div>
+                  <div class="label-date-done">
+                    <ion-label class="label-done">
+                      {{ dayDone(index) }}
+                    </ion-label>
+                    <ion-icon
+                      v-show="showFinishedIcon"
+                      :class="doneIconShow(index)"
+                      :icon="checkmarkDoneOutline"
+                    ></ion-icon>
+                  </div>
                 </div>
               </ion-card>
             </li>
@@ -97,7 +107,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import { IonContent, IonPage, IonLabel } from "@ionic/vue";
+import { IonContent, IonPage, IonLabel, IonIcon } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { computed, ref, watch, onMounted } from "vue";
@@ -117,11 +127,19 @@ import {
   timeOutline,
   receiptOutline,
   bodyOutline,
+  checkmarkDoneOutline,
 } from "ionicons/icons";
 
 export default defineComponent({
   name: "WorkoutPlan",
-  components: { IonContent, IonPage, TheFooter, IonLabel, CircleProgressBar },
+  components: {
+    IonContent,
+    IonPage,
+    TheFooter,
+    IonLabel,
+    CircleProgressBar,
+    IonIcon,
+  },
   setup() {
     const disabled = ref(false);
 
@@ -191,23 +209,12 @@ export default defineComponent({
     let weekIndex = ref(weekArray.currentWeek);
     let selectedCardIndex = ref(weekArray.currentWeek);
     let selectedDayIndex = ref(0);
-    console.log("dayState:");
 
     let workoutsDone = ref(
       weekArray.currentWeek * weekArray.weeks[0].array.length +
         weekArray.currentDay
     );
     let totalWorkouts = ref(weekArray.totalDays);
-    console.log("totalWorkouts");
-    console.log(totalWorkouts);
-    // const dayState = computed(() => (index) => ({
-    //   "workout-done":
-    //     weekArray.weeks[selectedCardIndex.value].array[index].state == "done",
-    //   "workout-today":
-    //     weekArray.weeks[selectedCardIndex.value].array[index].state == "today",
-    //   "workout-open":
-    //     weekArray.weeks[selectedCardIndex.value].array[index].state == "open",
-    // }));
 
     const dayState = computed(() => (index) => {
       if (weekArray) {
@@ -227,6 +234,33 @@ export default defineComponent({
       }
     });
 
+    const doneIconShow = computed(() => (index) => {
+      if (weekArray) {
+        return {
+          "icon-show":
+            weekArray.weeks[selectedCardIndex.value].array[index].doneDate !=
+            "",
+          "icon-dontshow":
+            weekArray.weeks[selectedCardIndex.value].array[index].doneDate ==
+              undefined ||
+            weekArray.weeks[selectedCardIndex.value].array[index].doneDate ==
+              "",
+        };
+      } else {
+        return {};
+      }
+    });
+
+    let showFinishedIcon = ref(false);
+    let dayDone = computed(() => (index) => {
+      if (
+        weekArray.weeks[selectedCardIndex.value].array[index].doneDate != ""
+      ) {
+        showFinishedIcon.value = true;
+        return weekArray.weeks[selectedCardIndex.value].array[index].doneDate;
+      }
+    });
+
     let selectedWeek = computed(() => {
       console.log("check");
       console.log(weekArray.weeks);
@@ -237,8 +271,7 @@ export default defineComponent({
       selectedCardIndex.value = index;
       weekIndex.value = index;
       selectedDay.value = index;
-      console.log("selectedWeek:");
-      console.log(selectedWeek.value);
+
       disabled.value = true;
       setTimeout(() => {
         disabled.value = false;
@@ -248,11 +281,21 @@ export default defineComponent({
     function goToWorkout(index, index2) {
       console.log(weekIndex.value);
       console.log(index2);
-      workoutPlanDataStore.weekNumber = weekIndex.value;
+      workoutPlanDataStore.weekNumber = selectedCardIndex.value;
       workoutPlanDataStore.dayNumber = index2;
       workoutPlanDataStore.currentPlanName = page;
       let workoutName = weekArray.weeks[index].weekWorkout;
-      router.push("/preview/" + workoutName);
+      console.log("in gotoW");
+      console.log(weekArray.weeks);
+      console.log(selectedCardIndex.value);
+      console.log(index2);
+      if (
+        weekArray.weeks[selectedCardIndex.value].array[index2].state == "today"
+      ) {
+        router.push("/preview/" + workoutName);
+      } else {
+        return;
+      }
     }
 
     return {
@@ -282,6 +325,10 @@ export default defineComponent({
       workouts,
       workoutsDone,
       totalWorkouts,
+      dayDone,
+      showFinishedIcon,
+      checkmarkDoneOutline,
+      doneIconShow,
     };
   },
 });
@@ -457,6 +504,7 @@ p {
 .workout-today {
   /* background-color: #e6bcf7; */
   border: 2px solid #e6bcf7;
+  /* box-shadow: 0 0 10px rgba(0, 255, 255, 0.8); */
 }
 .workout-open {
   background-color: #bce3f7;
@@ -528,5 +576,28 @@ p {
   align-self: start;
   justify-self: start;
   padding: 5%;
+}
+
+.label-date-done {
+  grid-row: row1-start / row1-end;
+  grid-column: column2-start / column3-start;
+  align-self: center;
+  justify-self: center;
+}
+
+.label-done {
+  color: white;
+  opacity: 0.8;
+}
+
+.icon-dontshow {
+  opacity: 0;
+  
+}
+
+.icon-show {
+  color: var(--ion-color-success);
+  vertical-align: middle;
+  margin-left: 5px;
 }
 </style>

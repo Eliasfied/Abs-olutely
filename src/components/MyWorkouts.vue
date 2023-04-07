@@ -33,7 +33,7 @@
                       <ion-label>{{ workout.exerciseTime }}s</ion-label>
                     </div>
                     <div class="break-time">
-                      <ion-icon :icon="hourglassOutline"></ion-icon>
+                      <ion-icon :icon="cafe"></ion-icon>
                       <ion-label>{{ workout.breakTime }}s</ion-label>
                     </div>
                     <div class="icon-edit">
@@ -102,6 +102,8 @@ import {
   timeOutline,
   receiptOutline,
   bodyOutline,
+  cafeOutline,
+  cafe,
 } from "ionicons/icons";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { ref, watch } from "vue";
@@ -195,6 +197,8 @@ export default defineComponent({
       getWorkoutLength,
       receiptOutline,
       bodyOutline,
+      cafeOutline,
+      cafe,
     };
   },
 });

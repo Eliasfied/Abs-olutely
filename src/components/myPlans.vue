@@ -15,8 +15,24 @@
                   <div class="label-planname">
                     <ion-label>{{ plan.planName }}</ion-label>
                   </div>
-
-                  <div class="icon-edit"></div>
+                  <div class="label-last-workout">
+                    <ion-label>{{ lastWorkout(index) }}</ion-label>
+                  </div>
+                  <div class="label-planlength">
+                    <ion-label class="style-label">
+                      {{ planWeeks(index) }}
+                    </ion-label>
+                    <ion-icon
+                      class="icon-color-weeks"
+                      :icon="calendarOutline"
+                    ></ion-icon>
+                  </div>
+                  <div class="label-plandone">
+                    <ion-label class="style-label">
+                      {{ planDone(index) }}
+                    </ion-label>
+                    <ion-icon class="icon-color-weeks" :icon="flag"></ion-icon>
+                  </div>
                   <div class="icon-trash">
                     <ion-icon
                       @click.stop="deletePlan(index)"
@@ -54,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import { IonPage, IonContent, IonCard, IonLabel, IonIcon } from "@ionic/vue";
 import {
@@ -69,11 +85,14 @@ import {
   receiptOutline,
   bodyOutline,
   readerOutline,
+  calendarOutline,
+  flag,
 } from "ionicons/icons";
 import { ref, watch } from "vue";
 import planStorage from "../storage/myPlanStorage";
 import { useMyPlanStore } from "../store/myPlans";
 import TheFooter from "../components/reusable/TheFooter.vue";
+import { getPlanList } from "@/composables/getMyPlanList";
 
 export default defineComponent({
   name: "myPlans",
@@ -115,6 +134,40 @@ export default defineComponent({
       plans.value.splice(index, 1);
     }
 
+    let planWeeks = computed(() => (index) => {
+      console.log("weeks");
+      console.log(plans.value[index].weeks.length);
+      return plans.value[index].weeks.length;
+    });
+
+    let workoutsDone = ref();
+    let totalWorkouts = ref();
+    console.log("totalWorkouts");
+    console.log(totalWorkouts);
+
+    let planDone = computed(() => (index) => {
+      workoutsDone.value =
+        plans.value[index].currentWeek *
+          plans.value[index].weeks[0].array.length +
+        plans.value[index].currentDay;
+      totalWorkouts.value = plans.value[index].totalDays;
+      if (workoutsDone.value == 0) {
+        return "0%";
+      } else {
+        return (
+          Math.round((workoutsDone.value / totalWorkouts.value) * 100) + "%"
+        );
+      }
+    });
+
+    let lastWorkout = computed(() => (index) => {
+      if (plans.value[index].lastWorkout != undefined) {
+        return "last: " + plans.value[index].lastWorkout;
+      } else {
+        return "";
+      }
+    });
+
     loadStore();
     store.$subscribe(
       (mutation, state) => {
@@ -139,8 +192,13 @@ export default defineComponent({
       receiptOutline,
       bodyOutline,
       readerOutline,
+      calendarOutline,
       addPlan,
       deletePlan,
+      planWeeks,
+      planDone,
+      flag,
+      lastWorkout,
     };
   },
 });
@@ -217,6 +275,31 @@ p {
   font-size: 18px;
 }
 
+.label-last-workout {
+  grid-row: row1-end / row2-start;
+  grid-column: column1-end / column2-start;
+  align-self: start;
+  justify-self: start;
+  padding: 5%;
+  color: var(--ion-color-primary);
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.label-planlength {
+  grid-row: row1-start / row1-end;
+  grid-column: column2-start / column2-end;
+  align-self: center;
+  justify-self: center;
+}
+
+.label-plandone {
+  grid-row: row1-start / row1-end;
+  grid-column: column2-end / column3-start;
+  align-self: center;
+  justify-self: center;
+}
+
 .plan-time {
   grid-row: row1-end / row2-start;
   grid-column: column1-end / column2-start;
@@ -245,6 +328,12 @@ p {
   color: red;
 }
 
+.icon-color-weeks {
+  color: white;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
 .style-time {
   margin-right: 5px;
   vertical-align: middle;
@@ -252,7 +341,7 @@ p {
 }
 
 .style-label {
-  vertical-align: text-top;
+  vertical-align: middle;
   color: white;
 }
 

@@ -24,7 +24,7 @@
 import { computed, defineComponent } from "vue";
 import { IonCard, IonSelect, IonSelectOption, IonIcon } from "@ionic/vue";
 import { ref } from "vue";
-import { hourglassOutline, barbellOutline } from "ionicons/icons";
+import { hourglassOutline, barbellOutline, cafe } from "ionicons/icons";
 
 export default defineComponent({
   name: "WorkoutSelect",
@@ -34,7 +34,7 @@ export default defineComponent({
   setup(props) {
     let timeSelected = ref(1);
     let selectIcon = computed(() => {
-      return props.name == "BreakTime" ? hourglassOutline : barbellOutline;
+      return props.name == "BreakTime" ? cafe : barbellOutline;
     });
 
     return {
@@ -43,6 +43,7 @@ export default defineComponent({
       hourglassOutline,
       barbellOutline,
       selectIcon,
+      cafe,
     };
   },
 });

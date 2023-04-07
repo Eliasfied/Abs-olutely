@@ -83,22 +83,35 @@ export default defineComponent({
       }
 
       myPlan.weeks[weekNumber].array[dayNumber].state = "done";
-      //myPlan.weeks[1+1].array[2+1].state = "today";
+      myPlan.weeks[weekNumber].array[dayNumber].doneDate = date;
 
-      if (myPlan.currentDay < myPlan.weeks[weekNumber].array.length - 1) {
+      //myPlan.weeks[1+1].array[2+1].state = "today";
+      console.log(myPlan.currentWeek);
+      console.log(myPlan.weeks);
+      if (myPlan.currentWeek == myPlan.weeks.length -1 && myPlan.currentDay == myPlan.weeks[weekNumber].array.length -1  ) {
+        console.log("letzte woche erreicht");
+        myPlan.currentDay++;
+
+      }
+      else {
+        if (myPlan.currentDay < myPlan.weeks[weekNumber].array.length - 1) {
         myPlan.currentDay++;
       } else {
         myPlan.currentWeek++;
         myPlan.currentDay = 0;
       }
       myPlan.weeks[myPlan.currentWeek].array[myPlan.currentDay].state = "today";
+      }
+     
       let parseArray = JSON.parse(JSON.stringify(myPlan.weeks));
+      let lastWorkout = date;
 
       let sendArray = {
         planName: myPlan.planName,
         currentDay: myPlan.currentDay,
         currentWeek: myPlan.currentWeek,
         totalDays: myPlan.totalDays,
+        lastWorkout: lastWorkout,
         weeks: parseArray,
       };
 
@@ -148,7 +161,7 @@ export default defineComponent({
         router.push({ path: "/statistics", replace: true });
         emit("resetAll");
       } else {
-        router.push({ path: "/myPlans", replace: true });
+        router.push({ path: "/planPreview/" + myPlan.planName, replace: true });
         emit("resetAll");
       }
     }

@@ -121,14 +121,14 @@ export default defineComponent({
     let dayArrayFirst = [] as any;
 
     for (let i = 1; i < days + 1; i++) {
-      dayArray.push({ dayInt: i, state: "open" });
+      dayArray.push({ dayInt: i, state: "open", doneDate: "" });
     }
 
     for (let i = 1; i < days + 1; i++) {
       if (i == 1) {
-        dayArrayFirst.push({ dayInt: i, state: "today" });
+        dayArrayFirst.push({ dayInt: i, state: "today", doneDate: "" });
       } else {
-        dayArrayFirst.push({ dayInt: i, state: "open" });
+        dayArrayFirst.push({ dayInt: i, state: "open", doneDate: "" });
       }
     }
 
