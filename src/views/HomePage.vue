@@ -5,9 +5,17 @@
       <div class="grid-page">
         <div class="quickstart-text-div"><p>Quickstart</p></div>
         <div v-if="showPlanWorkout" class="current-planWorkout-div">
-          <ion-card class="currentWorkout-card"
-            >this is current workout in Plan</ion-card
-          >
+          <ion-card @click="toActivePlan" class="create-plan-card">
+            <ion-icon class="add-icon" :icon="arrowForwardCircle"></ion-icon>
+            <div class="label-flex-div">
+              <ion-label class="create-plan-label-headline">{{
+                activePlan
+              }}</ion-label>
+              <ion-label class="create-plan-label-text"
+                >continue your plan</ion-label
+              >
+            </div>
+          </ion-card>
         </div>
         <div v-if="!showPlanWorkout" class="create-plan-div">
           <ion-card @click="toCreatePlans" class="create-plan-card">
@@ -101,8 +109,9 @@
 
 <script lang="ts">
 import { IonContent, IonPage, IonCard, IonIcon, IonLabel } from "@ionic/vue";
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
+import { useMyPlanStore } from "../store/myPlans";
 import TheFooter from "../components/reusable/TheFooter.vue";
 import { ref } from "vue";
 import { onIonViewWillLeave } from "@ionic/vue";
@@ -113,6 +122,7 @@ import {
   readerOutline,
   barbellOutline,
   settingsOutline,
+  arrowForwardCircle,
 } from "ionicons/icons";
 import { useRouter } from "vue-router";
 
@@ -145,13 +155,15 @@ export default defineComponent({
     let advancedWorkoutName = ref("");
     let champWorkoutName = ref("");
     let urlprefix = "/preview/";
+    let planStore;
+    const plans: any = ref([]);
     async function loadStore() {
       const store = useWorkoutsStore();
+      planStore = useMyPlanStore();
+      await planStore.loadPlansFromStore();
       await store.loadWorkoutsFromStore();
       list = store.workoutList;
-      console.log("STORE: ");
-      console.log(store);
-      console.log(list);
+      plans.value = planStore.planList;
 
       // beginnerWorkoutName = "beginner";
       beginnerWorkoutName.value = list[0].name;
@@ -163,10 +175,30 @@ export default defineComponent({
 
     loadStore();
 
-    console.log("zweite list");
-    console.log(list);
+    let showPlanWorkout = computed(() => {
+      if (plans.value.length > 0 && planStore.activePlan != "noPlan") {
+        return true;
+      } else {
+        return false;
+      }
+    });
 
-    let showPlanWorkout = false;
+    let activePlan = computed(() => {
+      return planStore.activePlan;
+    });
+
+    function toActivePlan() {
+      router.push("/planPreview/" + planStore.activePlan);
+    }
+
+    planStore.$subscribe(
+      (mutation, state) => {
+        console.log("a change happened");
+        console.log(mutation, state);
+        plans.value = state.planList;
+      },
+      { detached: true }
+    );
 
     const router = useRouter();
 
@@ -201,6 +233,9 @@ export default defineComponent({
       toMyPlans,
       toCreatePlans,
       settingsOutline,
+      arrowForwardCircle,
+      activePlan,
+      toActivePlan,
     };
   },
 });

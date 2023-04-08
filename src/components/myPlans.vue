@@ -92,7 +92,7 @@ import { ref, watch } from "vue";
 import planStorage from "../storage/myPlanStorage";
 import { useMyPlanStore } from "../store/myPlans";
 import TheFooter from "../components/reusable/TheFooter.vue";
-import { getPlanList } from "@/composables/getMyPlanList";
+import activePlanStorage from "../storage/activePlanStorage";
 
 export default defineComponent({
   name: "myPlans",
@@ -128,6 +128,11 @@ export default defineComponent({
     }
 
     async function deletePlan(index) {
+      if (plans.value[index].planName == store.activePlan) {
+        await activePlanStorage.removeItem("activePlan");
+        await activePlanStorage.setItem("activePlan", { activePlan: "noPlan" });
+        store.activePlan = "noPlan";
+      }
       await planStorage.removeItem(plans.value[index].planName);
       console.log("index workout: ");
       console.log(index);
@@ -135,9 +140,11 @@ export default defineComponent({
     }
 
     let planWeeks = computed(() => (index) => {
-      console.log("weeks");
-      console.log(plans.value[index].weeks.length);
-      return plans.value[index].weeks.length;
+      if (plans.value[index].weeks) {
+        return plans.value[index].weeks.length;
+      } else {
+        return;
+      }
     });
 
     let workoutsDone = ref();
@@ -146,17 +153,19 @@ export default defineComponent({
     console.log(totalWorkouts);
 
     let planDone = computed(() => (index) => {
-      workoutsDone.value =
-        plans.value[index].currentWeek *
-          plans.value[index].weeks[0].array.length +
-        plans.value[index].currentDay;
-      totalWorkouts.value = plans.value[index].totalDays;
-      if (workoutsDone.value == 0) {
-        return "0%";
-      } else {
-        return (
-          Math.round((workoutsDone.value / totalWorkouts.value) * 100) + "%"
-        );
+      if (workoutsDone.value) {
+        workoutsDone.value =
+          plans.value[index].currentWeek *
+            plans.value[index].weeks[0].array.length +
+          plans.value[index].currentDay;
+        totalWorkouts.value = plans.value[index].totalDays;
+        if (workoutsDone.value == 0) {
+          return "0%";
+        } else {
+          return (
+            Math.round((workoutsDone.value / totalWorkouts.value) * 100) + "%"
+          );
+        }
       }
     });
 
@@ -407,7 +416,7 @@ ul {
 
 ion-card {
   height: 100%;
-  background-color: #bce3f7;
+  background-color: #80abca;
 }
 
 ion-label {

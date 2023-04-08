@@ -87,6 +87,7 @@ import { useMyPlanStore } from "../store/myPlans";
 import { useRouter } from "vue-router";
 import planStorage from "../storage/myPlanStorage";
 import TheFooter from "../components/reusable/TheFooter.vue";
+import activePlanStorage from "../storage/activePlanStorage";
 
 export default defineComponent({
   name: "createPlanCustomize",
@@ -161,6 +162,8 @@ export default defineComponent({
 
     async function goToPreview() {
       console.log("go to" + name);
+      await activePlanStorage.removeItem("activePlan");
+      await activePlanStorage.setItem("activePlan", { activePlan: name });
       let parseArray = JSON.parse(JSON.stringify(weekArray.value));
       let sendArray = {
         planName: name,

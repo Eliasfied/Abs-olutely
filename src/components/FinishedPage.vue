@@ -22,6 +22,7 @@ import statisticStorage from "../storage/statisticsStorage";
 import { useStatisticsStore } from "../store/statisticsStore";
 import { useMyPlanStore } from "../store/myPlans";
 import planStorage from "../storage/myPlanStorage";
+import activePlanStorage from "../storage/activePlanStorage";
 import { useWorkoutPlanData } from "../store/workoutPlanData";
 import { useRoute, useRouter } from "vue-router";
 
@@ -75,13 +76,15 @@ export default defineComponent({
     }
 
     async function updatePlan() {
+
       console.log("numbers");
       console.log(weekNumber);
       console.log(dayNumber);
       if (weekNumber == 500 || weekNumber == 4000) {
         return;
       }
-
+      await activePlanStorage.removeItem("activePlan",);
+      await activePlanStorage.setItem("activePlan", {activePlan: myPlan.planName});
       myPlan.weeks[weekNumber].array[dayNumber].state = "done";
       myPlan.weeks[weekNumber].array[dayNumber].doneDate = date;
 

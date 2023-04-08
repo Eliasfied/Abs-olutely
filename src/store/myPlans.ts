@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { getPlanList } from "@/composables/getMyPlanList";
+import { getActivePlan } from "../composables/getActivePlan";
 
 export const useMyPlanStore = defineStore("myPlans", {
   state: () => ({
@@ -10,14 +11,13 @@ export const useMyPlanStore = defineStore("myPlans", {
     planDays: 0,
     weekArray: [] as any[],
     currentIndex: 0,
-    
-
+    activePlan: "testAktivPlan",
   }),
 
   actions: {
-
     async loadPlansFromStore() {
       this.planList = await getPlanList();
+      this.activePlan = await getActivePlan();
     },
     setDayInArray() {
       console.log(this.weekArray[2].array[1].day);

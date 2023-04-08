@@ -253,11 +253,13 @@ export default defineComponent({
 
     let showFinishedIcon = ref(false);
     let dayDone = computed(() => (index) => {
-      if (
-        weekArray.weeks[selectedCardIndex.value].array[index].doneDate != ""
-      ) {
-        showFinishedIcon.value = true;
-        return weekArray.weeks[selectedCardIndex.value].array[index].doneDate;
+      if (weekArray) {
+        if (
+          weekArray.weeks[selectedCardIndex.value].array[index].doneDate != ""
+        ) {
+          showFinishedIcon.value = true;
+          return weekArray.weeks[selectedCardIndex.value].array[index].doneDate;
+        }
       }
     });
 
@@ -592,7 +594,6 @@ p {
 
 .icon-dontshow {
   opacity: 0;
-  
 }
 
 .icon-show {
