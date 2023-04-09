@@ -1,19 +1,27 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true" color="tertiary">
-      <div
-        class="grid-style-top"
-        :style="{ 'background-image': 'url(' + getImgUrl() + ')' }"
-      >
+      <div class="grid-style-top">
         <div class="back-button-div">
           <ion-icon
-          class="back-icon"
+            class="back-icon"
             @click="backToMenu"
             :icon="arrowBackOutline"
+            color="light"
           ></ion-icon>
+        </div>
+        <div class="headline-name-div">
+          <p>
+            workout name
+          </p>
         </div>
         <div class="exercise-name-div">
           <ion-label class="exercise-name-label">{{ list.name }}</ion-label>
+        </div>
+        <div class="workoutbreak-name-div">
+          <p>
+            workout & break length
+          </p>
         </div>
         <div class="selectBreakTimeDiv">
           <workout-select
@@ -21,7 +29,7 @@
             name="BreakTime"
             :time="breakTime"
             :options="breakOptions"
-            background-color="dark"
+            background-color="medium"
           ></workout-select>
         </div>
 
@@ -31,8 +39,13 @@
             name="ExerciseTime"
             :time="exerciseTime"
             :options="exerciseOptions"
-            background-color="dark"
+            background-color="medium"
           ></workout-select>
+        </div>
+        <div class="list-headline-div">
+          <p>
+            exercises
+          </p>
         </div>
       </div>
 
@@ -283,9 +296,9 @@ export default defineComponent({
 <style scoped>
 .grid-style-top {
   height: 40%;
-  background-size: cover;
+  background-color: var(--ion-color-tertiary);
   display: grid;
-  grid-template-rows: [row1-start] 30% [row1-end] 30% [row2-start] 40% [row2-end];
+  grid-template-rows: [row1-start] 10% [row1-end] 12.5% [row2-start] 20% [row2-end] 12.5% [row3-start] 30% [row3-end] 12.5% [row4-start];
   grid-template-columns: [line1] 50% [line2] 50% [line3];
 }
 
@@ -297,7 +310,6 @@ export default defineComponent({
 }
 
 .exerciseListDiv {
-  border-top: 2px solid black;
 }
 
 .display-card {
@@ -311,18 +323,48 @@ export default defineComponent({
   box-shadow: rgba(0, 0, 0, 0.01) 0px 10px 20px, rgba(0, 0, 0, 0.05) 0px 6px 6px;
 }
 
-.exercise-name-div {
-  grid-row: row1-start / row1-end;
+.headline-name-div {
+  grid-row: row1-end / row2-start;
   grid-column: line1 / line3;
-  justify-self: center;
+  justify-self: start;
   align-self: center;
+  margin-left: 3%;
+}
+
+.list-headline-div {
+  grid-row: row3-end / row4-start;
+  grid-column: line1 / line3;
+  justify-self: start;
+  align-self: end;
+  margin-left: 3%;
+}
+
+p {
+  color: black;
+  font-weight: bold;
+}
+
+.exercise-name-div {
+  grid-row: row2-start / row2-end;
+  grid-column: line1 / line3;
+  justify-self: start;
+  align-self: center;
+  width: 100%;
+}
+
+.workoutbreak-name-div {
+  grid-row: row2-end / row3-start;
+  grid-column: line1 / line3;
+  justify-self: start;
+  align-self: center;
+  margin-left: 3%;
 }
 
 .back-button-div {
   grid-row: row1-start / row1-end;
-  grid-column: line1 / line2;
+  grid-column: line1 / line3;
   justify-self: start;
-  align-self: center;
+  align-self: start;
 }
 
 .back-icon {
@@ -331,8 +373,10 @@ export default defineComponent({
 }
 
 .exercise-name-label {
-  font-size: xx-large;
+  font-size: x-large;
   font-weight: bold;
+  color: var(--ion-color-light);
+  margin-left: 3%;
 }
 
 .selectBreakTimeDiv {
@@ -341,8 +385,8 @@ export default defineComponent({
   font-weight: bold;
   font-size: 16px;
   color: transparent;
-  grid-row: row2-start / row2-end;
-  grid-column: line1 / line2;
+  grid-row: row3-start / row3-end;
+  grid-column: line2 / line3;
   width: 125px;
   text-align: center;
 }
@@ -352,8 +396,8 @@ export default defineComponent({
   font-weight: bold;
   font-size: 16px;
   color: var(--ion-color-secondary);
-  grid-row: row2-start / row2-end;
-  grid-column: line2 / line3;
+  grid-row: row3-start / row3-end;
+  grid-column: line1 / line2;
   width: 125px;
   text-align: center;
 }

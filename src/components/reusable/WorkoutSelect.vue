@@ -1,5 +1,5 @@
 <template>
-  <ion-card class="display-card" :color="props.backgroundColor">
+  <ion-card :color="props.backgroundColor">
     <div class="timeAndCountDiv">
       <!-- <p class="timeLabel">{{ props.name }}</p> -->
       <ion-icon size="large" :icon="selectIcon"></ion-icon>
@@ -52,10 +52,13 @@ export default defineComponent({
 <style scoped>
 ion-select {
   --placeholder-opacity: 1;
+  
 }
 
 ion-select::part(icon) {
   color: var(--ion-color-success);
   opacity: 1;
 }
+
+
 </style>

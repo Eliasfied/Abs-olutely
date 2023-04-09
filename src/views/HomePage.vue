@@ -25,7 +25,7 @@
                 >Start the Journey!</ion-label
               >
               <ion-label class="create-plan-label-text"
-                >create your own Plan</ion-label
+                >begin your own Plan</ion-label
               >
             </div>
           </ion-card>

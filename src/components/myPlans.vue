@@ -153,7 +153,7 @@ export default defineComponent({
     console.log(totalWorkouts);
 
     let planDone = computed(() => (index) => {
-      if (workoutsDone.value) {
+      if (plans.value[index].weeks) {
         workoutsDone.value =
           plans.value[index].currentWeek *
             plans.value[index].weeks[0].array.length +

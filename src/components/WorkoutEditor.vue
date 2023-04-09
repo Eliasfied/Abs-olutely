@@ -62,14 +62,14 @@
           </div>
         </div>
 
-        <ion-card v-if="showTimeSelect">
-          <div class="grid-style-editor">
+          <div v-if="showTimeSelect" class="grid-style-editor">
             <div v-if="!showExerciseList" class="select-exercise-length">
               <workout-select
                 @updateTime="updateExerciseTime"
                 name="ExerciseTime"
                 :time="exerciseTime"
                 :options="exerciseOptions"
+                background-color="medium"
               ></workout-select>
             </div>
             <div class="select-break-length">
@@ -78,10 +78,10 @@
                 name="BreakTime"
                 :time="breakTime"
                 :options="breakOptions"
+                background-color="medium"
               ></workout-select>
             </div>
           </div>
-        </ion-card>
 
         <div v-if="!showExerciseList" class="grid-style-editor-bottom">
           <div v-if="noExercises" class="nothing-added">
@@ -512,6 +512,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
+.yolo {
+  color: red;
+}
+
+
 .grid-page {
   height: 90%;
   display: grid;

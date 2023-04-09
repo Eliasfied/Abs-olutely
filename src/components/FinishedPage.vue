@@ -1,17 +1,45 @@
 <template>
-  <ion-card color="secondary">
+  <ion-card color="tertiary">
     <div class="grid-style-finish">
-      <div class="finish-text">{{ finishText }}</div>
-      <div class="finish-subtext">{{ finishSubtext }}</div>
-      <div class="finish-workout">
-        <img :src="finishedImage" alt="" />
+      <div class="flag-div">
+        <ion-icon class="flag-icon" :icon="ribbon" color="light"></ion-icon>
       </div>
-      <div class="finish-buttons">
-        ><ion-button @click="navigateBack()" color="primary"
-          >Back To Menu</ion-button
+      <div class="finish-subtext">
+        <ion-label class="finish-subtext-label">
+          {{ finishSubtext }}
+        </ion-label>
+      </div>
+      <div v-if="isPlan" class="workout-details">
+       <div class="progress-div">
+       <p>your progress</p>
+       </div>
+       <div class="percentage-done-div">
+        <ion-label class="percentage-done-label">
+
+        </ion-label>
+       </div>
+
+      </div>
+      <div class="footer-grid">
+      <div class="addExercise">
+        <ion-button
+          class="add-button"
+          shape="round"
+          color="warning"
+          @click="navigateBack()"
+          ><ion-icon
+            size="large"
+            slot="start"
+            color="secondary"
+            :icon="backspace"
+          ></ion-icon
+          ><ion-label color="secondary">Back</ion-label></ion-button
         >
       </div>
     </div>
+    </div>
+
+
   </ion-card>
 </template>
 <script lang="ts">
@@ -25,6 +53,7 @@ import planStorage from "../storage/myPlanStorage";
 import activePlanStorage from "../storage/activePlanStorage";
 import { useWorkoutPlanData } from "../store/workoutPlanData";
 import { useRoute, useRouter } from "vue-router";
+import { flag, ribbon, medal, backspace } from "ionicons/icons";
 
 export default defineComponent({
   name: "FinishedPage",
@@ -32,8 +61,7 @@ export default defineComponent({
   props: ["page", "proptime", "isFinished"],
   emits: ["resetAll"],
   setup(props, { emit }) {
-    let finishText = "Good Job!";
-    let finishSubtext = "Workout completed: " + props.page;
+    let finishSubtext = props.page + " completed!";
     let id = Date.now().toString();
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, "0");
@@ -51,6 +79,8 @@ export default defineComponent({
     console.log(date);
 
     let myPlan: any = [];
+
+    let isPlan = ref(false);
 
     let weekNumber = 4000;
     let dayNumber = 4000;
@@ -76,36 +106,39 @@ export default defineComponent({
     }
 
     async function updatePlan() {
-
       console.log("numbers");
       console.log(weekNumber);
       console.log(dayNumber);
       if (weekNumber == 500 || weekNumber == 4000) {
         return;
       }
-      await activePlanStorage.removeItem("activePlan",);
-      await activePlanStorage.setItem("activePlan", {activePlan: myPlan.planName});
+      await activePlanStorage.removeItem("activePlan");
+      await activePlanStorage.setItem("activePlan", {
+        activePlan: myPlan.planName,
+      });
       myPlan.weeks[weekNumber].array[dayNumber].state = "done";
       myPlan.weeks[weekNumber].array[dayNumber].doneDate = date;
 
       //myPlan.weeks[1+1].array[2+1].state = "today";
       console.log(myPlan.currentWeek);
       console.log(myPlan.weeks);
-      if (myPlan.currentWeek == myPlan.weeks.length -1 && myPlan.currentDay == myPlan.weeks[weekNumber].array.length -1  ) {
+      if (
+        myPlan.currentWeek == myPlan.weeks.length - 1 &&
+        myPlan.currentDay == myPlan.weeks[weekNumber].array.length - 1
+      ) {
         console.log("letzte woche erreicht");
         myPlan.currentDay++;
-
-      }
-      else {
-        if (myPlan.currentDay < myPlan.weeks[weekNumber].array.length - 1) {
-        myPlan.currentDay++;
       } else {
-        myPlan.currentWeek++;
-        myPlan.currentDay = 0;
+        if (myPlan.currentDay < myPlan.weeks[weekNumber].array.length - 1) {
+          myPlan.currentDay++;
+        } else {
+          myPlan.currentWeek++;
+          myPlan.currentDay = 0;
+        }
+        myPlan.weeks[myPlan.currentWeek].array[myPlan.currentDay].state =
+          "today";
       }
-      myPlan.weeks[myPlan.currentWeek].array[myPlan.currentDay].state = "today";
-      }
-     
+
       let parseArray = JSON.parse(JSON.stringify(myPlan.weeks));
       let lastWorkout = date;
 
@@ -171,11 +204,15 @@ export default defineComponent({
 
     return {
       props,
-      finishText,
       finishSubtext,
       finishedImage,
       date,
       navigateBack,
+      flag,
+      ribbon,
+      medal,
+      backspace,
+      isPlan,
     };
   },
 });
@@ -201,9 +238,15 @@ ion-card {
     rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
-img {
-  height: 100%;
-  width: 100%;
+.flag-div {
+  grid-row: row1-start / row2-start;
+  grid-column: line1 / line2;
+  align-self: center;
+  justify-self: center;
+}
+
+.flag-icon {
+  font-size: 112px;
 }
 
 .finish-text {
@@ -224,25 +267,63 @@ img {
   color: var(--ion-color-primary);
 }
 
-.finish-workout {
-  justify-self: center;
-  align-self: center;
+.finish-subtext-label {
+  color: var(--ion-color-medium);
+  font-size: larger;
+  font-weight: bold;
+}
+
+.workout-details {
   grid-row: row2-end / row3-start;
   grid-column: line1 / line2;
-
-  width: 100%;
-  height: 100%;
 }
 
-.finish-buttons {
-  justify-self: center;
-  align-self: center;
+.progress-div {
+
+}
+
+p {
+  color: black;
+  font-size: larger;
+  font-weight: bold;
+  margin-left: 5%;
+}
+
+.percentage-done-div {
+
+}
+.percentage-done-label {
+
+}
+
+ion-footer {
+  height: 10%;
+}
+.footer-grid {
   grid-row: row3-start / row3-end;
   grid-column: line1 / line2;
-  width: 100%;
+  display: grid;
+  grid-template-rows: [row1-start] 20% [row1-end] 80% [row2-start];
+  grid-template-columns: [column1-start] 100% [column1-end];
+
+  height: 100%;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  border-top: 0.5px solid lightgray;
 }
 
-ion-button {
+.addExercise {
+  grid-row: row1-start / row1-end;
   width: 100%;
+  text-align: center;
+}
+
+.add-button {
+  position: fixed;
+  bottom: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #dbbfdd;
+  width: 60%;
 }
 </style>
