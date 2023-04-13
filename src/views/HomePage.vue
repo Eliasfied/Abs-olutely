@@ -18,14 +18,14 @@
           </ion-card>
         </div>
         <div v-if="!showPlanWorkout" class="create-plan-div">
-          <ion-card @click="toCreatePlans" class="create-plan-card">
+          <ion-card @click="toPlanDecision" class="create-plan-card">
             <ion-icon class="add-icon" :icon="bookOutline"></ion-icon>
             <div class="label-flex-div">
               <ion-label class="create-plan-label-headline"
-                >Start the Journey!</ion-label
+                >Start the journey!</ion-label
               >
               <ion-label class="create-plan-label-text"
-                >begin your own Plan</ion-label
+                >begin your plan</ion-label
               >
             </div>
           </ion-card>
@@ -170,13 +170,13 @@ export default defineComponent({
       // advancedWorkoutName = "advanced";
       advancedWorkoutName.value = list[1].name;
       // champWorkoutName = "champ";
-      champWorkoutName.value = list[2].name;
+      champWorkoutName.value = list[3].name;
     }
 
     loadStore();
 
     let showPlanWorkout = computed(() => {
-      if (plans.value.length > 0 && planStore.activePlan != "noPlan") {
+      if (plans.value.length >= 0 && planStore.activePlan != "noPlan") {
         return true;
       } else {
         return false;
@@ -217,6 +217,10 @@ export default defineComponent({
       });
     }
 
+    function toPlanDecision() {
+      router.push("/planDecision");
+    }
+
     return {
       beginnerWorkoutName,
       advancedWorkoutName,
@@ -236,6 +240,7 @@ export default defineComponent({
       arrowForwardCircle,
       activePlan,
       toActivePlan,
+      toPlanDecision,
     };
   },
 });

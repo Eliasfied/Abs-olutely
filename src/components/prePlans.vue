@@ -1,9 +1,9 @@
 <template>
   <ion-page>
-    <the-footer title="custom Plans"> </the-footer>
+    <the-footer title="Plans"> </the-footer>
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-style-plans">
-        <div class="quickstart-text-div"><p>custom Plans</p></div>
+        <div class="quickstart-text-div"><p>Plans</p></div>
         <div class="plan-list">
           <ul>
             <li v-for="(plan, index) in plans" :key="plan">
@@ -33,13 +33,6 @@
                     </ion-label>
                     <ion-icon class="icon-color-weeks" :icon="flag"></ion-icon>
                   </div>
-                  <div class="icon-trash">
-                    <ion-icon
-                      @click.stop="deletePlan(index)"
-                      class="icon-color-trash"
-                      :icon="trash"
-                    ></ion-icon>
-                  </div>
                 </div>
               </ion-card>
             </li>
@@ -47,25 +40,6 @@
         </div>
       </div>
     </ion-content>
-    <ion-footer>
-      <div class="footer-grid">
-        <div class="addExercise">
-          <ion-button
-            class="add-button"
-            shape="round"
-            color="warning"
-            @click="addPlan()"
-            ><ion-icon
-              size="large"
-              slot="start"
-              color="secondary"
-              :icon="addCircle"
-            ></ion-icon
-            ><ion-label color="secondary">Add Plan</ion-label></ion-button
-          >
-        </div>
-      </div>
-    </ion-footer>
   </ion-page>
 </template>
 
@@ -95,7 +69,7 @@ import TheFooter from "../components/reusable/TheFooter.vue";
 import activePlanStorage from "../storage/activePlanStorage";
 
 export default defineComponent({
-  name: "myPlans",
+  name: "prePlans",
   components: {
     IonPage,
     IonContent,
@@ -112,7 +86,7 @@ export default defineComponent({
     async function loadStore() {
       store = useMyPlanStore();
       await store.loadPlansFromStore();
-      plans.value = store.planList;
+      plans.value = store.prePlanList;
     }
 
     function goToPlanPreview(planName: string) {
@@ -125,18 +99,6 @@ export default defineComponent({
       router.push({
         path: "/workoutplan/" + routeID + "/createPlanName",
       });
-    }
-
-    async function deletePlan(index) {
-      if (plans.value[index].planName == store.activePlan) {
-        await activePlanStorage.removeItem("activePlan");
-        await activePlanStorage.setItem("activePlan", { activePlan: "noPlan" });
-        store.activePlan = "noPlan";
-      }
-      await planStorage.removeItem(plans.value[index].planName);
-      console.log("index workout: ");
-      console.log(index);
-      plans.value.splice(index, 1);
     }
 
     let planWeeks = computed(() => (index) => {
@@ -182,7 +144,7 @@ export default defineComponent({
       (mutation, state) => {
         console.log("a change happened");
         console.log(mutation, state);
-        plans.value = state.planList;
+        plans.value = state.prePlanList;
       },
       { detached: true }
     );
@@ -203,7 +165,6 @@ export default defineComponent({
       readerOutline,
       calendarOutline,
       addPlan,
-      deletePlan,
       planWeeks,
       planDone,
       flag,

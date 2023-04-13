@@ -11,17 +11,13 @@
           ></ion-icon>
         </div>
         <div class="headline-name-div">
-          <p>
-            workout name
-          </p>
+          <p>workout name</p>
         </div>
         <div class="exercise-name-div">
           <ion-label class="exercise-name-label">{{ list.name }}</ion-label>
         </div>
         <div class="workoutbreak-name-div">
-          <p>
-            workout & break length
-          </p>
+          <p>workout & break length</p>
         </div>
         <div class="selectBreakTimeDiv">
           <workout-select
@@ -43,9 +39,7 @@
           ></workout-select>
         </div>
         <div class="list-headline-div">
-          <p>
-            exercises
-          </p>
+          <p>exercises</p>
         </div>
       </div>
 
@@ -179,7 +173,12 @@ export default defineComponent({
     let list;
     let store;
     let proplist;
-    if (page == "beginner" || page == "advanced" || page == "champ") {
+    if (
+      page == "beginner" ||
+      page == "advanced" ||
+      page == "champ" ||
+      page == "professional"
+    ) {
       store = useWorkoutsStore();
     } else {
       store = useMyWorkoutsStore();

@@ -1,9 +1,9 @@
 <template>
   <ion-page>
-    <the-footer title="custom Workouts"></the-footer>
+    <the-footer title="My Workouts"></the-footer>
     <ion-content color="tertiary" :fullscreen="true">
       <div class="grid-style-workouts">
-        <div class="quickstart-text-div"><p>custom Workouts</p></div>
+        <div class="quickstart-text-div"><p>my Workouts</p></div>
         <div class="workout-list">
           <div v-if="isEmpty" class="no-workouts-text">
             <p>No Workouts yet...</p>
@@ -14,7 +14,10 @@
                 <ion-card>
                   <div class="grid-style-li">
                     <div class="workout-icon">
-                      <ion-icon class="add-icon" :icon="barbellOutline"></ion-icon>
+                      <ion-icon
+                        class="add-icon"
+                        :icon="barbellOutline"
+                      ></ion-icon>
                     </div>
                     <div class="label-workoutname">
                       <ion-label>{{ workout.name }}</ion-label>
@@ -36,19 +39,6 @@
                       <ion-icon :icon="cafe"></ion-icon>
                       <ion-label>{{ workout.breakTime }}s</ion-label>
                     </div>
-                    <div class="icon-edit">
-                      <router-link
-                        :to="'/myworkouts/editor/' + workouts[index].name"
-                        ><ion-icon :icon="create"></ion-icon
-                      ></router-link>
-                    </div>
-                    <div class="icon-trash">
-                      <ion-icon
-                        @click.prevent="removeWorkout(index)"
-                        class="icon-color-trash"
-                        :icon="trash"
-                      ></ion-icon>
-                    </div>
                   </div>
                 </ion-card>
               </router-link>
@@ -57,25 +47,6 @@
         </div>
       </div>
     </ion-content>
-    <ion-footer>
-      <div class="footer-grid">
-        <div class="addExercise">
-          <ion-button
-            @click="newWorkout"
-            class="add-button"
-            shape="round"
-            color="warning"
-            ><ion-icon
-              size="large"
-              slot="start"
-              color="secondary"
-              :icon="addCircle"
-            ></ion-icon
-            ><ion-label color="secondary">Add Workout</ion-label></ion-button
-          >
-        </div>
-      </div>
-    </ion-footer>
   </ion-page>
 </template>
 
@@ -83,14 +54,7 @@
 import { defineComponent } from "vue";
 import TheFooter from "../components/reusable/TheFooter.vue";
 import { useRouter } from "vue-router";
-import {
-  IonPage,
-  IonContent,
-  IonCard,
-  IonIcon,
-  IonFooter,
-  IonLabel,
-} from "@ionic/vue";
+import { IonPage, IonContent, IonCard, IonIcon, IonLabel } from "@ionic/vue";
 import {
   addCircle,
   clipboardOutline,
@@ -105,18 +69,17 @@ import {
   cafeOutline,
   cafe,
 } from "ionicons/icons";
-import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { ref, watch } from "vue";
-import myWorkoutStorage from "../storage/myWorkoutStorage";
+import { useWorkoutsStore } from "../store/workouts";
+
 export default defineComponent({
-  name: "MyWorkouts",
+  name: "preWorkouts",
   components: {
     TheFooter,
     IonPage,
     IonContent,
     IonCard,
     IonIcon,
-    IonFooter,
     IonLabel,
   },
   setup() {
@@ -137,11 +100,11 @@ export default defineComponent({
           isEmpty.value = true;
         }
       },
-      { deep: true, immediate: true } 
+      { deep: true, immediate: true }
     );
 
     async function loadStore() {
-      const store = useMyWorkoutsStore();
+      const store = useWorkoutsStore();
       await store.loadWorkoutsFromStore();
       workouts.value = store.workoutList;
 
@@ -164,20 +127,7 @@ export default defineComponent({
       );
     }
 
-    async function removeWorkout(index) {
-      await myWorkoutStorage.removeItem(workouts.value[index].name);
-      console.log("index workout: ");
-      console.log(index);
-      workouts.value.splice(index, 1);
-    }
-
     //routing
-    const router = useRouter();
-    let routeID;
-    function newWorkout() {
-      routeID = Math.floor(Math.random() * 1000);
-      router.push("/myworkouts/editor/" + routeID);
-    }
 
     return {
       addCircle,
@@ -186,9 +136,7 @@ export default defineComponent({
       trash,
       clipboard,
       workouts,
-      removeWorkout,
       isEmpty,
-      newWorkout,
       hourglassOutline,
       barbellOutline,
       timeOutline,

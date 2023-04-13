@@ -14,21 +14,18 @@
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle>
-          <ion-item
-            router-link="/myPlans"
-            class="list-item"
-            color="secondary"
+          <ion-item router-link="/prePlans" class="list-item" color="secondary"
             ><ion-icon slot="start" :icon="readerOutline"></ion-icon>
-            <p>My Plans</p></ion-item
+            <p>Plans</p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item
-            router-link="/myworkouts"
+            router-link="/preWorkouts"
             class="list-item"
             color="secondary"
             ><ion-icon slot="start" :icon="barbellOutline"></ion-icon>
-            <p>My Workouts</p></ion-item
+            <p>Workouts</p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
@@ -41,6 +38,21 @@
           <ion-item router-link="/statistics" color="secondary"
             ><ion-icon slot="start" :icon="analyticsOutline"></ion-icon>
             <p>Statistics</p></ion-item
+          >
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item router-link="/myPlans" class="list-item" color="secondary"
+            ><ion-icon slot="start" :icon="readerSharp"></ion-icon>
+            <p>custom Plans</p></ion-item
+          >
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item
+            router-link="/myworkouts"
+            class="list-item"
+            color="secondary"
+            ><ion-icon slot="start" :icon="barbellSharp"></ion-icon>
+            <p>custom Workouts</p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
@@ -75,6 +87,8 @@ import {
   settingsOutline,
   analyticsOutline,
   readerOutline,
+  readerSharp,
+  barbellSharp,
 } from "ionicons/icons";
 
 import { ref, watch } from "vue";
@@ -116,7 +130,9 @@ export default defineComponent({
       calendarOutline,
       settingsOutline,
       analyticsOutline,
-      readerOutline
+      readerOutline,
+      readerSharp,
+      barbellSharp,
     };
   },
 });

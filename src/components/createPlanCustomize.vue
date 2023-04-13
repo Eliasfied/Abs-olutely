@@ -166,6 +166,7 @@ export default defineComponent({
       await activePlanStorage.setItem("activePlan", { activePlan: name });
       let parseArray = JSON.parse(JSON.stringify(weekArray.value));
       let sendArray = {
+        isDefault: false,
         planName: name,
         currentDay: 0,
         currentWeek: 0,

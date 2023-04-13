@@ -173,7 +173,11 @@ export default defineComponent({
       (mutation, state) => {
         console.log("a change happened");
         console.log(mutation, state);
-        weekArray = state.planList.find((element) => element.planName == page);
+        combinedPlans = state.planList.concat(state.prePlanList);
+        // weekArray = state.planList.find((element) => element.planName == page);
+        weekArray = combinedPlans.find((element) => element.planName == page);
+        console.log("weeekarrray");
+        console.log(weekArray);
         if (weekArray != undefined) {
           workoutsDone.value =
             weekArray.currentWeek * weekArray.weeks[0].array.length +
@@ -201,9 +205,10 @@ export default defineComponent({
     console.log(planStore);
     console.log("page " + page);
 
-    let weekArray = planStore.planList.find(
-      (element) => element.planName == page
-    );
+    let combinedPlans = planStore.planList.concat(planStore.prePlanList);
+
+    let weekArray = combinedPlans.find((element) => element.planName == page);
+    console.log(weekArray);
 
     let selectedDay = ref(0);
     let weekIndex = ref(weekArray.currentWeek);
@@ -265,6 +270,7 @@ export default defineComponent({
 
     let selectedWeek = computed(() => {
       console.log("check");
+      console.log(weekArray);
       console.log(weekArray.weeks);
       return weekArray.weeks[selectedDay.value].array;
     });

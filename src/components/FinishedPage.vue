@@ -10,36 +10,31 @@
         </ion-label>
       </div>
       <div v-if="isPlan" class="workout-details">
-       <div class="progress-div">
-       <p>your progress</p>
-       </div>
-       <div class="percentage-done-div">
-        <ion-label class="percentage-done-label">
-
-        </ion-label>
-       </div>
-
+        <div class="progress-div">
+          <p>your progress</p>
+        </div>
+        <div class="percentage-done-div">
+          <ion-label class="percentage-done-label"> </ion-label>
+        </div>
       </div>
       <div class="footer-grid">
-      <div class="addExercise">
-        <ion-button
-          class="add-button"
-          shape="round"
-          color="warning"
-          @click="navigateBack()"
-          ><ion-icon
-            size="large"
-            slot="start"
-            color="secondary"
-            :icon="backspace"
-          ></ion-icon
-          ><ion-label color="secondary">Back</ion-label></ion-button
-        >
+        <div class="addExercise">
+          <ion-button
+            class="add-button"
+            shape="round"
+            color="warning"
+            @click="navigateBack()"
+            ><ion-icon
+              size="large"
+              slot="start"
+              color="secondary"
+              :icon="backspace"
+            ></ion-icon
+            ><ion-label color="secondary">Back</ion-label></ion-button
+          >
+        </div>
       </div>
     </div>
-    </div>
-
-
   </ion-card>
 </template>
 <script lang="ts">
@@ -50,6 +45,7 @@ import statisticStorage from "../storage/statisticsStorage";
 import { useStatisticsStore } from "../store/statisticsStore";
 import { useMyPlanStore } from "../store/myPlans";
 import planStorage from "../storage/myPlanStorage";
+import defaultPlans from "@/storage/defaultPlanStorage";
 import activePlanStorage from "../storage/activePlanStorage";
 import { useWorkoutPlanData } from "../store/workoutPlanData";
 import { useRoute, useRouter } from "vue-router";
@@ -94,7 +90,8 @@ export default defineComponent({
     async function loadPlanStore() {
       const planStore = useMyPlanStore();
       await planStore.loadPlansFromStore();
-      myPlan = planStore.planList.find(
+      let combinedPlans = planStore.planList.concat(planStore.prePlanList);
+      myPlan = combinedPlans.find(
         (element) => element.planName == currentPlanName
       );
     }
@@ -143,6 +140,7 @@ export default defineComponent({
       let lastWorkout = date;
 
       let sendArray = {
+        isDefault: myPlan.isDefault,
         planName: myPlan.planName,
         currentDay: myPlan.currentDay,
         currentWeek: myPlan.currentWeek,
@@ -151,11 +149,15 @@ export default defineComponent({
         weeks: parseArray,
       };
 
-      await planStorage.removeItem(myPlan.planName);
-      await planStorage.setItem(sendArray.planName, sendArray);
-      await reloadPlanStore();
-      //const planStore = useMyPlanStore();
-      // await planStore.workoutToArray
+      if (sendArray.isDefault == true) {
+        await defaultPlans.removeItem(myPlan.planName);
+        await defaultPlans.setItem(sendArray.planName, sendArray);
+        await reloadPlanStore();
+      } else {
+        await planStorage.removeItem(myPlan.planName);
+        await planStorage.setItem(sendArray.planName, sendArray);
+        await reloadPlanStore();
+      }
     }
 
     async function workoutToStatistics() {
@@ -197,6 +199,8 @@ export default defineComponent({
         router.push({ path: "/statistics", replace: true });
         emit("resetAll");
       } else {
+        workoutPlanDataStore.weekNumber = 500;
+        workoutPlanDataStore.dayNumber = 500;
         router.push({ path: "/planPreview/" + myPlan.planName, replace: true });
         emit("resetAll");
       }
@@ -279,7 +283,6 @@ ion-card {
 }
 
 .progress-div {
-
 }
 
 p {
@@ -290,10 +293,8 @@ p {
 }
 
 .percentage-done-div {
-
 }
 .percentage-done-label {
-
 }
 
 ion-footer {

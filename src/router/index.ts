@@ -16,6 +16,9 @@ import createPlanCustomize from "../components/createPlanCustomize.vue";
 import WorkoutList from "../components/WorkoutList.vue";
 import PlanPreview from "../components/PlanPreview.vue";
 import myPlans from "../components/myPlans.vue";
+import planDecision from "../components/planDecision.vue";
+import prePlans from "../components/prePlans.vue";
+import preWorkouts from "../components/preWorkouts.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -65,6 +68,21 @@ const routes: Array<RouteRecordRaw> = [
     path: "/planPreview/:plan",
     name: "PlanPreview",
     component: PlanPreview,
+  },
+  {
+    path: "/planDecision",
+    name: "planDecision",
+    component: planDecision,
+  },
+  {
+    path: "/prePlans",
+    name: "prePlans",
+    component: prePlans,
+  },
+  {
+    path: "/preWorkouts",
+    name: "preWorkouts",
+    component: preWorkouts,
   },
   {
     path: "/workoutplan/:id/createPlanName",
