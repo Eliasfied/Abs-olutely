@@ -6,26 +6,29 @@
         <div class="plan-headline-name">
           <p>Plan Name</p>
         </div>
-        <div class="plan-name-container">
-          <div class="plan-name">
-            <ion-label class="plan-name-label" color="secondary">
-              {{ weekArray.planName }}
-            </ion-label>
-          </div>
-
-          <div class="progress-bar-div">
-            <CircleProgressBar
-              class="progress-bar"
-              :value="workoutsDone"
-              :max="totalWorkouts"
-              percentage="true"
-              animationDuration="1s"
-              :colorUnfilled="colorUnfilled"
-              :colorFilled="colorFilled"
-            />
-          </div>
+        <div class="reset-div">
+          <ion-icon
+            class="reset-icon"
+            :icon="reload"
+            @click="resetPlan"
+          ></ion-icon>
         </div>
-
+        <div class="plan-name">
+          <ion-label class="plan-name-label" color="secondary">
+            {{ weekArray.planName }}
+          </ion-label>
+        </div>
+        <div class="progress-bar-div">
+          <CircleProgressBar
+            class="progress-bar"
+            :value="workoutsDone"
+            :max="totalWorkouts"
+            percentage="true"
+            animationDuration="1s"
+            :colorUnfilled="colorUnfilled"
+            :colorFilled="colorFilled"
+          />
+        </div>
         <div class="weeks-headline">
           <p>Weeks</p>
         </div>
@@ -115,6 +118,8 @@ import TheFooter from "../components/reusable/TheFooter.vue";
 import { useRoute, useRouter } from "vue-router";
 import { CircleProgressBar } from "vue3-m-circle-progress-bar";
 import { useWorkoutPlanData } from "../store/workoutPlanData";
+import planStorage from "../storage/myPlanStorage";
+import defaultPlans from "@/storage/defaultPlanStorage";
 
 import {
   addCircle,
@@ -128,7 +133,11 @@ import {
   receiptOutline,
   bodyOutline,
   checkmarkDoneOutline,
+  arrowRedo,
+  arrowRedoCircle,
+  reload,
 } from "ionicons/icons";
+import { async } from "rxjs/internal/scheduler/async";
 
 export default defineComponent({
   name: "WorkoutPlan",
@@ -286,6 +295,48 @@ export default defineComponent({
       }, 1000);
     }
 
+    async function resetPlan() {
+      weekArray.currentDay = 0;
+      weekArray.currentWeek = 0;
+      selectedCardIndex.value = 0;
+      weekArray.lastWorkout = "";
+      weekIndex.value = 0;
+      console.log(weekArray.weeks.length);
+
+      for (let i = 0; i < weekArray.weeks.length; i++) {
+        console.log(weekArray.weeks[i].array.length);
+        for (let y = 0; y < weekArray.weeks[i].array.length; y++) {
+          console.log("wo bin ich");
+          console.log(weekArray.weeks[i].array[y].stat);
+          weekArray.weeks[i].array[y].state = "open";
+        }
+      }
+
+      weekArray.weeks[0].array[0].state = "today";
+
+      let parseArray = JSON.parse(JSON.stringify(weekArray.weeks));
+
+      let sendArray = {
+        isDefault: weekArray.isDefault,
+        planName: weekArray.planName,
+        currentDay: weekArray.currentDay,
+        currentWeek: weekArray.currentWeek,
+        totalDays: weekArray.totalDays,
+        lastWorkout: weekArray.lastWorkout,
+        weeks: parseArray,
+      };
+
+      if (sendArray.isDefault == true) {
+        await defaultPlans.removeItem(weekArray.planName);
+        await defaultPlans.setItem(sendArray.planName, sendArray);
+        await planStore.loadPlansFromStore();
+      } else {
+        await planStorage.removeItem(weekArray.planName);
+        await planStorage.setItem(sendArray.planName, sendArray);
+        await planStore.loadPlansFromStore();
+      }
+    }
+
     function goToWorkout(index, index2) {
       console.log(weekIndex.value);
       console.log(index2);
@@ -310,6 +361,7 @@ export default defineComponent({
       weekArray,
       selectedDay,
       selectedWeek,
+      resetPlan,
       changeWeek,
       weekIndex,
       selectedCardIndex,
@@ -337,6 +389,9 @@ export default defineComponent({
       showFinishedIcon,
       checkmarkDoneOutline,
       doneIconShow,
+      arrowRedo,
+      arrowRedoCircle,
+      reload,
     };
   },
 });
@@ -384,31 +439,37 @@ p {
 .grid-page {
   display: grid;
   height: 90%;
-  grid-template-rows: [row1-start] 5% [row1-end] 10% [row2-start] 5% [row2-end]15% [row3-start]5% [row3-end]60% [row4-start];
-}
-
-.plan-name-container {
-  grid-template-rows: row1-end / row2-start;
-  align-self: center;
-  justify-self: center;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-  width: 100%;
+  grid-template-rows: [row1-start] 7.5% [row1-end] 10% [row2-start] 5% [row2-end]10% [row3-start]5% [row3-end]60% [row4-start];
+  grid-template-columns: [column1-start] 50% [column1-end] 50% [column2-start];
 }
 
 .plan-headline-name {
-  grid-template-rows: row1-start / row1-end;
+  grid-row: row1-start / row1-end;
+  grid-column: column1-start / column2-start;
+  width: 40%;
+  align-self: end;
+  justify-self: start;
+}
+
+.reset-div {
+  grid-row: row1-start / row1-end;
+  grid-column: column1-end / column2-start;
+  align-self: center;
+  justify-self: end;
+  margin-right: 5%;
+}
+
+.reset-icon {
+  font-size: xx-large;
+  color: var(--ion-color-light);
 }
 
 .plan-name {
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  flex: 6;
-  height: 100%;
+  grid-row: row1-end / row2-start;
+  grid-column: column1-start / column2-start;
+  align-self: center;
+  justify-self: start;
+  width: 60%;
 }
 
 .plan-name-label {
@@ -419,11 +480,10 @@ p {
 }
 
 .progress-bar-div {
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  flex: 3;
-  height: 100%;
+  grid-row: row1-end / row2-start;
+  grid-column: column1-end / column2-start;
+  align-self: center;
+  justify-self: center;
 }
 .progress-bar {
   color: #80abca;
@@ -431,10 +491,13 @@ p {
 }
 
 .weeks-headline {
-  grid-template-rows: row2-start / row2-end;
+  grid-row: row2-start / row2-end;
+  grid-column: column1-start / column2-start;
 }
 .weeks-div {
-  grid-template-rows: row2-end / row3-start;
+  grid-row: row2-end / row3-start;
+  grid-column: column1-start / column2-start;
+
   align-self: center;
   justify-self: center;
   height: 100%;
@@ -442,10 +505,12 @@ p {
 }
 
 .days-headline {
-  grid-template-rows: row3-start / row3-end;
+  grid-row: row3-start / row3-end;
+  grid-column: column1-start / column2-start;
 }
 .days-div {
-  grid-template-rows: row3-end / row4-start;
+  grid-row: row3-end / row4-start;
+  grid-column: column1-start / column2-start;
 }
 
 .days-ul {
@@ -486,11 +551,12 @@ p {
   white-space: nowrap;
   height: 100%;
   width: 100%;
+  margin: 0;
 }
 
 .week-listitem {
   display: inline-block;
-  height: 40%;
+  height: 60%;
   width: 20%;
   margin: 10px;
 }

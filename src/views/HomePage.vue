@@ -92,7 +92,7 @@
           </ion-card>
         </div>
         <div class="statistics-div">
-          <ion-card @click="toMyWorkouts" class="settings-card">
+          <ion-card @click="toSettings" class="settings-card">
             <ion-icon class="add-icon" :icon="settingsOutline"></ion-icon>
             <div class="label-flex-div">
               <ion-label class="create-plan-label-headline">Settings</ion-label>
@@ -221,6 +221,10 @@ export default defineComponent({
       router.push("/planDecision");
     }
 
+    function toSettings() {
+      router.push("/settings");
+    }
+
     return {
       beginnerWorkoutName,
       advancedWorkoutName,
@@ -241,6 +245,7 @@ export default defineComponent({
       activePlan,
       toActivePlan,
       toPlanDecision,
+      toSettings,
     };
   },
 });
