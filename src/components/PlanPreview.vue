@@ -110,7 +110,13 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import { IonContent, IonPage, IonLabel, IonIcon } from "@ionic/vue";
+import {
+  IonContent,
+  IonPage,
+  IonLabel,
+  IonIcon,
+  alertController,
+} from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { computed, ref, watch, onMounted } from "vue";
@@ -295,45 +301,77 @@ export default defineComponent({
       }, 1000);
     }
 
+    const handlerMessage = ref();
     async function resetPlan() {
-      weekArray.currentDay = 0;
-      weekArray.currentWeek = 0;
-      selectedCardIndex.value = 0;
-      weekArray.lastWorkout = "";
-      weekIndex.value = 0;
-      console.log(weekArray.weeks.length);
+      const alert = await alertController.create({
+        header: "reset plan?",
+        message: "your progress will be lost",
+        cssClass: "custom-alert",
+        buttons: [
+          {
+            text: "Yes",
+            cssClass: "alert-button-confirm",
+            handler: () => {
+              handlerMessage.value = 1;
+            },
+          },
+          {
+            text: "No",
+            cssClass: "alert-button-cancel",
+            handler: () => {
+              handlerMessage.value = 0;
+            },
+          },
+        ],
+      });
 
-      for (let i = 0; i < weekArray.weeks.length; i++) {
-        console.log(weekArray.weeks[i].array.length);
-        for (let y = 0; y < weekArray.weeks[i].array.length; y++) {
-          console.log("wo bin ich");
-          console.log(weekArray.weeks[i].array[y].stat);
-          weekArray.weeks[i].array[y].state = "open";
+      await alert.present();
+      await alert.onDidDismiss();
+
+      if (handlerMessage.value == 1) {
+        weekArray.currentDay = 0;
+        weekArray.currentWeek = 0;
+        selectedCardIndex.value = 0;
+        weekArray.lastWorkout = "";
+        weekIndex.value = 0;
+        console.log(weekArray.weeks.length);
+
+        for (let i = 0; i < weekArray.weeks.length; i++) {
+          console.log(weekArray.weeks[i].array.length);
+          for (let y = 0; y < weekArray.weeks[i].array.length; y++) {
+            console.log("wo bin ich");
+            console.log(weekArray.weeks[i].array[y].stat);
+            weekArray.weeks[i].array[y].state = "open";
+          }
+        }
+
+        weekArray.weeks[0].array[0].state = "today";
+
+        let parseArray = JSON.parse(JSON.stringify(weekArray.weeks));
+
+        let sendArray = {
+          isDefault: weekArray.isDefault,
+          planName: weekArray.planName,
+          currentDay: weekArray.currentDay,
+          currentWeek: weekArray.currentWeek,
+          totalDays: weekArray.totalDays,
+          lastWorkout: weekArray.lastWorkout,
+          weeks: parseArray,
+        };
+
+        if (sendArray.isDefault == true) {
+          await defaultPlans.removeItem(weekArray.planName);
+          await defaultPlans.setItem(sendArray.planName, sendArray);
+          await planStore.loadPlansFromStore();
+        } else {
+          await planStorage.removeItem(weekArray.planName);
+          await planStorage.setItem(sendArray.planName, sendArray);
+          await planStore.loadPlansFromStore();
         }
       }
 
-      weekArray.weeks[0].array[0].state = "today";
-
-      let parseArray = JSON.parse(JSON.stringify(weekArray.weeks));
-
-      let sendArray = {
-        isDefault: weekArray.isDefault,
-        planName: weekArray.planName,
-        currentDay: weekArray.currentDay,
-        currentWeek: weekArray.currentWeek,
-        totalDays: weekArray.totalDays,
-        lastWorkout: weekArray.lastWorkout,
-        weeks: parseArray,
-      };
-
-      if (sendArray.isDefault == true) {
-        await defaultPlans.removeItem(weekArray.planName);
-        await defaultPlans.setItem(sendArray.planName, sendArray);
-        await planStore.loadPlansFromStore();
-      } else {
-        await planStorage.removeItem(weekArray.planName);
-        await planStorage.setItem(sendArray.planName, sendArray);
-        await planStore.loadPlansFromStore();
+      if (handlerMessage.value == 0) {
+        return;
       }
     }
 

@@ -2,8 +2,20 @@
   <ion-page :fullscreen="true">
     <ion-content>
       <div class="grid-style">
-        <the-timer></the-timer>
-        <div class="item-timer">{{ counter }}</div>
+        <!-- <the-timer></the-timer> -->
+        <div class="progress-div">
+          <CircleProgressBar
+            class="progress-bar"
+            :value="counter"
+            :max="maxCounter"
+            animationDuration="0.5s"
+            :colorUnfilled="colorUnfilled"
+            :colorFilled="colorFilled"
+          >
+            {{ counter }}
+          </CircleProgressBar>
+        </div>
+        <!-- <div class="item-timer">{{ counter }}</div> -->
         <div class="item-exerciseNumber">{{ currentExerciseNumber }}</div>
         <div class="item-exerciseName">{{ currentExercise }}</div>
         <div class="item-nextExercise">{{ nextExercise }}</div>
@@ -62,6 +74,7 @@ import { StatusBar, Style } from "@capacitor/status-bar";
 import { NativeAudio } from "@ionic-native/native-audio";
 import { useMyPlanStore } from "../store/myPlans";
 import planStorage from "../storage/myPlanStorage";
+import { CircleProgressBar } from "vue3-m-circle-progress-bar";
 
 import {
   playBack,
@@ -76,14 +89,14 @@ export default defineComponent({
   components: {
     IonContent,
     IonPage,
-    TheTimer,
+    // TheTimer,
     IonButton,
     IonIcon,
     FinishedPage,
+    CircleProgressBar,
   },
 
   setup() {
-
     //onMounted
 
     onMounted(() => startWorkout());
@@ -153,7 +166,22 @@ export default defineComponent({
         60
     );
 
+    let colorUnfilled = "#80abca";
+    let colorFilled = "green";
+
     //ALL TIMER RELATED STUFF
+
+    let maxCounter = computed(() => {
+      if (currentExercise.value == "Break") {
+        return list.breakTime;
+      }
+      if (isPrepare.value == true) {
+        return 5;
+      }
+      else {
+       return list.exerciseTime;
+      }
+    });
 
     //custom asyncTimeout function
     const asyncTimeout = (ms: number) => {
@@ -175,8 +203,8 @@ export default defineComponent({
       console.log("currentExercise.value");
       console.log(currentExercise.value);
       return isPrepare.value
-        //? require("../assets/exercises/Prepare.png")
-        ? require("../assets/exercises/" + list?.exercises[0].name + ".gif")
+        ? //? require("../assets/exercises/Prepare.png")
+          require("../assets/exercises/" + list?.exercises[0].name + ".gif")
         : require("../assets/exercises/" + currentExercise.value + ".gif");
     }
 
@@ -367,6 +395,9 @@ export default defineComponent({
       isFinished,
       resetAll,
       proptime,
+      colorFilled,
+      colorUnfilled,
+      maxCounter,
     };
   },
 });
@@ -384,7 +415,7 @@ ion-button {
   color: #80abca;
 }
 
-.item-timer {
+/* .item-timer {
   justify-self: center;
   align-self: center;
   grid-column: line1 / line2;
@@ -392,6 +423,20 @@ ion-button {
   color: var(--ion-color-light);
   font-weight: bold;
   font-size: 28px;
+} */
+
+.progress-div {
+  justify-self: center;
+  align-self: center;
+  grid-column: line1 / line2;
+  grid-row: row1-start / row1-end;
+}
+
+.progress-bar {
+  color: #80abca;
+  font-weight: bold;
+  font-size: x-large;
+  padding: 20%;
 }
 
 .item-exerciseNumber {

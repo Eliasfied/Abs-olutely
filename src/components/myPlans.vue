@@ -72,7 +72,14 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { useRouter } from "vue-router";
-import { IonPage, IonContent, IonCard, IonLabel, IonIcon } from "@ionic/vue";
+import {
+  IonPage,
+  IonContent,
+  IonCard,
+  IonLabel,
+  IonIcon,
+  alertController,
+} from "@ionic/vue";
 import {
   addCircle,
   clipboardOutline,
@@ -127,16 +134,49 @@ export default defineComponent({
       });
     }
 
+    const handlerMessage = ref();
+
     async function deletePlan(index) {
-      if (plans.value[index].planName == store.activePlan) {
-        await activePlanStorage.removeItem("activePlan");
-        await activePlanStorage.setItem("activePlan", { activePlan: "noPlan" });
-        store.activePlan = "noPlan";
+      const alert = await alertController.create({
+        header: "delete plan?",
+        message: "this cant be undone",
+        cssClass: "custom-alert",
+        buttons: [
+          {
+            text: "Yes",
+            cssClass: "alert-button-confirm",
+            handler: () => {
+              handlerMessage.value = 1;
+            },
+          },
+          {
+            text: "No",
+            cssClass: "alert-button-cancel",
+            handler: () => {
+              handlerMessage.value = 0;
+            },
+          },
+        ],
+      });
+
+      await alert.present();
+      await alert.onDidDismiss();
+
+      if (handlerMessage.value == 1) {
+        if (plans.value[index].planName == store.activePlan) {
+          await activePlanStorage.removeItem("activePlan");
+          await activePlanStorage.setItem("activePlan", {
+            activePlan: "noPlan",
+          });
+          store.activePlan = "noPlan";
+        }
+        await planStorage.removeItem(plans.value[index].planName);
+        plans.value.splice(index, 1);
       }
-      await planStorage.removeItem(plans.value[index].planName);
-      console.log("index workout: ");
-      console.log(index);
-      plans.value.splice(index, 1);
+
+      if (handlerMessage.value == 0) {
+        return;
+      }
     }
 
     let planWeeks = computed(() => (index) => {

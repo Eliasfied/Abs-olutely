@@ -14,7 +14,10 @@
                 <ion-card>
                   <div class="grid-style-li">
                     <div class="workout-icon">
-                      <ion-icon class="add-icon" :icon="barbellOutline"></ion-icon>
+                      <ion-icon
+                        class="add-icon"
+                        :icon="barbellOutline"
+                      ></ion-icon>
                     </div>
                     <div class="label-workoutname">
                       <ion-label>{{ workout.name }}</ion-label>
@@ -90,6 +93,7 @@ import {
   IonIcon,
   IonFooter,
   IonLabel,
+  alertController,
 } from "@ionic/vue";
 import {
   addCircle,
@@ -137,7 +141,7 @@ export default defineComponent({
           isEmpty.value = true;
         }
       },
-      { deep: true, immediate: true } 
+      { deep: true, immediate: true }
     );
 
     async function loadStore() {
@@ -164,11 +168,40 @@ export default defineComponent({
       );
     }
 
+    const handlerMessage = ref();
     async function removeWorkout(index) {
-      await myWorkoutStorage.removeItem(workouts.value[index].name);
-      console.log("index workout: ");
-      console.log(index);
-      workouts.value.splice(index, 1);
+      const alert = await alertController.create({
+        header: "delete workout?",
+        message: "this cant be undone",
+        cssClass: "custom-alert",
+        buttons: [
+          {
+            text: "Yes",
+            cssClass: "alert-button-confirm",
+            handler: () => {
+              handlerMessage.value = 1;
+            },
+          },
+          {
+            text: "No",
+            cssClass: "alert-button-cancel",
+            handler: () => {
+              handlerMessage.value = 0;
+            },
+          },
+        ],
+      });
+
+      await alert.present();
+      await alert.onDidDismiss();
+
+      if (handlerMessage.value == 1) {
+        await myWorkoutStorage.removeItem(workouts.value[index].name);
+        workouts.value.splice(index, 1);
+      }
+      if (handlerMessage.value == 0) {
+        return;
+      }
     }
 
     //routing

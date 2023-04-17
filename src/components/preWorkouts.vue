@@ -1,12 +1,12 @@
 <template>
   <ion-page>
-    <the-footer title="My Workouts"></the-footer>
+    <the-footer title="Workouts"></the-footer>
     <ion-content color="tertiary" :fullscreen="true">
       <div class="grid-style-workouts">
-        <div class="quickstart-text-div"><p>my Workouts</p></div>
+        <div class="quickstart-text-div"><p>Workouts</p></div>
         <div class="workout-list">
           <div v-if="isEmpty" class="no-workouts-text">
-            <p>No Workouts yet...</p>
+            <p>No workouts yet...</p>
           </div>
           <ul>
             <li v-for="(workout, index) in workouts" :key="workout.name">
