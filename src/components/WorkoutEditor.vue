@@ -2,7 +2,7 @@
   <ion-page>
     <ion-content color="tertiary" :fullscreen="true">
       <the-footer v-if="!showExerciseList" title="Workout Editor"></the-footer>
-      
+
       <div
         v-if="showExerciseList && !showTimeSelect"
         class="align-exercise-list"
@@ -15,7 +15,7 @@
           :currentWorkout="currentWorkout"
         ></exercise-list>
       </div>
-   
+
       <div class="grid-page">
         <div v-if="!showExerciseList" class="grid-top">
           <div class="back-icon">
@@ -62,26 +62,26 @@
           </div>
         </div>
 
-          <div v-if="showTimeSelect" class="grid-style-editor">
-            <div v-if="!showExerciseList" class="select-exercise-length">
-              <workout-select
-                @updateTime="updateExerciseTime"
-                name="ExerciseTime"
-                :time="exerciseTime"
-                :options="exerciseOptions"
-                background-color="medium"
-              ></workout-select>
-            </div>
-            <div class="select-break-length">
-              <workout-select
-                @updateTime="updateBreakTime"
-                name="BreakTime"
-                :time="breakTime"
-                :options="breakOptions"
-                background-color="medium"
-              ></workout-select>
-            </div>
+        <div v-if="showTimeSelect" class="grid-style-editor">
+          <div v-if="!showExerciseList" class="select-exercise-length">
+            <workout-select
+              @updateTime="updateExerciseTime"
+              name="ExerciseTime"
+              :time="exerciseTime"
+              :options="exerciseOptions"
+              background-color="medium"
+            ></workout-select>
           </div>
+          <div class="select-break-length">
+            <workout-select
+              @updateTime="updateBreakTime"
+              name="BreakTime"
+              :time="breakTime"
+              :options="breakOptions"
+              background-color="medium"
+            ></workout-select>
+          </div>
+        </div>
 
         <div v-if="!showExerciseList" class="grid-style-editor-bottom">
           <div v-if="noExercises" class="nothing-added">
@@ -159,7 +159,9 @@
               color="secondary"
               :icon="addCircle"
             ></ion-icon
-            ><ion-label color="secondary">Add Exercises</ion-label></ion-button
+            ><ion-label class="add-label" color="secondary"
+              >Add Exercises</ion-label
+            ></ion-button
           >
         </div>
         <div class="time-calculate">
@@ -366,6 +368,26 @@ export default defineComponent({
     const handlerMessage = ref();
 
     async function safeExercise() {
+      if (workoutName.value == "") {
+        const alert = await alertController.create({
+          header: "Add Workout not possible",
+          message: "please enter a valid workoutname",
+          cssClass: "custom-alert",
+          buttons: [
+            {
+              text: "Ok",
+              cssClass: "alert-button-confirm",
+              handler: () => {
+                handlerMessage.value = 1;
+              },
+            },
+          ],
+        });
+
+        await alert.present();
+        await alert.onDidDismiss();
+        return;
+      }
       saved.value = true;
 
       //ALERT HANDLER MAKE COMPOSABLE OUT OF THIS
@@ -382,7 +404,8 @@ export default defineComponent({
         store.addToWorkoutlist(currentWorkout);
         console.log("workoutlist stored");
         console.log(store.workoutList);
-        router.push("/myworkouts");
+        // router.push("/myworkouts");
+        router.go(-1);
       } else {
         workout = await getMyWorkout(page);
         await WorkoutStorage.removeItem(workout.name);
@@ -397,7 +420,8 @@ export default defineComponent({
         console.log(workout);
         await WorkoutStorage.setItem(workoutName.value, workout);
         //store.loadWorkoutsFromStore;
-        router.push("/myworkouts");
+        // router.push("/myworkouts");
+        router.go(-1);
       }
     }
 
@@ -445,13 +469,16 @@ export default defineComponent({
 
         if (handlerMessage.value == 0) {
           console.log("no save");
-          router.push("/myworkouts");
+          // router.push("/myworkouts");
+          router.go(-1);
           return;
         }
         console.log("saved");
         safeExercise();
       } else {
-        router.push("/myworkouts");
+        // router.push("/myworkouts");
+
+        router.go(-1);
       }
     }
 
@@ -512,11 +539,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
 .yolo {
   color: red;
 }
-
 
 .grid-page {
   height: 90%;
@@ -533,7 +558,7 @@ export default defineComponent({
   grid-template-rows: [row1-start] 40% [row1-end] 60% [row2-start];
   grid-template-columns: [column1-start] 50% [column1-end] 20% [column2-start] 20% [column2-end] 10% [column3-start];
   border-radius: 0px 0px 20px 20px;
-  background-color:  #bce3f7;
+  background-color: #bce3f7;
 }
 
 .exercise-time {
@@ -603,14 +628,11 @@ export default defineComponent({
 .input-label {
   font-weight: lighter;
   color: white;
-
+  font-weight: bold;
 }
 ion-item {
   border: none;
   outline: none;
-  
- 
-
 }
 
 .item-has-focus ion-label {
@@ -620,7 +642,6 @@ ion-input {
   font-weight: bold;
   color: white;
   caret-color: white;
-  
 }
 
 .back-icon {
@@ -680,7 +701,7 @@ ion-input {
   font-weight: bold;
 }
 .input-workoutname {
-  padding: 10px;
+  padding: 3%;
   grid-row: row1-end / row2-start;
   grid-column: column1-start / column1-end;
   align-self: center;
@@ -735,6 +756,12 @@ ion-footer {
   bottom: 7%;
   left: 50%;
   transform: translateX(-50%);
+  width: 50%;
+}
+
+.add-label {
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .time-calculate {
@@ -779,7 +806,6 @@ ul {
 }
 
 ion-card {
-  
 }
 .list-exercises {
   width: 100%;
@@ -823,7 +849,6 @@ ion-card {
   font-size: medium;
   height: 100%;
   /* font-weight: bold; */
-  
 }
 
 .icon-trash {
@@ -860,7 +885,6 @@ ion-card {
 }
 
 li {
-  
 }
 
 ion-alert.custom-alert {
@@ -894,7 +918,4 @@ button.alert-button.alert-button-confirm {
   border-bottom-right-radius: 13px;
   border-top-right-radius: 13px;
 }
-
-
-
 </style>

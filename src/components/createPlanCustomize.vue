@@ -14,7 +14,6 @@
             <ion-label class="headline-label">workouts</ion-label>
           </div>
         </div>
-
         <div class="list-div">
           <ul>
             <li class="li-grid" v-for="(week, index) in weekArray" :key="index">
@@ -49,7 +48,7 @@
             color="warning"
             @click="goToPreview()"
           >
-            <ion-label color="secondary">Save</ion-label>
+            <ion-label class="add-label" color="secondary">Save</ion-label>
             <ion-icon
               size="large"
               slot="start"
@@ -74,6 +73,7 @@ import {
   helpOutline,
   barChartOutline,
   barbellOutline,
+  build,
 } from "ionicons/icons";
 import {
   IonContent,
@@ -256,7 +256,7 @@ export default defineComponent({
   justify-self: center;
   display: grid;
   grid-template-rows: [row1-start] 100% [row1-end];
-  grid-template-columns: [column1-start] 15% [column1-end] 85% [column2-start];
+  grid-template-columns: [column1-start] 15% [column1-end] 70% [column2-start] 15% [column2-end];
 }
 
 p {
@@ -285,6 +285,18 @@ p {
   grid-column: column1-end / column2-start;
   align-self: end;
   justify-self: start;
+}
+
+.create-workouts-div {
+  grid-row: row1-start / row1-end;
+  grid-column: column2-start / column2-end;
+  align-self: end;
+  justify-self: center;
+}
+
+.icon-build {
+  font-size: 40px;
+  color: black;
 }
 
 .icon-weeks {
@@ -412,11 +424,16 @@ ion-footer {
 }
 
 .add-button {
-  width: 60%;
   position: fixed;
   bottom: 17.5%;
   left: 50%;
   transform: translateX(-50%);
   color: #dbbfdd;
+  width: 50%;
+}
+
+.add-label {
+  font-weight: bold;
+  font-size: 14px;
 }
 </style>

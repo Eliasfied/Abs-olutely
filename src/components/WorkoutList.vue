@@ -2,6 +2,12 @@
   <ion-page>
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-exercise-list">
+        <div class="create-workout-div">
+          <ion-button @click="goToWorkout()" class="create-workout-button" color="warning" shape="round">
+            <ion-icon color="secondary" :icon="build"></ion-icon>
+            <ion-label color="secondary">add workout</ion-label>
+          </ion-button>
+        </div>
         <div class="close-icon">
           <ion-icon
             class="icon-cancel"
@@ -53,6 +59,8 @@ import {
   IonLabel,
   IonPage,
   IonContent,
+  IonButton,
+  
 } from "@ionic/vue";
 import { useRoute } from "vue-router";
 import {
@@ -60,6 +68,7 @@ import {
   informationCircleOutline,
   addOutline,
   barbellOutline,
+  build,
 } from "ionicons/icons";
 import { ref, onBeforeMount } from "vue";
 import { getWorkoutList } from "@/composables/getMyWorkoutList";
@@ -75,6 +84,7 @@ export default defineComponent({
     IonLabel,
     IonPage,
     IonContent,
+    IonButton
   },
   setup(props, { emit }) {
     //ROUTE
@@ -92,6 +102,16 @@ export default defineComponent({
 
     onBeforeMount(() => init());
 
+
+    // planStore.$subscribe(
+    //   (mutation, state) => {
+    //     console.log("a change happened");
+    //     console.log(mutation, state);
+    //     plans.value = state.planList;
+    //   },
+    //   { detached: true }
+    // );
+
     let proplist = ref();
     let propIndex = ref(0);
     let showModal = ref(false);
@@ -105,6 +125,12 @@ export default defineComponent({
     async function addWorkout(index, workoutname) {
       await planStore.workoutToArray(currentIndex, workoutname);
       router.go(-1);
+    }
+    let routeID;
+    function goToWorkout() {
+      routeID = Math.floor(Math.random() * 1000);
+      router.push("/myworkouts/editor/" + routeID);
+
     }
 
     //value for CSS animation
@@ -121,6 +147,8 @@ export default defineComponent({
       addOutline,
       addWorkout,
       barbellOutline,
+      build,
+      goToWorkout
     };
   },
 });
@@ -139,6 +167,7 @@ ion-label {
 p {
   font-weight: bold;
   color: black;
+  margin-left: 2.5%;
 }
 
 .grid-exercise-list {
@@ -146,6 +175,18 @@ p {
   display: grid;
   grid-template-rows: [row1-start] 5% [row1-end] 5% [row2-start] 85% [row2-end];
   grid-template-columns: [column1-start] 85% [column1-end] 15% [column2-start];
+}
+
+.create-workout-div {
+  grid-row: row1-start / row1-end;
+  grid-column: column1-start / column1-end;
+  align-self: center;
+  justify-self: center;
+}
+
+.create-workout-button {
+  
+
 }
 
 .my-workouts-text {

@@ -39,7 +39,7 @@
             color="warning"
             @click="goToCustomize()"
           >
-            <ion-label color="secondary">Continue</ion-label>
+            <ion-label class="add-label" color="secondary">Continue</ion-label>
             <ion-icon
               size="large"
               slot="start"
@@ -244,11 +244,16 @@ ion-footer {
 }
 
 .add-button {
-  width: 60%;
   position: fixed;
   bottom: 17.5%;
   left: 50%;
   transform: translateX(-50%);
   color: #dbbfdd;
+  width: 50%;
+}
+
+.add-label {
+  font-weight: bold;
+  font-size: 14px;
 }
 </style>

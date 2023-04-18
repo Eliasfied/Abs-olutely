@@ -97,7 +97,7 @@
               color="secondary"
               :icon="play"
             ></ion-icon
-            ><ion-label color="secondary">Start Workout</ion-label></ion-button
+            ><ion-label class="add-label" color="secondary">start workout</ion-label></ion-button
           >
         </div>
         <div class="time-calculate">
@@ -500,6 +500,12 @@ ion-footer {
   bottom: 7%;
   left: 50%;
   transform: translateX(-50%);
+  width: 50%;
+}
+
+.add-label {
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .time-calculate {

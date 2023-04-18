@@ -279,7 +279,7 @@ export default defineComponent({
 
 .grid-style-plans {
   display: grid;
-  height: 90%;
+  height: 97.5%;
   grid-template-rows: [row1-start] 5% [row1-end] 95% [row2-start];
 }
 
@@ -452,6 +452,8 @@ ul {
   height: 100%;
   list-style: none;
   padding: 0;
+  overflow-y: auto;
+
 }
 
 ion-card {
@@ -525,5 +527,6 @@ ion-footer {
   left: 50%;
   transform: translateX(-50%);
   color: #dbbfdd;
+  width: 50%;
 }
 </style>
