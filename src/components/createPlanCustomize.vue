@@ -57,6 +57,14 @@
             ></ion-icon
           ></ion-button>
         </div>
+        <div class="navigation">
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li class="active"></li>
+          </ul>
+        </div>
       </div>
     </ion-footer>
   </ion-page>
@@ -82,6 +90,7 @@ import {
   IonIcon,
   IonCard,
   IonFooter,
+  alertController,
 } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
 import { useRouter } from "vue-router";
@@ -97,7 +106,6 @@ export default defineComponent({
     IonLabel,
     IonIcon,
     IonCard,
-    // TheFooter,
     IonFooter,
   },
   setup() {
@@ -108,15 +116,12 @@ export default defineComponent({
     }
 
     let name = planStore.planName;
-    console.log("name plan");
-    console.log(name);
     let days = planStore.planDays;
     let weeks = planStore.planWeeks;
     let router = useRouter();
     let weekArray = ref([]) as any;
     let dayArray = [] as any;
     planStore.setArray(weekArray);
-    console.log("this is weekarray:" + weekArray);
     let index1 = ref(0) as any;
 
     let dayArrayFirst = [] as any;
@@ -150,18 +155,36 @@ export default defineComponent({
     }
 
     function addWorkout(index) {
-      console.log("kommt noch");
       index1.value = index;
-      console.log("index:");
-      console.log(index);
-      console.log("index1:");
-      console.log(index1);
+
       planStore.setCurrentIndex(index1);
       router.push("/workoutList");
     }
-
+    const handlerMessage = ref();
     async function goToPreview() {
-      console.log("go to" + name);
+      for (let i = 0; i < weekArray.value.length; i++) {
+        if (weekArray.value[i].weekWorkout == "empty") {
+          console.log("ist empty man");
+          const alert = await alertController.create({
+            header: "save plan not possible",
+            message: "add a workout to every week",
+            cssClass: "custom-alert",
+            buttons: [
+              {
+                text: "Ok",
+                cssClass: "alert-button-confirm",
+                handler: () => {
+                  handlerMessage.value = 1;
+                },
+              },
+            ],
+          });
+
+          await alert.present();
+          await alert.onDidDismiss();
+          return;
+        }
+      }
       await activePlanStorage.removeItem("activePlan");
       await activePlanStorage.setItem("activePlan", { activePlan: name });
       let parseArray = JSON.parse(JSON.stringify(weekArray.value));
@@ -174,16 +197,12 @@ export default defineComponent({
         weeks: parseArray,
       };
       console.log("das ist sendArray" + sendArray);
-      //sendArray.name = name;
       await planStorage.setItem(name, sendArray);
       await loadStore();
       router.push("/planPreview/" + name);
     }
 
     let cardIcon = computed(() => (index) => {
-      console.log(weekArray);
-      console.log(index);
-      console.log(weekArray.value[index].weekWorkout);
       if (weekArray.value[index].weekWorkout == "empty") {
         return helpOutline;
       } else {
@@ -435,5 +454,35 @@ ion-footer {
 .add-label {
   font-weight: bold;
   font-size: 14px;
+}
+
+.navigation {
+  background-color: white;
+  padding: 10px;
+  grid-row: row1-end / row2-start;
+  grid-column: column1-start / column1-end;
+  justify-self: center;
+  align-self: center;
+}
+
+.navigation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.navigation li {
+  background-color: #e5e5e5;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.navigation li.active {
+  background-color: #333;
 }
 </style>

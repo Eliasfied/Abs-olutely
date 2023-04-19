@@ -11,6 +11,7 @@
             animationDuration="0.5s"
             :colorUnfilled="colorUnfilled"
             :colorFilled="colorFilled"
+            reversedFilling="true"
           >
             {{ counter }}
           </CircleProgressBar>

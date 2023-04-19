@@ -371,7 +371,7 @@ export default defineComponent({
       if (workoutName.value == "") {
         const alert = await alertController.create({
           header: "Add Workout not possible",
-          message: "please enter a valid workoutname",
+          message: "workout name cant be empty",
           cssClass: "custom-alert",
           buttons: [
             {
@@ -388,41 +388,71 @@ export default defineComponent({
         await alert.onDidDismiss();
         return;
       }
-      saved.value = true;
 
-      //ALERT HANDLER MAKE COMPOSABLE OUT OF THIS
+      await WorkoutStorage.keys()
+        .then(async function (keys) {
+          if (keys.includes(workoutName.value)) {
+            const alert = await alertController.create({
+              header: "Invalid workout name",
+              message: "a workout with that name already exists",
+              cssClass: "custom-alert",
+              buttons: [
+                {
+                  text: "Ok",
+                  cssClass: "alert-button-confirm",
+                  handler: () => {
+                    handlerMessage.value = 1;
+                  },
+                },
+              ],
+            });
 
-      if (found == undefined) {
-        currentWorkout.exercises = JSON.parse(
-          JSON.stringify(exerciseArray.value)
-        );
-        currentWorkout.name = workoutName.value;
-        currentWorkout.exerciseTime = exerciseTime.value;
-        currentWorkout.breakTime = breakTime.value;
-        await WorkoutStorage.setItem(workoutName.value, currentWorkout);
-        console.log("bin im safeexercise method");
-        store.addToWorkoutlist(currentWorkout);
-        console.log("workoutlist stored");
-        console.log(store.workoutList);
-        // router.push("/myworkouts");
-        router.go(-1);
-      } else {
-        workout = await getMyWorkout(page);
-        await WorkoutStorage.removeItem(workout.name);
-        workout.exercises = JSON.parse(JSON.stringify(exerciseArray.value));
-        workout.name = workoutName.value;
-        workout.exerciseTime = exerciseTime.value;
-        workout.breakTime = breakTime.value;
-        console.log("listvalue");
-        console.log(list.value);
-        list.value.name = workoutName.value;
-        console.log("workout");
-        console.log(workout);
-        await WorkoutStorage.setItem(workoutName.value, workout);
-        //store.loadWorkoutsFromStore;
-        // router.push("/myworkouts");
-        router.go(-1);
-      }
+            await alert.present();
+            await alert.onDidDismiss();
+            return;
+          } else {
+            saved.value = true;
+
+            //ALERT HANDLER MAKE COMPOSABLE OUT OF THIS
+
+            if (found == undefined) {
+              currentWorkout.exercises = JSON.parse(
+                JSON.stringify(exerciseArray.value)
+              );
+              currentWorkout.name = workoutName.value;
+              currentWorkout.exerciseTime = exerciseTime.value;
+              currentWorkout.breakTime = breakTime.value;
+              await WorkoutStorage.setItem(workoutName.value, currentWorkout);
+              console.log("bin im safeexercise method");
+              store.addToWorkoutlist(currentWorkout);
+              console.log("workoutlist stored");
+              console.log(store.workoutList);
+              // router.push("/myworkouts");
+              router.go(-1);
+            } else {
+              workout = await getMyWorkout(page);
+              await WorkoutStorage.removeItem(workout.name);
+              workout.exercises = JSON.parse(
+                JSON.stringify(exerciseArray.value)
+              );
+              workout.name = workoutName.value;
+              workout.exerciseTime = exerciseTime.value;
+              workout.breakTime = breakTime.value;
+              console.log("listvalue");
+              console.log(list.value);
+              list.value.name = workoutName.value;
+              console.log("workout");
+              console.log(workout);
+              await WorkoutStorage.setItem(workoutName.value, workout);
+              //store.loadWorkoutsFromStore;
+              // router.push("/myworkouts");
+              router.go(-1);
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
 
     async function removeExercise(index) {

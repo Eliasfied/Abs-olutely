@@ -3,7 +3,12 @@
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-exercise-list">
         <div class="create-workout-div">
-          <ion-button @click="goToWorkout()" class="create-workout-button" color="warning" shape="round">
+          <ion-button
+            @click="goToWorkout()"
+            class="create-workout-button"
+            color="warning"
+            shape="round"
+          >
             <ion-icon color="secondary" :icon="build"></ion-icon>
             <ion-label color="secondary">add workout</ion-label>
           </ion-button>
@@ -16,11 +21,42 @@
           ></ion-icon>
         </div>
         <div class="my-workouts-text">
-          <p>my Workouts</p>
+          <p>custom workouts</p>
         </div>
-        <div class="exercise-list">
+        <div class="my-workouts-list">
           <ul>
             <li v-for="(workout, index) in results" :key="workout">
+              <ion-card>
+                <div class="card-grid">
+                  <div class="workout-icon-div">
+                    <ion-icon
+                      class="workout-icon"
+                      :icon="barbellOutline"
+                    ></ion-icon>
+                  </div>
+                  <div class="workoutname-div">
+                    <ion-label class="workoutname-label">{{
+                      workout.name
+                    }}</ion-label>
+                  </div>
+                  <div class="add-div">
+                    <ion-icon
+                      class="icon-add"
+                      :icon="addOutline"
+                      @click="addWorkout(index, workout.name)"
+                    ></ion-icon>
+                  </div>
+                </div>
+              </ion-card>
+            </li>
+          </ul>
+        </div>
+        <div class="workouts-text">
+          <p>workouts</p>
+        </div>
+        <div class="workouts-list">
+          <ul>
+            <li v-for="(workout, index) in results2" :key="workout">
               <ion-card>
                 <div class="card-grid">
                   <div class="workout-icon-div">
@@ -60,7 +96,6 @@ import {
   IonPage,
   IonContent,
   IonButton,
-  
 } from "@ionic/vue";
 import { useRoute } from "vue-router";
 import {
@@ -74,6 +109,9 @@ import { ref, onBeforeMount } from "vue";
 import { getWorkoutList } from "@/composables/getMyWorkoutList";
 import { useMyPlanStore } from "../store/myPlans";
 import { useRouter } from "vue-router";
+import { useMyWorkoutsStore } from "@/store/myWorkouts";
+import { async } from "rxjs/internal/scheduler/async";
+import { useWorkoutsStore } from "@/store/workouts";
 
 export default defineComponent({
   name: "WorkoutList",
@@ -84,33 +122,45 @@ export default defineComponent({
     IonLabel,
     IonPage,
     IonContent,
-    IonButton
+    IonButton,
   },
   setup(props, { emit }) {
     //ROUTE
     let planStore = useMyPlanStore();
+    let workoutStore = useMyWorkoutsStore();
+    let preWorkoutStore = useWorkoutsStore();
     let currentIndex = planStore.currentIndex;
 
-    let workoutList: any[] = [];
+    let workoutList: any = ref([]);
+    let preWorkoutList: any = ref([]);
     let results = ref();
+    let results2 = ref();
     async function init() {
-      workoutList = [];
-      workoutList = await getWorkoutList();
-      results.value = workoutList;
+      workoutList.value = [];
+      workoutList.value = await getWorkoutList();
+      results.value = workoutList.value;
+      await preWorkoutStore.loadWorkoutsFromStore();
+      console.log("workoutlist normal");
+      console.log(preWorkoutStore.workoutList);
+      preWorkoutList.value = preWorkoutStore.workoutList;
+      results2.value = preWorkoutList.value;
+      console.log(results2);
+
       proplist.value = results.value;
     }
 
     onBeforeMount(() => init());
 
-
-    // planStore.$subscribe(
-    //   (mutation, state) => {
-    //     console.log("a change happened");
-    //     console.log(mutation, state);
-    //     plans.value = state.planList;
-    //   },
-    //   { detached: true }
-    // );
+    workoutStore.$subscribe(
+      (mutation, state) => {
+        console.log("a change happened in workoutstore");
+        console.log(mutation, state);
+        workoutList.value = state.workoutList;
+        results.value = workoutList.value;
+        proplist.value = results.value;
+      },
+      { detached: true }
+    );
 
     let proplist = ref();
     let propIndex = ref(0);
@@ -130,7 +180,6 @@ export default defineComponent({
     function goToWorkout() {
       routeID = Math.floor(Math.random() * 1000);
       router.push("/myworkouts/editor/" + routeID);
-
     }
 
     //value for CSS animation
@@ -139,6 +188,7 @@ export default defineComponent({
       props,
       closeCircleOutline,
       results,
+      results2,
       proplist,
       propIndex,
       showModal,
@@ -148,7 +198,7 @@ export default defineComponent({
       addWorkout,
       barbellOutline,
       build,
-      goToWorkout
+      goToWorkout,
     };
   },
 });
@@ -157,7 +207,6 @@ export default defineComponent({
 <style scoped>
 ion-card {
   height: 100%;
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
 ion-label {
@@ -173,7 +222,7 @@ p {
 .grid-exercise-list {
   height: 100%;
   display: grid;
-  grid-template-rows: [row1-start] 5% [row1-end] 5% [row2-start] 85% [row2-end];
+  grid-template-rows: [row1-start] 5% [row1-end] 5% [row2-start] 42.5% [row2-end] 5% [row3-start] 42.5% [row3-end];
   grid-template-columns: [column1-start] 85% [column1-end] 15% [column2-start];
 }
 
@@ -185,8 +234,6 @@ p {
 }
 
 .create-workout-button {
-  
-
 }
 
 .my-workouts-text {
@@ -194,9 +241,19 @@ p {
   grid-column: column1-start / column2-start;
 }
 
-.exercise-list {
+.my-workouts-list {
   background-color: var(--ion-color-tertiary);
   grid-row: row2-start / row2-end;
+  grid-column: column1-start / column2-start;
+}
+
+.workouts-text {
+  grid-row: row2-end / row3-start;
+  grid-column: column1-start / column2-start;
+}
+
+.workouts-list {
+  grid-row: row3-start / row3-end;
   grid-column: column1-start / column2-start;
 }
 
@@ -289,7 +346,7 @@ ion-card {
 
 .workout-icon {
   color: white;
-  font-size: xx-large;
+  font-size: 64px;
 }
 
 .workoutname-div {

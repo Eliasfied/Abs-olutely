@@ -143,9 +143,9 @@ export default defineComponent({
       },
       { deep: true, immediate: true }
     );
-
+    let store;
     async function loadStore() {
-      const store = useMyWorkoutsStore();
+      store = useMyWorkoutsStore();
       await store.loadWorkoutsFromStore();
       workouts.value = store.workoutList;
 
@@ -211,6 +211,15 @@ export default defineComponent({
       routeID = Math.floor(Math.random() * 1000);
       router.push("/myworkouts/editor/" + routeID);
     }
+
+    store.$subscribe(
+      (mutation, state) => {
+        console.log("a change happened in myWorkouts");
+        console.log(mutation, state);
+        workouts.value = state.workoutList;
+      },
+      { detached: true }
+    );
 
     return {
       addCircle,

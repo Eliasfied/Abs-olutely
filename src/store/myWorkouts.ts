@@ -10,9 +10,9 @@ export const useMyWorkoutsStore = defineStore("myWorkouts", {
     async loadWorkoutsFromStore() {
       this.workoutList = await getWorkoutList();
     },
-    addToWorkoutlist(workout) {
+    async addToWorkoutlist(workout) {
       console.log("bin im store");
-      this.workoutList.push(workout);
+      this.workoutList = await getWorkoutList();
 
     },
   },

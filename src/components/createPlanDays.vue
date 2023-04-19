@@ -48,6 +48,14 @@
             ></ion-icon
           ></ion-button>
         </div>
+        <div class="navigation">
+          <ul>
+            <li ></li>
+            <li ></li>
+            <li class="active"></li>
+            <li></li>
+          </ul>
+        </div>
       </div>
     </ion-footer>
   </ion-page>
@@ -255,5 +263,35 @@ ion-footer {
 .add-label {
   font-weight: bold;
   font-size: 14px;
+}
+
+.navigation {
+  background-color: white;
+  padding: 10px;
+  grid-row: row1-end / row2-start;
+  grid-column: column1-start / column1-end;
+  justify-self: center;
+  align-self: center;
+}
+
+.navigation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.navigation li {
+  background-color: #e5e5e5;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.navigation li.active {
+  background-color: #333;
 }
 </style>

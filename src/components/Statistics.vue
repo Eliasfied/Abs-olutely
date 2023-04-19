@@ -72,7 +72,7 @@
           </ul>
         </div>
         <div class="calendar-div">
-          <v-calendar :attributes="attrs" is-expanded> </v-calendar>
+          <v-calendar :attributes="attrs" expanded> </v-calendar>
         </div>
       </div> </ion-content
   ></ion-page>

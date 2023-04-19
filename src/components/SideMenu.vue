@@ -8,15 +8,23 @@
     <ion-content color="secondary">
       <ion-list>
         <ion-menu-toggle>
-          <ion-item router-link="/home" class="list-item" color="secondary"
-            ><ion-icon slot="start" :icon="homeOutline"></ion-icon>
-            <p>Homepage</p>
+          <ion-item router-link="/home" color="secondary"
+            ><ion-icon
+              :class="{ active: isActive('/home') }"
+              slot="start"
+              :icon="homeOutline"
+            ></ion-icon>
+            <p :class="{ active: isActive('/home') }">Homepage</p>
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item router-link="/prePlans" class="list-item" color="secondary"
-            ><ion-icon slot="start" :icon="readerOutline"></ion-icon>
-            <p>Plans</p></ion-item
+            ><ion-icon
+              :class="{ active: isActive('/prePlans') }"
+              slot="start"
+              :icon="readerOutline"
+            ></ion-icon>
+            <p :class="{ active: isActive('/prePlans') }">Plans</p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
@@ -24,26 +32,50 @@
             router-link="/preWorkouts"
             class="list-item"
             color="secondary"
-            ><ion-icon slot="start" :icon="barbellOutline"></ion-icon>
-            <p>Workouts</p></ion-item
+            ><ion-icon
+              :class="{ active: isActive('/preWorkouts') }"
+              slot="start"
+              :icon="barbellOutline"
+            ></ion-icon>
+            <p :class="{ active: isActive('/preWorkouts') }">
+              Workouts
+            </p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item router-link="/exerciseList" color="secondary"
-            ><ion-icon slot="start" :icon="listCircleOutline"></ion-icon>
-            <p>Exercises</p></ion-item
+            ><ion-icon
+              :class="{ active: isActive('/exerciseList') }"
+              slot="start"
+              :icon="listCircleOutline"
+            ></ion-icon>
+            <p :class="{ active: isActive('/exerciseList') }">
+              Exercises
+            </p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item router-link="/statistics" color="secondary"
-            ><ion-icon slot="start" :icon="analyticsOutline"></ion-icon>
-            <p>Statistics</p></ion-item
+            ><ion-icon
+              :class="{ active: isActive('/statistics') }"
+              slot="start"
+              :icon="analyticsOutline"
+            ></ion-icon>
+            <p :class="{ active: isActive('/statistics') }">
+              Statistics
+            </p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item router-link="/myPlans" class="list-item" color="secondary"
-            ><ion-icon slot="start" :icon="readerSharp"></ion-icon>
-            <p>custom Plans</p></ion-item
+            ><ion-icon
+              :class="{ active: isActive('/myPlans') }"
+              slot="start"
+              :icon="readerSharp"
+            ></ion-icon>
+            <p :class="{ active: isActive('/myPlans') }">
+              custom Plans
+            </p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
@@ -51,14 +83,24 @@
             router-link="/myworkouts"
             class="list-item"
             color="secondary"
-            ><ion-icon slot="start" :icon="barbellSharp"></ion-icon>
-            <p>custom Workouts</p></ion-item
+            ><ion-icon
+              :class="{ active: isActive('/myworkouts') }"
+              slot="start"
+              :icon="barbellSharp"
+            ></ion-icon>
+            <p :class="{ active: isActive('/myworkouts') }">
+              custom Workouts
+            </p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item router-link="/settings" color="secondary"
-            ><ion-icon slot="start" :icon="settingsOutline"></ion-icon>
-            <p>Settings</p></ion-item
+            ><ion-icon
+              :class="{ active: isActive('/settings') }"
+              slot="start"
+              :icon="settingsOutline"
+            ></ion-icon>
+            <p :class="{ active: isActive('/settings') }">Settings</p></ion-item
           >
         </ion-menu-toggle>
       </ion-list>
@@ -94,6 +136,7 @@ import {
 import { ref, watch } from "vue";
 import { menuController } from "@ionic/core";
 import { onIonViewWillEnter } from "@ionic/vue";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   name: "SideMenu",
@@ -123,6 +166,13 @@ export default defineComponent({
       console.log("props: ");
       console.log(props.closeMenu);
     });
+    const route = useRoute();
+    const isActive = (path) => {
+      console.log(path);
+      console.log(route.fullPath);
+      return path === route.fullPath;
+    };
+
     return {
       homeOutline,
       barbellOutline,
@@ -133,6 +183,7 @@ export default defineComponent({
       readerOutline,
       readerSharp,
       barbellSharp,
+      isActive,
     };
   },
 });
@@ -151,17 +202,15 @@ ion-list {
   background-color: var(--ion-color-secondary);
 }
 
-/* ion-item {
-  --border-style: dashed;
-
- 
-} */
-
 .routerLink {
   text-decoration: none;
 }
 
 ion-toolbar {
   border-bottom: 2px solid black;
+}
+
+.active {
+  color: var(--ion-color-light);
 }
 </style>

@@ -15,9 +15,7 @@
           <ion-input v-model="name" placeholder="my planname"></ion-input>
         </div>
         <div class="explain-text">
-          <ion-label class="explain-label">
-            give your plan a name
-          </ion-label>
+          <ion-label class="explain-label"> give your plan a name </ion-label>
         </div>
       </div>
     </ion-content>
@@ -39,6 +37,14 @@
             ></ion-icon
           ></ion-button>
         </div>
+        <div class="navigation">
+          <ul>
+            <li class="active"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
       </div>
     </ion-footer>
   </ion-page>
@@ -56,9 +62,11 @@ import {
   IonInput,
   IonIcon,
   IonFooter,
+  alertController,
 } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
 import useRouteId from "../composables/getPlanRouteID";
+import planStorage from "../storage/myPlanStorage";
 
 export default defineComponent({
   name: "createPlanName",
@@ -69,12 +77,63 @@ export default defineComponent({
     let name = ref("") as any;
 
     let routeID = useRouteId();
+    const handlerMessage = ref();
 
-    function goToWeeks() {
-      planStore.setPlanName(name);
-      router.push({
-        path: "/workoutplan/" + routeID.currentRouteId + "/createPlanWeeks",
-      });
+    async function goToWeeks() {
+      if (name.value == "") {
+        const alert = await alertController.create({
+          header: "Invalid plan name",
+          message: "plan name cant be empty",
+          cssClass: "custom-alert",
+          buttons: [
+            {
+              text: "Ok",
+              cssClass: "alert-button-confirm",
+              handler: () => {
+                handlerMessage.value = 1;
+              },
+            },
+          ],
+        });
+
+        await alert.present();
+        await alert.onDidDismiss();
+        return;
+      }
+
+      planStorage
+        .keys()
+        .then(async function (keys) {
+          if (keys.includes(name.value)) {
+            const alert = await alertController.create({
+              header: "Invalid plan name",
+              message: "a plan with that name already exists",
+              cssClass: "custom-alert",
+              buttons: [
+                {
+                  text: "Ok",
+                  cssClass: "alert-button-confirm",
+                  handler: () => {
+                    handlerMessage.value = 1;
+                  },
+                },
+              ],
+            });
+
+            await alert.present();
+            await alert.onDidDismiss();
+            return;
+          } else {
+            planStore.setPlanName(name);
+            router.push({
+              path:
+                "/workoutplan/" + routeID.currentRouteId + "/createPlanWeeks",
+            });
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
 
     return {
@@ -174,7 +233,6 @@ ion-input {
   font-size: x-large;
 }
 
-
 .explain-text {
   grid-row: row3-end / row4-start;
   align-self: start;
@@ -187,7 +245,6 @@ ion-input {
   font-size: 16px;
   color: grey;
   opacity: 0.7;
-  
 }
 
 .button-div {
@@ -227,5 +284,35 @@ ion-footer {
 .add-label {
   font-weight: bold;
   font-size: 14px;
+}
+
+.navigation {
+  background-color: white;
+  padding: 10px;
+  grid-row: row1-end / row2-start;
+  grid-column: column1-start / column1-end;
+  justify-self: center;
+  align-self: center;
+}
+
+.navigation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.navigation li {
+  background-color: #e5e5e5;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.navigation li.active {
+  background-color: #333;
 }
 </style>

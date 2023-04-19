@@ -1,23 +1,17 @@
 <template>
   <ion-page>
     <ion-content>
-      <div class="grid-page">
-        <div class="headline-div">
-          <p>Pick a plan or create your own plan</p>
+      <div class="split-page-container">
+        <div @click="toCreatePlans" class="split-page-item split-page-left">
+          <p>Create</p>
+          <p class="split-page-subtext">your custom plan</p>
         </div>
-        <div class="pick-plan">
-          <ion-card class="pick-card" @click="toPrePlans">
-            <ion-card-content class="card-content">
-              <ion-label class="center-label">pick</ion-label>
-            </ion-card-content>
-          </ion-card>
+        <div class="split-page-circle">
+          <p class="or-class">OR</p>
         </div>
-        <div class="create-plan">
-          <ion-card class="create-card" @click="toCreatePlans">
-            <ion-card-content class="card-content">
-              <ion-label class="center-label">create</ion-label>
-            </ion-card-content>
-          </ion-card>
+        <div @click="toPrePlans" class="split-page-item split-page-right">
+          <p>Pick</p>
+          <p class="split-page-subtext">one of our prefabricated plans</p>
         </div>
       </div>
     </ion-content>
@@ -62,61 +56,76 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.grid-page {
-  display: grid;
-  height: 95%;
-  grid-template-rows: [row1-start] 10% [row1-end] 45% [row2-start] 45% [row2-end];
-  grid-template-columns: [column1-start] 100% [column1-end];
-}
-
-.headline-div {
-  grid-row: row1-start / row1-end;
-  align-self: end;
-  justify-self: center;
-}
-
-.pick-plan {
-  grid-row: row1-end / row2-start;
-  align-self: center;
-  justify-self: center;
-  height: 100%;
-  width: 100%;
-}
-.create-plan {
-  grid-row: row2-start / row2-end;
-  align-self: center;
-  justify-self: center;
-  height: 100%;
-  width: 100%;
-}
-
-.pick-card {
-  height: 95%;
-  background-color: var(--ion-color-warning);
+.split-page-container {
   display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.create-card {
-  height: 95%;
-  background-color: var(--ion-color-light);
+.split-page-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  height: 100%;
+  color: #fff;
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+.split-page-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: white;
+  z-index: 1;
+}
+
+.or-class {
+  color: var(--ion-color-light);
+}
+
+.split-page-circle p {
+  margin: 0;
+  font-size: 1.2rem;
+  text-transform: none;
+}
+
+.split-page-right {
+  background-color: var(--ion-color-medium);
+  border-left: none; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.split-page-left {
+  background-color: var(--ion-color-warning);
+  border-right: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.split-page-subtext {
+  font-size: 0.8rem;
+  margin-top: 5px;
+  opacity: 0.8;
 }
 
 p {
   font-weight: bold;
+  margin: 0;
 }
 
-.card-content {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.center-label {
-  text-align: center;
-  font-size: 64px;
-  font-weight: bold;
-  color: white;
-}
 </style>
