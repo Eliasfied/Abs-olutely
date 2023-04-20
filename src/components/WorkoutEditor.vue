@@ -329,20 +329,20 @@ export default defineComponent({
     let workout;
 
     function updateExerciseTime(value) {
-      console.log("jo");
       exerciseTime.value = value;
-      list.value.exerciseTime = value;
+      if (list.value != undefined) {
+        list.value.exerciseTime = value;
+      }
       saved.value = false;
       console.log(exerciseTime.value);
     }
 
     function updateBreakTime(value) {
-      console.log("ko");
       breakTime.value = value;
-      list.value.breakTime = value;
-
+      if (list.value != undefined) {
+        list.value.breakTime = value;
+      }
       saved.value = false;
-      console.log(breakTime.value);
     }
 
     //DATA
@@ -391,7 +391,7 @@ export default defineComponent({
 
       await WorkoutStorage.keys()
         .then(async function (keys) {
-          if (keys.includes(workoutName.value)) {
+          if (keys.includes(workoutName.value) && found == undefined) {
             const alert = await alertController.create({
               header: "Invalid workout name",
               message: "a workout with that name already exists",

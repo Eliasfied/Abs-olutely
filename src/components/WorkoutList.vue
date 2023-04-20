@@ -2,17 +2,6 @@
   <ion-page>
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-exercise-list">
-        <div class="create-workout-div">
-          <ion-button
-            @click="goToWorkout()"
-            class="create-workout-button"
-            color="warning"
-            shape="round"
-          >
-            <ion-icon color="secondary" :icon="build"></ion-icon>
-            <ion-label color="secondary">add workout</ion-label>
-          </ion-button>
-        </div>
         <div class="close-icon">
           <ion-icon
             class="icon-cancel"
@@ -84,6 +73,25 @@
         </div>
       </div>
     </ion-content>
+    <ion-footer>
+      <div class="footer-grid">
+        <div class="addExercise">
+          <ion-button
+            @click="goToWorkout"
+            class="add-button"
+            shape="round"
+            color="warning"
+            ><ion-icon
+              size="large"
+              slot="start"
+              color="secondary"
+              :icon="build"
+            ></ion-icon
+            ><ion-label color="secondary">Add Workout</ion-label></ion-button
+          >
+        </div>
+      </div>
+    </ion-footer>
   </ion-page>
 </template>
 
@@ -346,7 +354,7 @@ ion-card {
 
 .workout-icon {
   color: white;
-  font-size: 64px;
+  font-size: 48px;
 }
 
 .workoutname-div {
@@ -370,5 +378,35 @@ ion-card {
 
 .add-div:active {
   color: var(--ion-color-success);
+}
+
+
+ion-footer {
+  height: 10%;
+}
+.footer-grid {
+  display: grid;
+  grid-template-rows: [row1-start] 20% [row1-end] 80% [row2-start];
+  grid-template-columns: [column1-start] 100% [column1-end];
+
+  height: 100%;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  border-top: 0.5px solid lightgray;
+}
+
+.addExercise {
+  grid-row: row1-start / row1-end;
+  width: 100%;
+  text-align: center;
+}
+
+.add-button {
+  position: fixed;
+  bottom: 7%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #dbbfdd;
+  width: 50%;
 }
 </style>
