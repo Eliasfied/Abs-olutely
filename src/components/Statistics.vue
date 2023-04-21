@@ -208,6 +208,7 @@ export default defineComponent({
 
 .text-label {
   color: var(--ion-color-primary);
+  font-weight: bold;
 }
 
 .list-text {

@@ -217,10 +217,11 @@ p {
 
 .input-div {
   grid-row: row3-start / row3-end;
-  align-self: center;
+  align-self: end;
   justify-self: center;
   height: 30%;
   width: 60%;
+  margin-bottom: 5%;
 }
 
 ion-input {

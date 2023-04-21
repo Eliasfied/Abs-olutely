@@ -614,12 +614,14 @@ p {
   background-color: #d3e6f0;
 }
 .workout-today {
-  /* background-color: #e6bcf7; */
-  border: 2px solid #e6bcf7;
-  /* box-shadow: 0 0 10px rgba(0, 255, 255, 0.8); */
+  /* border: 2px solid lightgray; */
+ 
 }
 .workout-open {
-  background-color: #bce3f7;
+  /* background-color: var(--ion-color-medium); */
+  background-color: #d3e6f0;
+
+
 }
 
 .grid-style-li {

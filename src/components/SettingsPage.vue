@@ -5,25 +5,37 @@
     <ion-content color="tertiary" :fullscreen="true">
       <div class="settings-grid">
         <div class="delete-workouts-div">
-          <ion-button @click="deleteWorkouts">Reset custom workouts</ion-button>
+          <p class="explain-p">
+            if you face any problems regarding your app you can reset the
+            storage which might solve the problem
+          </p>
+          <ion-button
+            class="reset-button"
+            color="warning"
+            @click="deleteWorkouts"
+          >
+            <ion-label> Reset custom workouts</ion-label>
+          </ion-button>
         </div>
         <div class="delete-custom-plans-div">
-          <ion-button @click="deletePlans">Reset custom plans</ion-button>
+          <ion-button class="reset-button" color="warning" @click="deletePlans">
+            <ion-label> Reset custom plans</ion-label>
+          </ion-button>
         </div>
         <div class="delete-plans-div">
-          <ion-button @click="resetPlans">Reset pre plans</ion-button>
+          <ion-button class="reset-button" color="warning" @click="resetPlans">
+            <ion-label> Reset premade plans</ion-label>
+          </ion-button>
         </div>
-        <div class="delete-statistics-div">
-          <ion-button>Reset statistics</ion-button>
-        </div>
-      </div>
-    </ion-content></ion-page
-  >
+        <div class="delete-statistics-div"></div>
+      </div> </ion-content
+  ></ion-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { IonContent, IonPage, IonButton } from "@ionic/vue";
+import { ref } from "vue";
+import { IonContent, IonPage, IonButton, alertController } from "@ionic/vue";
 import TheFooter from "./reusable/TheFooter.vue";
 import planStorage from "../storage/myPlanStorage";
 import { useMyPlanStore } from "../store/myPlans";
@@ -37,19 +49,113 @@ export default defineComponent({
   setup() {
     const planStore = useMyPlanStore();
     const workoutStore = useMyWorkoutsStore();
+    const handlerMessage = ref();
 
-    function deletePlans() {
-      planStorage.clear();
-      planStore.loadPlansFromStore();
+    async function deletePlans() {
+      const alert = await alertController.create({
+        header: "delete all custom plans?",
+        message: "this cant be undone",
+        cssClass: "custom-alert",
+        buttons: [
+          {
+            text: "Yes",
+            cssClass: "alert-button-confirm",
+            handler: () => {
+              handlerMessage.value = 1;
+            },
+          },
+          {
+            text: "No",
+            cssClass: "alert-button-cancel",
+            handler: () => {
+              handlerMessage.value = 0;
+            },
+          },
+        ],
+      });
+
+      await alert.present();
+      await alert.onDidDismiss();
+
+      if (handlerMessage.value == 1) {
+        planStorage.clear();
+        planStore.loadPlansFromStore();
+      }
+
+      if (handlerMessage.value == 0) {
+        return;
+      }
     }
 
-    function deleteWorkouts() {
-      myWorkoutStorage.clear();
-      workoutStore.loadWorkoutsFromStore();
+    async function deleteWorkouts() {
+      const alert = await alertController.create({
+        header: "delete all custom workouts?",
+        message: "this cant be undone",
+        cssClass: "custom-alert",
+        buttons: [
+          {
+            text: "Yes",
+            cssClass: "alert-button-confirm",
+            handler: () => {
+              handlerMessage.value = 1;
+            },
+          },
+          {
+            text: "No",
+            cssClass: "alert-button-cancel",
+            handler: () => {
+              handlerMessage.value = 0;
+            },
+          },
+        ],
+      });
+
+      await alert.present();
+      await alert.onDidDismiss();
+
+      if (handlerMessage.value == 1) {
+        myWorkoutStorage.clear();
+        workoutStore.loadWorkoutsFromStore();
+      }
+
+      if (handlerMessage.value == 0) {
+        return;
+      }
     }
 
-    function resetPlans() {
-      defaultPlans.clear();
+    async function resetPlans() {
+      const alert = await alertController.create({
+        header: "reset all premade plans?",
+        message: "this cant be undone",
+        cssClass: "custom-alert",
+        buttons: [
+          {
+            text: "Yes",
+            cssClass: "alert-button-confirm",
+            handler: () => {
+              handlerMessage.value = 1;
+            },
+          },
+          {
+            text: "No",
+            cssClass: "alert-button-cancel",
+            handler: () => {
+              handlerMessage.value = 0;
+            },
+          },
+        ],
+      });
+
+      await alert.present();
+      await alert.onDidDismiss();
+
+      if (handlerMessage.value == 1) {
+        defaultPlans.clear();
+      }
+
+      if (handlerMessage.value == 0) {
+        return;
+      }
     }
 
     return {
@@ -68,27 +174,45 @@ export default defineComponent({
   height: 100%;
 }
 
+.explain-p {
+  padding: 5%;
+  color: var(--ion-color-light);
+  opacity: 0.8;
+}
+
+.reset-button {
+  width: 100%;
+}
+
+ion-label {
+  color: white;
+}
+
 .delete-workouts-div {
   grid-row: row1-start / row1-end;
   align-self: center;
   justify-self: center;
+  width: 100%;
 }
 
 .delete-custom-plans-div {
   grid-row: row1-end / row2-start;
   align-self: center;
   justify-self: center;
+  width: 100%;
 }
 
 .delete-plans-div {
   grid-row: row2-start / row2-end;
-  align-self: center;
+  align-self: start;
   justify-self: center;
+  width: 100%;
 }
 
 .delete-statistics-div {
   grid-row: row2-end / row3-start;
   align-self: center;
   justify-self: center;
+  width: 100%;
 }
 </style>

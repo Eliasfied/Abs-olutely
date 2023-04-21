@@ -154,22 +154,13 @@ export default defineComponent({
     IonMenuToggle,
   },
   setup(props) {
-    onIonViewWillEnter(() => {
-      console.log("propsOnENTER");
-      console.log(props.closeMenu);
-    });
-
     watch(props.closeMenu, (newValue) => {
       if (props.closeMenu == true) {
         menuController.close();
       }
-      console.log("props: ");
-      console.log(props.closeMenu);
     });
     const route = useRoute();
     const isActive = (path) => {
-      console.log(path);
-      console.log(route.fullPath);
       return path === route.fullPath;
     };
 

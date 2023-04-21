@@ -320,11 +320,12 @@ p {
 
 .icon-weeks {
   font-size: 40px;
-  color: black;
+  color: var(--ion-color-light);
+
 }
 
 .headline-label {
-  color: black;
+  color: var(--ion-color-light);
   font-weight: bold;
 }
 

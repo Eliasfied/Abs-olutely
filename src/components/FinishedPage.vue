@@ -1,8 +1,8 @@
 <template>
-  <ion-card color="tertiary">
+  <ion-card color="medium">
     <div class="grid-style-finish">
       <div class="flag-div">
-        <ion-icon class="flag-icon" :icon="ribbon" color="light"></ion-icon>
+        <ion-icon class="flag-icon" :icon="ribbon" color="secondary"></ion-icon>
       </div>
       <div class="finish-subtext">
         <ion-label class="finish-subtext-label">
@@ -236,10 +236,7 @@ ion-card {
   height: 100%;
   width: 100%;
   margin: 0;
-  border: 2px solid black;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
 }
 
 .flag-div {
@@ -272,7 +269,7 @@ ion-card {
 }
 
 .finish-subtext-label {
-  color: var(--ion-color-medium);
+  color: white;
   font-size: larger;
   font-weight: bold;
 }
@@ -308,7 +305,7 @@ ion-footer {
   grid-template-columns: [column1-start] 100% [column1-end];
 
   height: 100%;
-  background-color: white;
+  background-color: var(--ion-color-light);
   box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
   border-top: 0.5px solid lightgray;
 }
