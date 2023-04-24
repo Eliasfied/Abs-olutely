@@ -7,7 +7,7 @@
         </div>
         <div class="headline-div">
           <div class="week-headline-label">
-            <ion-label class="headline-label">Plan duration</ion-label>
+            <ion-label class="headline-label">Plandauer</ion-label>
           </div>
         </div>
         <div class="range-div">
@@ -24,7 +24,7 @@
         </div>
         <div class="explain-text">
           <ion-label class="explain-label">
-            set the length of your plan in weeks
+           wie viele Wochen möchtest du trainieren?
           </ion-label>
         </div>
       </div>

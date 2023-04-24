@@ -8,7 +8,7 @@
         </div>
         <div class="headline-div">
           <div class="week-headline-label">
-            <ion-label class="headline-label">Weekly workouts</ion-label>
+            <ion-label class="headline-label">Wöchentliche Workouts</ion-label>
           </div>
         </div>
         <div class="range-div">
@@ -25,7 +25,7 @@
         </div>
         <div class="explain-text">
           <ion-label class="explain-label">
-            set the amount of days you are going to train per week
+            Wie viele Tage pro Woche möchtest du trainieren?
           </ion-label>
         </div>
       </div>
@@ -39,7 +39,7 @@
             color="warning"
             @click="goToCustomize()"
           >
-            <ion-label class="add-label" color="secondary">Continue</ion-label>
+            <ion-label class="add-label" color="secondary">Weiter</ion-label>
             <ion-icon
               size="large"
               slot="start"

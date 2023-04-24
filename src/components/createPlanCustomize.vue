@@ -11,7 +11,7 @@
             <ion-icon class="icon-weeks" :icon="calendarSharp"></ion-icon>
           </div>
           <div class="week-headline-label">
-            <ion-label class="headline-label">workouts</ion-label>
+            <ion-label class="headline-label">Workouts</ion-label>
           </div>
         </div>
         <div class="list-div">
@@ -48,7 +48,7 @@
             color="warning"
             @click="goToPreview()"
           >
-            <ion-label class="add-label" color="secondary">Save</ion-label>
+            <ion-label class="add-label" color="secondary">Plan starten</ion-label>
             <ion-icon
               size="large"
               slot="start"
@@ -142,13 +142,13 @@ export default defineComponent({
       if (i == 1) {
         planStore.pushArray({
           weekInt: i,
-          weekWorkout: "empty",
+          weekWorkout: "leer",
           array: JSON.parse(JSON.stringify(dayArrayFirst)),
         });
       } else {
         planStore.pushArray({
           weekInt: i,
-          weekWorkout: "empty",
+          weekWorkout: "leer",
           array: JSON.parse(JSON.stringify(dayArray)),
         });
       }
@@ -163,11 +163,11 @@ export default defineComponent({
     const handlerMessage = ref();
     async function goToPreview() {
       for (let i = 0; i < weekArray.value.length; i++) {
-        if (weekArray.value[i].weekWorkout == "empty") {
+        if (weekArray.value[i].weekWorkout == "leer") {
           console.log("ist empty man");
           const alert = await alertController.create({
-            header: "save plan not possible",
-            message: "add a workout to every week",
+            header: "Plan speichern nicht möglich!",
+            message: "füge jeder Woche ein Workout hinzu.",
             cssClass: "custom-alert",
             buttons: [
               {
@@ -203,7 +203,7 @@ export default defineComponent({
     }
 
     let cardIcon = computed(() => (index) => {
-      if (weekArray.value[index].weekWorkout == "empty") {
+      if (weekArray.value[index].weekWorkout == "leer") {
         return helpOutline;
       } else {
         return barbellOutline;
@@ -211,7 +211,7 @@ export default defineComponent({
     });
 
     let labelStyle = computed(() => (index) => {
-      if (weekArray.value[index].weekWorkout == "empty") {
+      if (weekArray.value[index].weekWorkout == "leer") {
         return "card-label";
       } else {
         return "card-label-filled";

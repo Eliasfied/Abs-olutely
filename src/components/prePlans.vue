@@ -1,9 +1,9 @@
 <template>
   <ion-page>
-    <the-footer title="Plans"> </the-footer>
+    <the-footer title="Pläne"> </the-footer>
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-style-plans">
-        <div class="quickstart-text-div"><p>Plans</p></div>
+        <div class="quickstart-text-div"><p>Pläne</p></div>
         <div class="plan-list">
           <ul>
             <li v-for="(plan, index) in plans" :key="plan">

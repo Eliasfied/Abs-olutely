@@ -1,30 +1,29 @@
 <template>
   <ion-page>
-    <the-footer title="Settings"></the-footer>
+    <the-footer title="Einstellungen"></the-footer>
 
     <ion-content color="tertiary" :fullscreen="true">
       <div class="settings-grid">
         <div class="delete-workouts-div">
           <p class="explain-p">
-            if you face any problems regarding your app you can reset the
-            storage which might solve the problem
+            falls es zu Problemen mit der App kommt kannst du hier den Storage resetten was eventuell das Problem lösen kann
           </p>
           <ion-button
             class="reset-button"
             color="warning"
             @click="deleteWorkouts"
           >
-            <ion-label> Reset custom workouts</ion-label>
+            <ion-label> Reset personalisierte Workouts</ion-label>
           </ion-button>
         </div>
         <div class="delete-custom-plans-div">
           <ion-button class="reset-button" color="warning" @click="deletePlans">
-            <ion-label> Reset custom plans</ion-label>
+            <ion-label> Reset personalisierte Pläne</ion-label>
           </ion-button>
         </div>
         <div class="delete-plans-div">
           <ion-button class="reset-button" color="warning" @click="resetPlans">
-            <ion-label> Reset premade plans</ion-label>
+            <ion-label> Reset vordefinierte Pläne</ion-label>
           </ion-button>
         </div>
         <div class="delete-statistics-div"></div>
@@ -177,7 +176,7 @@ export default defineComponent({
 .explain-p {
   padding: 5%;
   color: var(--ion-color-light);
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 .reset-button {

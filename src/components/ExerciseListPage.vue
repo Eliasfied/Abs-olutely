@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <the-footer title="ExerciseList"></the-footer>
+    <the-footer title="Übungen"></the-footer>
 
     <ion-content color="tertiary" :fullscreen="true">
       <div class="grid-page">

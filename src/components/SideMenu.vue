@@ -2,7 +2,7 @@
   <ion-menu content-id="main-content">
     <ion-header>
       <ion-toolbar color="secondary">
-        <ion-title color="primary">Menu</ion-title>
+        <ion-title color="primary">Menü</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content color="secondary">
@@ -14,7 +14,7 @@
               slot="start"
               :icon="homeOutline"
             ></ion-icon>
-            <p :class="{ active: isActive('/home') }">Homepage</p>
+            <p :class="{ active: isActive('/home') }">Startseite</p>
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle>
@@ -24,7 +24,7 @@
               slot="start"
               :icon="readerOutline"
             ></ion-icon>
-            <p :class="{ active: isActive('/prePlans') }">Plans</p></ion-item
+            <p :class="{ active: isActive('/prePlans') }">Pläne</p></ion-item
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
@@ -50,7 +50,7 @@
               :icon="listCircleOutline"
             ></ion-icon>
             <p :class="{ active: isActive('/exerciseList') }">
-              Exercises
+              Übungen
             </p></ion-item
           >
         </ion-menu-toggle>
@@ -62,7 +62,7 @@
               :icon="analyticsOutline"
             ></ion-icon>
             <p :class="{ active: isActive('/statistics') }">
-              Statistics
+              Statistiken
             </p></ion-item
           >
         </ion-menu-toggle>
@@ -74,7 +74,7 @@
               :icon="readerSharp"
             ></ion-icon>
             <p :class="{ active: isActive('/myPlans') }">
-              custom Plans
+              personalisierte Pläne
             </p></ion-item
           >
         </ion-menu-toggle>
@@ -89,7 +89,7 @@
               :icon="barbellSharp"
             ></ion-icon>
             <p :class="{ active: isActive('/myworkouts') }">
-              custom Workouts
+              personalisierte Workouts
             </p></ion-item
           >
         </ion-menu-toggle>
@@ -100,7 +100,7 @@
               slot="start"
               :icon="settingsOutline"
             ></ion-icon>
-            <p :class="{ active: isActive('/settings') }">Settings</p></ion-item
+            <p :class="{ active: isActive('/settings') }">Einstellungen</p></ion-item
           >
         </ion-menu-toggle>
       </ion-list>

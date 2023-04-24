@@ -1,9 +1,9 @@
 <template>
   <ion-page>
-    <the-footer title="EasyAbs"> </the-footer>
+    <the-footer title="Startseite"> </the-footer>
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-page">
-        <div class="quickstart-text-div"><p>Quickstart</p></div>
+        <div class="quickstart-text-div"><p>Schnellstart</p></div>
         <div v-if="showPlanWorkout" class="current-planWorkout-div">
           <ion-card @click="toActivePlan" class="create-plan-card">
             <ion-icon class="add-icon" :icon="arrowForwardCircle"></ion-icon>
@@ -12,7 +12,7 @@
                 activePlan
               }}</ion-label>
               <ion-label class="create-plan-label-text"
-                >continue your plan</ion-label
+                >weiter mit dem Plan</ion-label
               >
             </div>
           </ion-card>
@@ -22,10 +22,10 @@
             <ion-icon class="add-icon" :icon="bookOutline"></ion-icon>
             <div class="label-flex-div">
               <ion-label class="create-plan-label-headline"
-                >Start the journey!</ion-label
+                >Starte jetzt durch</ion-label
               >
               <ion-label class="create-plan-label-text"
-                >begin your plan</ion-label
+                >beginne deinen Plan</ion-label
               >
             </div>
           </ion-card>
@@ -66,14 +66,14 @@
             ></ion-card>
           </div>
         </div>
-        <div class="more-text-div"><p>More</p></div>
+        <div class="more-text-div"><p>Mehr</p></div>
         <div class="myPlans-div">
           <ion-card @click="toMyPlans" class="myPlans-card">
             <ion-icon class="add-icon" :icon="readerOutline"></ion-icon>
             <div class="label-flex-div">
-              <ion-label class="create-plan-label-headline">my Plans</ion-label>
+              <ion-label class="create-plan-label-headline">meine Pläne</ion-label>
               <ion-label class="create-plan-label-text"
-                >my custom Plans</ion-label
+                >benutzerdefinierte Pläne</ion-label
               >
             </div>
           </ion-card>
@@ -83,10 +83,10 @@
             <ion-icon class="add-icon" :icon="barbellOutline"></ion-icon>
             <div class="label-flex-div">
               <ion-label class="create-plan-label-headline"
-                >my Workouts</ion-label
+                >meine Workouts</ion-label
               >
               <ion-label class="create-plan-label-text"
-                >my custom Workouts</ion-label
+                >benutzerdefinierte Workouts</ion-label
               >
             </div>
           </ion-card>
@@ -95,9 +95,9 @@
           <ion-card @click="toSettings" class="settings-card">
             <ion-icon class="add-icon" :icon="settingsOutline"></ion-icon>
             <div class="label-flex-div">
-              <ion-label class="create-plan-label-headline">Settings</ion-label>
+              <ion-label class="create-plan-label-headline">Einstellungen</ion-label>
               <ion-label class="create-plan-label-text"
-                >check your Settings</ion-label
+                >nehme Einstellungen vor</ion-label
               >
             </div>
           </ion-card>

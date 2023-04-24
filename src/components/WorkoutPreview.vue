@@ -11,13 +11,13 @@
           ></ion-icon>
         </div>
         <div class="headline-name-div">
-          <p>workout name</p>
+          <p>Workoutname</p>
         </div>
         <div class="exercise-name-div">
           <ion-label class="exercise-name-label">{{ list.name }}</ion-label>
         </div>
         <div class="workoutbreak-name-div">
-          <p>workout & break length</p>
+          <p>Workout & Pausen - Länge</p>
         </div>
         <div class="selectBreakTimeDiv">
           <workout-select
@@ -39,7 +39,7 @@
           ></workout-select>
         </div>
         <div class="list-headline-div">
-          <p>exercises</p>
+          <p>Übungen</p>
         </div>
       </div>
 
@@ -97,7 +97,7 @@
               color="secondary"
               :icon="play"
             ></ion-icon
-            ><ion-label class="add-label" color="secondary">start workout</ion-label></ion-button
+            ><ion-label class="add-label" color="secondary">Starte Workout</ion-label></ion-button
           >
         </div>
         <div class="time-calculate">
@@ -114,7 +114,7 @@
             size="large"
             :icon="barbellOutline"
           ></ion-icon>
-          <ion-label class="style-label">{{ quantityExercises }} Ex.</ion-label>
+          <ion-label class="style-label">{{ quantityExercises }} Üb.</ion-label>
         </div>
       </div>
     </ion-footer>

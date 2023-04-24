@@ -173,7 +173,7 @@ export default defineComponent({
     //ALL TIMER RELATED STUFF
 
     let maxCounter = computed(() => {
-      if (currentExercise.value == "Break") {
+      if (currentExercise.value == "Pause") {
         return list.breakTime;
       }
       if (isPrepare.value == true) {
@@ -216,7 +216,7 @@ export default defineComponent({
 
       while (counter.value > 0) {
         if (counter.value < 10) {
-          nextExercise.value = "Next: " + list?.exercises[0].name;
+          nextExercise.value = "Nächste: " + list?.exercises[0].name;
         } else {
           nextExercise.value = "";
         }
@@ -232,7 +232,7 @@ export default defineComponent({
     }
 
     const exerciseValuePrepare = computed(() => {
-      return "Starting in " + counter.value + " seconds.";
+      return "Start in " + counter.value + " Sekunden.";
     });
 
     //triggers when page loads
@@ -279,7 +279,7 @@ export default defineComponent({
             list?.breakTime == 0 &&
             index < list?.exercises.length - 1
           ) {
-            nextExercise.value = "Next: " + list?.exercises[index + 1].name;
+            nextExercise.value = "Nächste: " + list?.exercises[index + 1].name;
           } else {
             nextExercise.value = "";
           }
@@ -298,11 +298,11 @@ export default defineComponent({
 
     async function startBreakTimer(index) {
       if (list?.breakTime != undefined) {
-        currentExercise.value = "Break";
+        currentExercise.value = "Pause";
         counter.value = list?.breakTime;
         while (counter.value > 0) {
           if (counter.value < 10 && index < list?.exercises.length - 1) {
-            nextExercise.value = "Next: " + list?.exercises[index + 1].name;
+            nextExercise.value = "Nächste: " + list?.exercises[index + 1].name;
           } else {
             nextExercise.value = "";
           }

@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <the-footer title="Statistics"></the-footer>
+    <the-footer title="Statistiken"></the-footer>
 
     <ion-content color="tertiary" :fullscreen="true">
       <div class="grid-style">
@@ -15,7 +15,7 @@
                       slot="start"
                       :icon="flagOutline"
                     ></ion-icon>
-                    <p>Finished Workouts: {{ list.length }}</p>
+                    <p>Abgeschlossene Workouts: {{ list.length }}</p>
                   </ion-item>
                   <ion-item>
                     <ion-icon
@@ -23,7 +23,7 @@
                       slot="start"
                       :icon="stopwatchOutline"
                     ></ion-icon>
-                    <p>Overall Workout-Time: {{ totalTime }} Min.</p>
+                    <p>Insgesamte Workoutzeit: {{ totalTime }} Min.</p>
                   </ion-item>
                   <ion-item>
                     <ion-icon
@@ -31,7 +31,7 @@
                       slot="start"
                       :icon="hourglassOutline"
                     ></ion-icon>
-                    <p>Average Workout-Time: {{ averageTime }} Min.</p>
+                    <p>Durchschnittliche Workoutzeit: {{ averageTime }} Min.</p>
                   </ion-item>
                 </ion-list>
               </div>
@@ -39,7 +39,7 @@
           </ion-card>
         </div>
         <div class="list-text">
-          <ion-label class="text-label"> Recent Workouts...</ion-label>
+          <ion-label class="text-label"> letzte Workouts...</ion-label>
         </div>
         <div class="top-list">
           <ul>

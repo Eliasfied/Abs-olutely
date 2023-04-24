@@ -4,7 +4,7 @@
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-page">
         <div class="plan-headline-name">
-          <p>Plan Name</p>
+          <p>Planname</p>
         </div>
         <div class="reset-div">
           <ion-icon
@@ -30,7 +30,7 @@
           />
         </div>
         <div class="weeks-headline">
-          <p>Weeks</p>
+          <p>Wochen</p>
         </div>
         <div class="weeks-div">
           <ul class="week-list">
@@ -46,7 +46,7 @@
               >
                 <div class="container">
                   <div class="label-wrapper">
-                    <ion-label class="top-label">Week</ion-label>
+                    <ion-label class="top-label">Woche</ion-label>
                   </div>
                   <div class="label-wrapper">
                     <ion-label class="bottom-label">{{
@@ -59,7 +59,7 @@
           </ul>
         </div>
         <div class="days-headline">
-          <p>Workouts this Week</p>
+          <p>Workouts diese Woche</p>
         </div>
         <div class="days-div" :class="{ fade: disabled }">
           <ul class="days-ul">
@@ -304,8 +304,8 @@ export default defineComponent({
     const handlerMessage = ref();
     async function resetPlan() {
       const alert = await alertController.create({
-        header: "reset plan?",
-        message: "your progress will be lost",
+        header: "Plan zurücksetzen?",
+        message: "Dein Fortschritt geht verloren.",
         cssClass: "custom-alert",
         buttons: [
           {

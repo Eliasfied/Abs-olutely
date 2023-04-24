@@ -1,9 +1,9 @@
 <template>
   <ion-page>
-    <the-footer title="custom Plans"> </the-footer>
+    <the-footer title="personalisierte Pläne"> </the-footer>
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-style-plans">
-        <div class="quickstart-text-div"><p>custom Plans</p></div>
+        <div class="quickstart-text-div"><p>personalisierte Pläne</p></div>
         <div class="plan-list">
           <ul>
             <li v-for="(plan, index) in plans" :key="plan">
@@ -61,7 +61,7 @@
               color="secondary"
               :icon="addCircle"
             ></ion-icon
-            ><ion-label color="secondary">Add Plan</ion-label></ion-button
+            ><ion-label color="secondary">Neuer Plan</ion-label></ion-button
           >
         </div>
       </div>

@@ -30,7 +30,7 @@
               color="secondary"
               :icon="backspace"
             ></ion-icon
-            ><ion-label color="secondary">Back</ion-label></ion-button
+            ><ion-label color="secondary">Zurück</ion-label></ion-button
           >
         </div>
       </div>
@@ -57,7 +57,7 @@ export default defineComponent({
   props: ["page", "proptime", "isFinished"],
   emits: ["resetAll"],
   setup(props, { emit }) {
-    let finishSubtext = props.page + " completed!";
+    let finishSubtext = props.page + " abgeschlossen!";
     let id = Date.now().toString();
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, "0");

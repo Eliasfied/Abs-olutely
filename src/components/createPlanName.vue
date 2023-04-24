@@ -8,14 +8,14 @@
         </div>
         <div class="headline-div">
           <div class="week-headline-label">
-            <ion-label class="headline-label">Plan name</ion-label>
+            <ion-label class="headline-label">Planname</ion-label>
           </div>
         </div>
         <div class="input-div">
-          <ion-input v-model="name" placeholder="my planname"></ion-input>
+          <ion-input v-model="name" placeholder="mein Plan 2023"></ion-input>
         </div>
         <div class="explain-text">
-          <ion-label class="explain-label"> give your plan a name </ion-label>
+          <ion-label class="explain-label"> Gib deinem Plan einen Namen </ion-label>
         </div>
       </div>
     </ion-content>
@@ -28,7 +28,7 @@
             color="warning"
             @click="goToWeeks()"
           >
-            <ion-label class="add-label" color="secondary">Continue</ion-label>
+            <ion-label class="add-label" color="secondary">Weiter</ion-label>
             <ion-icon
               size="large"
               slot="start"
