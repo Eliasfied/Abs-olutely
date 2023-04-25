@@ -97,7 +97,9 @@
               color="secondary"
               :icon="play"
             ></ion-icon
-            ><ion-label class="add-label" color="secondary">Starte Workout</ion-label></ion-button
+            ><ion-label class="add-label" color="secondary"
+              >Starte Workout</ion-label
+            ></ion-button
           >
         </div>
         <div class="time-calculate">
@@ -388,6 +390,7 @@ p {
   grid-column: line2 / line3;
   width: 125px;
   text-align: center;
+  height: 100%;
 }
 .selectExerciseTimeDiv {
   justify-self: center;
@@ -399,6 +402,7 @@ p {
   grid-column: line1 / line2;
   width: 125px;
   text-align: center;
+  height: 100%;
 }
 
 .timeAndCountDiv {
@@ -448,9 +452,17 @@ li {
   color: #80abca !important;
 }
 .exercise-img {
-  height: 100%;
   width: 100%;
+  height: 100%;
 }
+
+@media only screen and (max-height: 740px) {
+  .exercise-img {
+    width: 90%;
+    height: 90%;
+  }
+}
+
 
 .title-div {
   align-self: center;
