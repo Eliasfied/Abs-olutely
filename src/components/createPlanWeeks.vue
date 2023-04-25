@@ -2,6 +2,9 @@
   <ion-page>
     <ion-content color="tertiary">
       <div class="grid-page">
+        <div >
+        <back-button></back-button>
+      </div>
         <div class="icon-div">
           <ion-icon :icon="calendarSharp" class="customize-icon"></ion-icon>
         </div>
@@ -75,10 +78,12 @@ import {
 } from "@ionic/vue";
 import { useMyPlanStore } from "../store/myPlans";
 import useRouteId from "../composables/getPlanRouteID";
+import BackButton from "./reusable/BackButton.vue";
+
 
 export default defineComponent({
   name: "createPlanWeek",
-  components: { IonContent, IonPage, IonLabel, IonRange, IonIcon, IonFooter },
+  components: { IonContent, IonPage, IonLabel, IonRange, IonIcon, IonFooter, BackButton },
   setup() {
     let planStore = useMyPlanStore();
     let name = ref("");
@@ -110,6 +115,12 @@ export default defineComponent({
   height: 100%;
   display: grid;
   grid-template-rows: [row1-start]5%[row1-end] 10% [row2-start] 15% [row2-end] 10% [row3-start] 30% [row3-end] 10% [row4-start];
+}
+
+.back-div {
+  grid-row: row1-start / row1-end;
+  align-self: center;
+  justify-self: start;
 }
 
 .icon-div {

@@ -3,15 +3,15 @@
     <ion-content>
       <div class="split-page-container">
         <div @click="toCreatePlans" class="split-page-item split-page-left">
-          <p>Create</p>
-          <p class="split-page-subtext">your custom plan</p>
+          <p>Erstelle</p>
+          <p class="split-page-subtext">deinen individuellen Plan</p>
         </div>
         <div class="split-page-circle">
-          <p class="or-class">OR</p>
+          <p class="or-class">ODER</p>
         </div>
         <div @click="toPrePlans" class="split-page-item split-page-right">
-          <p>Pick</p>
-          <p class="split-page-subtext">one of our prefabricated plans</p>
+          <p>Wähle</p>
+          <p class="split-page-subtext">einen unserer Expertenpläne</p>
         </div>
       </div>
     </ion-content>
@@ -100,12 +100,11 @@ export default defineComponent({
 
 .split-page-right {
   background-color: var(--ion-color-medium);
-  border-left: none; 
+  border-left: none;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 
 .split-page-left {
   background-color: var(--ion-color-warning);
@@ -114,7 +113,6 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
 }
-
 
 .split-page-subtext {
   font-size: 0.8rem;
@@ -126,6 +124,4 @@ p {
   font-weight: bold;
   margin: 0;
 }
-
-
 </style>

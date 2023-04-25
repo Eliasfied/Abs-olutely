@@ -3,6 +3,9 @@
     <!-- <the-footer title="customize"> </the-footer> -->
     <ion-content color="tertiary">
       <div class="grid-page">
+        <div>
+          <BackButton></BackButton>
+        </div>
         <div class="icon-div">
           <ion-icon class="customize-icon" :icon="constructSharp"></ion-icon>
         </div>
@@ -97,6 +100,8 @@ import { useRouter } from "vue-router";
 import planStorage from "../storage/myPlanStorage";
 import TheFooter from "../components/reusable/TheFooter.vue";
 import activePlanStorage from "../storage/activePlanStorage";
+import BackButton from "./reusable/BackButton.vue";
+
 
 export default defineComponent({
   name: "createPlanCustomize",
@@ -107,6 +112,7 @@ export default defineComponent({
     IonIcon,
     IonCard,
     IonFooter,
+    BackButton
   },
   setup() {
     let planStore;

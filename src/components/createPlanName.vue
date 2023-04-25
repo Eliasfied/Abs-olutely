@@ -2,7 +2,9 @@
   <ion-page>
     <ion-content color="tertiary">
       <div class="grid-page">
-        <div></div>
+        <div>
+          <BackButton></BackButton>
+        </div>
         <div class="icon-div">
           <ion-icon :icon="bookSharp" class="customize-icon"></ion-icon>
         </div>
@@ -15,7 +17,9 @@
           <ion-input v-model="name" placeholder="mein Plan 2023"></ion-input>
         </div>
         <div class="explain-text">
-          <ion-label class="explain-label"> Gib deinem Plan einen Namen </ion-label>
+          <ion-label class="explain-label">
+            Gib deinem Plan einen Namen
+          </ion-label>
         </div>
       </div>
     </ion-content>
@@ -67,10 +71,19 @@ import {
 import { useMyPlanStore } from "../store/myPlans";
 import useRouteId from "../composables/getPlanRouteID";
 import planStorage from "../storage/myPlanStorage";
+import BackButton from "./reusable/BackButton.vue";
 
 export default defineComponent({
   name: "createPlanName",
-  components: { IonContent, IonPage, IonLabel, IonInput, IonIcon, IonFooter },
+  components: {
+    IonContent,
+    IonPage,
+    IonLabel,
+    IonInput,
+    IonIcon,
+    IonFooter,
+    BackButton,
+  },
   setup() {
     let router = useRouter();
     let planStore = useMyPlanStore();
@@ -154,6 +167,12 @@ export default defineComponent({
   display: grid;
   grid-template-rows: [row1-start]5%[row1-end] 10% [row2-start] 15% [row2-end] 10% [row3-start] 30% [row3-end] 10% [row4-start];
   background-color: #f8f9f9;
+}
+
+.back-div {
+  grid-row: row1-start / row1-end;
+  align-self: center;
+  justify-self: start;
 }
 
 .icon-div {
