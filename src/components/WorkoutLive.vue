@@ -42,6 +42,9 @@
             <ion-icon color="secondary" :icon="playForward"></ion-icon
           ></ion-button>
         </div>
+        <div class="back-button">
+          <ion-icon class="back-icon" :icon="arrowBackOutline"></ion-icon>
+        </div>
         <div class="item-pauseButton">
           <ion-button color="light" :disabled="disabled" @click="pauseWorkout">
             <ion-icon color="secondary" :icon="togglePauseButton"></ion-icon
@@ -83,6 +86,7 @@ import {
   pauseCircleOutline,
   pauseOutline,
   playOutline,
+  arrowBackOutline,
 } from "ionicons/icons";
 
 export default defineComponent({
@@ -399,6 +403,7 @@ export default defineComponent({
       colorFilled,
       colorUnfilled,
       maxCounter,
+      arrowBackOutline
     };
   },
 });
@@ -487,6 +492,20 @@ ion-button {
   align-self: center;
   grid-column: line1 / line2;
   grid-row: row2-start / row2-end;
+}
+
+.back-button {
+  justify-self: start;
+  align-self: center;
+  grid-column: line1 / line2;
+  grid-row: row1-start / row1-end;
+  margin-left: 5%;
+
+}
+
+.back-icon {
+  color: var(--ion-color-light);
+  font-size: xx-large;
 }
 .item-pauseButton {
   justify-self: center;

@@ -2,6 +2,9 @@
   <ion-page>
     <ion-content>
       <div class="split-page-container">
+        <div class="back-button-div">
+        <back-button></back-button>
+      </div>
         <div @click="toCreatePlans" class="split-page-item split-page-left">
           <p>Erstelle</p>
           <p class="split-page-subtext">deinen individuellen Plan</p>
@@ -23,12 +26,14 @@ import { computed, defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import { IonPage, IonContent, IonCard, IonLabel, IonIcon } from "@ionic/vue";
 import { ref, watch } from "vue";
+import BackButton from "./reusable/BackButton.vue";
 
 export default defineComponent({
   name: "planDecision",
   components: {
     IonPage,
     IonContent,
+    BackButton
   },
   setup() {
     const router = useRouter();
@@ -56,6 +61,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
+.back-button-div {
+  background-color: var(--ion-color-warning);
+}
 .split-page-container {
   display: flex;
   flex-direction: column;
