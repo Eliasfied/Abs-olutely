@@ -458,8 +458,8 @@ li {
 
 @media only screen and (max-height: 740px) {
   .exercise-img {
-    width: 90%;
-    height: 90%;
+    width: 80%;
+    height: 80%;
   }
 }
 
