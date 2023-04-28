@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <the-footer title="Planpreview"> </the-footer>
+    <the-footer title="Planvorschau"> </the-footer>
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-page">
         <div class="plan-headline-name">
