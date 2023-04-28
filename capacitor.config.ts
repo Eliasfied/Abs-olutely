@@ -18,8 +18,8 @@ const config: CapacitorConfig = {
       useDialog: false,
     },
   },
-  appId: 'io.ionic.starter',
-  appName: 'gridlearn',
+  appId: 'com.Absolutely',
+  appName: 'Abs-olutely',
   webDir: 'dist',
   bundledWebRuntime: false
 };

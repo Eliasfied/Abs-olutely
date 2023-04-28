@@ -2,6 +2,68 @@ import localForage from "localforage";
 const defaultPlans = localForage.createInstance({ name: "defaultPlans" });
 
 async function loadAll() {
+
+
+//defaultPlans.clear();
+
+await defaultPlans
+    .getItem("BeginnerPlanx")
+    .then(function (value) {
+      if (value === null) {
+        defaultPlans.setItem("BeginnerPlanx", {
+          planName: "BeginnerPlanx",
+          currentDay: 0,
+          currentWeek: 0,
+          totalDays: 12,
+          isDefault: true,
+          weeks: [
+            {
+              weekInt: 1,
+              weekWorkout: "beginner",
+              array: [
+                { dayInt: 1, state: "today", doneDate: "" },
+                { dayInt: 2, state: "open", doneDate: "" },
+                { dayInt: 3, state: "open", doneDate: "" },
+              ],
+            },
+            {
+              weekInt: 2,
+              weekWorkout: "beginner",
+              array: [
+                { dayInt: 1, state: "open", doneDate: "" },
+                { dayInt: 2, state: "open", doneDate: "" },
+                { dayInt: 3, state: "open", doneDate: "" },
+              ],
+            },
+            {
+              weekInt: 3,
+              weekWorkout: "advanced",
+              array: [
+                { dayInt: 1, state: "open", doneDate: "" },
+                { dayInt: 2, state: "open", doneDate: "" },
+                { dayInt: 3, state: "open", doneDate: "" },
+              ],
+            },
+            {
+              weekInt: 4,
+              weekWorkout: "advanced",
+              array: [
+                { dayInt: 1, state: "open", doneDate: "" },
+                { dayInt: 2, state: "open", doneDate: "" },
+                { dayInt: 3, state: "open", doneDate: "" },
+              ],
+            },
+          ],
+        });
+      } else {
+        console.log("Item ist bereits gesetzt");
+      }
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+
+
   await defaultPlans
     .getItem("BeginnerPlan 4x3")
     .then(function (value) {
@@ -124,7 +186,7 @@ async function loadAll() {
           planName: "SixPack Deluxe 5x3",
           currentDay: 0,
           currentWeek: 0,
-          totalDays: 12,
+          totalDays: 15,
           isDefault: true,
           weeks: [
             {
@@ -183,14 +245,14 @@ async function loadAll() {
     });
 
   await defaultPlans
-    .getItem("BASIC 2x per Week")
+    .getItem("BASIC 8x2")
     .then(function (value) {
       if (value === null) {
-        defaultPlans.setItem("BASIC 2x per Week", {
+        defaultPlans.setItem("BASIC 8x2", {
           planName: "BASIC 8x2",
           currentDay: 0,
           currentWeek: 0,
-          totalDays: 12,
+          totalDays: 16,
           isDefault: true,
           weeks: [
             {
@@ -267,7 +329,6 @@ async function loadAll() {
       console.log(err);
     });
 }
-//defaultPlans.clear();
 loadAll();
 
 export default defaultPlans;

@@ -6,7 +6,7 @@
         <div class="quickstart-text-div"><p>Pläne</p></div>
         <div class="plan-list">
           <ul>
-            <li v-for="(plan, index) in plans" :key="plan">
+            <li v-for="(plan, index) in plans" :key="index">
               <ion-card @click="goToPlanPreview(plan.planName)">
                 <div class="grid-style-li">
                   <div class="plan-icon">
@@ -29,7 +29,7 @@
                   </div>
                   <div class="label-plandone">
                     <ion-label class="style-label">
-                      {{ planDone(index) }}
+                      <!-- {{ planDone(index) }} -->
                     </ion-label>
                     <ion-icon class="icon-color-weeks" :icon="flag"></ion-icon>
                   </div>
@@ -112,7 +112,7 @@ export default defineComponent({
     let workoutsDone = ref();
     let totalWorkouts = ref();
     console.log("totalWorkouts");
-    console.log(totalWorkouts);
+    console.log(totalWorkouts.value);
 
     let planDone = computed(() => (index) => {
       if (plans.value[index].weeks) {
@@ -120,16 +120,28 @@ export default defineComponent({
           plans.value[index].currentWeek *
             plans.value[index].weeks[0].array.length +
           plans.value[index].currentDay;
-        totalWorkouts.value = plans.value[index].totalDays;
         if (workoutsDone.value == 0) {
           return "0%";
         } else {
           return (
-            Math.round((workoutsDone.value / totalWorkouts.value) * 100) + "%"
+            Math.round(
+              (workoutsDone.value / plans.value[index].totalDays) * 100
+            ) + "%"
           );
         }
       }
     });
+
+    loadStore();
+
+    store.$subscribe(
+      (mutation, state) => {
+        console.log("a change happened in prePlans");
+        console.log(mutation, state);
+        plans.value = state.prePlanList;
+      },
+      { detached: true }
+    );
 
     let lastWorkout = computed(() => (index) => {
       if (plans.value[index].lastWorkout != undefined) {
@@ -138,17 +150,6 @@ export default defineComponent({
         return "";
       }
     });
-
-    loadStore();
-    store.$subscribe(
-      (mutation, state) => {
-        console.log("a change happened");
-        console.log(mutation, state);
-        plans.value = state.prePlanList;
-      },
-      { detached: true }
-    );
-
     return {
       plans,
       goToPlanPreview,

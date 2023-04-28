@@ -95,7 +95,7 @@ import {
   calendarOutline,
   flag,
 } from "ionicons/icons";
-import { ref, watch } from "vue";
+import { ref, watch, watchEffect } from "vue";
 import planStorage from "../storage/myPlanStorage";
 import { useMyPlanStore } from "../store/myPlans";
 import TheFooter from "../components/reusable/TheFooter.vue";
@@ -192,8 +192,23 @@ export default defineComponent({
     console.log("totalWorkouts");
     console.log(totalWorkouts);
 
+    // let planDone = computed(() => (index) => {
+    //   if (plans.value[index].weeks != undefined) {
+    //     workoutsDone.value =
+    //       plans.value[index].currentWeek *
+    //         plans.value[index].weeks[0].array.length +
+    //       plans.value[index].currentDay;
+    //     totalWorkouts.value = plans.value[index].totalDays;
+    //     if (workoutsDone.value == 0) {
+    //       return "0%";
+    //     } else {
+    //       return (
+    //         Math.round((workoutsDone.value / totalWorkouts.value) * 100) + "%"
+    //       );
+    //     }
+    //   }
+    // });
     let planDone = computed(() => (index) => {
-      if (plans.value[index].weeks) {
         workoutsDone.value =
           plans.value[index].currentWeek *
             plans.value[index].weeks[0].array.length +
@@ -206,8 +221,10 @@ export default defineComponent({
             Math.round((workoutsDone.value / totalWorkouts.value) * 100) + "%"
           );
         }
-      }
+      
     });
+
+  
 
     let lastWorkout = computed(() => (index) => {
       if (plans.value[index].lastWorkout != undefined) {
@@ -220,7 +237,7 @@ export default defineComponent({
     loadStore();
     store.$subscribe(
       (mutation, state) => {
-        console.log("a change happened");
+        console.log("a change happened myPlans");
         console.log(mutation, state);
         plans.value = state.planList;
       },
@@ -453,7 +470,6 @@ ul {
   list-style: none;
   padding: 0;
   overflow-y: auto;
-
 }
 
 ion-card {

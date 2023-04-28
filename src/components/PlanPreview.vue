@@ -186,12 +186,12 @@ export default defineComponent({
 
     planStore.$subscribe(
       (mutation, state) => {
-        console.log("a change happened");
+        console.log("a change happened in PlanPreview");
         console.log(mutation, state);
-        combinedPlans = state.planList.concat(state.prePlanList);
+        weekArray = state.planList.concat(state.prePlanList).find((element) => element.planName == page);
         // weekArray = state.planList.find((element) => element.planName == page);
-        weekArray = combinedPlans.find((element) => element.planName == page);
-        console.log("weeekarrray");
+        // weekArray = combinedPlans.find((element) => element.planName == page);
+        console.log("weeekarrray:");
         console.log(weekArray);
         if (weekArray != undefined) {
           workoutsDone.value =
