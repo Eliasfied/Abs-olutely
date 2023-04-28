@@ -187,44 +187,17 @@ export default defineComponent({
       }
     });
 
-    let workoutsDone = ref();
-    let totalWorkouts = ref();
-    console.log("totalWorkouts");
-    console.log(totalWorkouts);
-
-    // let planDone = computed(() => (index) => {
-    //   if (plans.value[index].weeks != undefined) {
-    //     workoutsDone.value =
-    //       plans.value[index].currentWeek *
-    //         plans.value[index].weeks[0].array.length +
-    //       plans.value[index].currentDay;
-    //     totalWorkouts.value = plans.value[index].totalDays;
-    //     if (workoutsDone.value == 0) {
-    //       return "0%";
-    //     } else {
-    //       return (
-    //         Math.round((workoutsDone.value / totalWorkouts.value) * 100) + "%"
-    //       );
-    //     }
-    //   }
-    // });
     let planDone = computed(() => (index) => {
-        workoutsDone.value =
-          plans.value[index].currentWeek *
-            plans.value[index].weeks[0].array.length +
-          plans.value[index].currentDay;
-        totalWorkouts.value = plans.value[index].totalDays;
-        if (workoutsDone.value == 0) {
-          return "0%";
-        } else {
-          return (
-            Math.round((workoutsDone.value / totalWorkouts.value) * 100) + "%"
-          );
-        }
-      
+      if (plans.value[index].currentDay == 0) {
+        return "0%";
+      } else {
+        return (
+          Math.round(
+            (plans.value[index].currentDay / plans.value[index].totalDays) * 100
+          ) + "%"
+        );
+      }
     });
-
-  
 
     let lastWorkout = computed(() => (index) => {
       if (plans.value[index].lastWorkout != undefined) {

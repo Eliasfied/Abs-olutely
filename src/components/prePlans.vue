@@ -29,7 +29,7 @@
                   </div>
                   <div class="label-plandone">
                     <ion-label class="style-label">
-                      <!-- {{ planDone(index) }} -->
+                      {{ planDone(index) }}
                     </ion-label>
                     <ion-icon class="icon-color-weeks" :icon="flag"></ion-icon>
                   </div>
@@ -109,28 +109,21 @@ export default defineComponent({
       }
     });
 
-    let workoutsDone = ref();
-    let totalWorkouts = ref();
-    console.log("totalWorkouts");
-    console.log(totalWorkouts.value);
+
+
+
 
     let planDone = computed(() => (index) => {
-      if (plans.value[index].weeks) {
-        workoutsDone.value =
-          plans.value[index].currentWeek *
-            plans.value[index].weeks[0].array.length +
-          plans.value[index].currentDay;
-        if (workoutsDone.value == 0) {
-          return "0%";
-        } else {
-          return (
-            Math.round(
-              (workoutsDone.value / plans.value[index].totalDays) * 100
-            ) + "%"
-          );
-        }
-      }
-    });
+   
+   if (plans.value[index].currentDay == 0) {
+     return "0%";
+   } else {
+     return (
+       Math.round((plans.value[index].currentDay / plans.value[index].totalDays) * 100) + "%"
+     );
+   }
+ 
+});
 
     loadStore();
 
