@@ -100,8 +100,41 @@
               slot="start"
               :icon="settingsOutline"
             ></ion-icon>
-            <p :class="{ active: isActive('/settings') }">Einstellungen</p></ion-item
+            <p :class="{ active: isActive('/settings') }">
+              Einstellungen
+            </p></ion-item
           >
+        </ion-menu-toggle>
+      </ion-list>
+
+      <ion-list class="bottom-list">
+        <ion-menu-toggle v-if="isLoggedIn">
+          <ion-item router-link="/profile" color="secondary"
+            ><ion-icon
+              :class="{ active: isActive('/profile') }"
+              slot="start"
+              :icon="personOutline"
+            ></ion-icon>
+            <p :class="{ active: isActive('/profile') }">Profil</p>
+          </ion-item>
+          <ion-item @click="logout" color="secondary"
+            ><ion-icon
+              slot="start"
+              :icon="logOutOutline"
+            ></ion-icon>
+            <p>Logout</p>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <ion-menu-toggle v-else>
+          <ion-item router-link="/profile" color="secondary"
+            ><ion-icon
+              :class="{ active: isActive('/profile') }"
+              slot="start"
+              :icon="logInOutline"
+            ></ion-icon>
+            <p>Login</p>
+          </ion-item>
         </ion-menu-toggle>
       </ion-list>
     </ion-content>
@@ -131,12 +164,17 @@ import {
   readerOutline,
   readerSharp,
   barbellSharp,
+  personOutline,
+  logInOutline,
+  logOutOutline,
 } from "ionicons/icons";
 
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { menuController } from "@ionic/core";
 import { onIonViewWillEnter } from "@ionic/vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { useTokenValidation } from "./../composables/UseTokenValidation";
+import { loginStore } from "@/store/loginStore";
 
 export default defineComponent({
   name: "SideMenu",
@@ -159,10 +197,33 @@ export default defineComponent({
         menuController.close();
       }
     });
+
+    const store = loginStore();
+    const router = useRouter();
+    const isLoggedIn = ref(false);
+
+    onMounted(async () => {
+      console.log("bin in onMounted drin");
+      await store.checkLoginStatus();
+      isLoggedIn.value = store.isLoggedIn;
+    });
     const route = useRoute();
     const isActive = (path) => {
       return path === route.fullPath;
     };
+
+    watch(
+      () => store.isLoggedIn,
+      (newIsLoggedIn) => {
+        isLoggedIn.value = newIsLoggedIn;
+      }
+    );
+
+    function logout() {
+      store.logout();
+      isLoggedIn.value = store.isLoggedIn;
+      router.push("/profile");
+    }
 
     return {
       homeOutline,
@@ -174,7 +235,12 @@ export default defineComponent({
       readerOutline,
       readerSharp,
       barbellSharp,
+      personOutline,
+      logInOutline,
+      logOutOutline,
+      isLoggedIn,
       isActive,
+      logout,
     };
   },
 });
@@ -203,5 +269,11 @@ ion-toolbar {
 
 .active {
   color: var(--ion-color-light);
+}
+
+.bottom-list {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 </style>

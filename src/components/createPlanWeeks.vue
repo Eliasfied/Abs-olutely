@@ -41,7 +41,7 @@
             color="warning"
             @click="goToDays()"
           >
-            <ion-label class="add-label" color="secondary">Continue</ion-label>
+            <ion-label class="add-label" color="secondary">Weiter</ion-label>
             <ion-icon
               size="large"
               slot="start"

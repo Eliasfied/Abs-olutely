@@ -52,19 +52,19 @@ export default defineComponent({
 
     async function deletePlans() {
       const alert = await alertController.create({
-        header: "delete all custom plans?",
-        message: "this cant be undone",
+        header: "Lösche alle benutzerdefinierte Pläne?",
+        message: "Dies kann nicht rückgängig gemacht werden",
         cssClass: "custom-alert",
         buttons: [
           {
-            text: "Yes",
+            text: "Ja",
             cssClass: "alert-button-confirm",
             handler: () => {
               handlerMessage.value = 1;
             },
           },
           {
-            text: "No",
+            text: "Nein",
             cssClass: "alert-button-cancel",
             handler: () => {
               handlerMessage.value = 0;
@@ -88,19 +88,19 @@ export default defineComponent({
 
     async function deleteWorkouts() {
       const alert = await alertController.create({
-        header: "delete all custom workouts?",
-        message: "this cant be undone",
+        header: "Lösche alle benutzerdefinierten Workouts?",
+        message: "Dies kann nicht rückgängig gemacht werden",
         cssClass: "custom-alert",
         buttons: [
           {
-            text: "Yes",
+            text: "Ja",
             cssClass: "alert-button-confirm",
             handler: () => {
               handlerMessage.value = 1;
             },
           },
           {
-            text: "No",
+            text: "Nein",
             cssClass: "alert-button-cancel",
             handler: () => {
               handlerMessage.value = 0;
@@ -124,19 +124,19 @@ export default defineComponent({
 
     async function resetPlans() {
       const alert = await alertController.create({
-        header: "reset all premade plans?",
-        message: "this cant be undone",
+        header: "Lösche alle vorgefertigten Pläne?",
+        message: "Dies kann nicht rückgängig gemacht werden",
         cssClass: "custom-alert",
         buttons: [
           {
-            text: "Yes",
+            text: "Ja",
             cssClass: "alert-button-confirm",
             handler: () => {
               handlerMessage.value = 1;
             },
           },
           {
-            text: "No",
+            text: "Nein",
             cssClass: "alert-button-cancel",
             handler: () => {
               handlerMessage.value = 0;

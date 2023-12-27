@@ -138,19 +138,19 @@ export default defineComponent({
 
     async function deletePlan(index) {
       const alert = await alertController.create({
-        header: "delete plan?",
-        message: "this cant be undone",
+        header: "Plan löschen?",
+        message: "Kann nicht rückgängig gemacht werden!",
         cssClass: "custom-alert",
         buttons: [
           {
-            text: "Yes",
+            text: "Ja",
             cssClass: "alert-button-confirm",
             handler: () => {
               handlerMessage.value = 1;
             },
           },
           {
-            text: "No",
+            text: "Nein",
             cssClass: "alert-button-cancel",
             handler: () => {
               handlerMessage.value = 0;
@@ -201,7 +201,7 @@ export default defineComponent({
 
     let lastWorkout = computed(() => (index) => {
       if (plans.value[index].lastWorkout != undefined) {
-        return "last: " + plans.value[index].lastWorkout;
+        return "letztes: " + plans.value[index].lastWorkout;
       } else {
         return "";
       }

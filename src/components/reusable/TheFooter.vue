@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { menuOutline } from "ionicons/icons";
+import { menuOutline, person } from "ionicons/icons";
 import {
   IonHeader,
   IonToolbar,
@@ -20,6 +20,7 @@ import {
   IonMenuButton,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "TheFooter",
@@ -33,7 +34,7 @@ export default defineComponent({
   },
   props: ["title", "closeMenu"],
   setup(props) {
-    return { menuOutline, props };
+    return { menuOutline, person, props };
   },
 });
 </script>

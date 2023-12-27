@@ -272,17 +272,11 @@ export default defineComponent({
 
     //REORDER HANDLER
     const handleReorder = (event: CustomEvent) => {
-      // Before complete is called with the items they will remain in the
-      // order before the drag
       console.log("Before complete", exerciseArray.value);
 
-      // Finish the reorder and position the item in the DOM based on
-      // where the gesture ended. Update the items variable to the
-      // new order of items
       exerciseArray.value = event.detail.complete(exerciseArray.value);
       proplist.value = exerciseArray.value;
 
-      // After complete is called the items will be in the new order
       console.log("After complete", exerciseArray.value);
       saved.value = false;
     };
@@ -370,8 +364,8 @@ export default defineComponent({
     async function safeExercise() {
       if (workoutName.value == "") {
         const alert = await alertController.create({
-          header: "Add Workout not possible",
-          message: "workout name cant be empty",
+          header: "Feher!",
+          message: "Workout Named darf nicht leer sein!",
           cssClass: "custom-alert",
           buttons: [
             {
@@ -393,8 +387,8 @@ export default defineComponent({
         .then(async function (keys) {
           if (keys.includes(workoutName.value) && found == undefined) {
             const alert = await alertController.create({
-              header: "Invalid workout name",
-              message: "a workout with that name already exists",
+              header: "Invalider Workout Name",
+              message: "Es gibt bereits ein Workout mit diesem Namen",
               cssClass: "custom-alert",
               buttons: [
                 {
@@ -473,19 +467,19 @@ export default defineComponent({
     async function backToWorkouts() {
       if (saved.value == false) {
         const alert = await alertController.create({
-          header: "Save Workout?",
-          message: "You have unsaved changes",
+          header: "Workout speichern?",
+          message: "Du hast ungespeicherte Änderungen!",
           cssClass: "custom-alert",
           buttons: [
             {
-              text: "Yes",
+              text: "Ja",
               cssClass: "alert-button-confirm",
               handler: () => {
                 handlerMessage.value = 1;
               },
             },
             {
-              text: "No",
+              text: "Nein",
               cssClass: "alert-button-cancel",
               handler: () => {
                 handlerMessage.value = 0;

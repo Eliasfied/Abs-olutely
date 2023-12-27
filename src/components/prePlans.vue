@@ -138,7 +138,7 @@ export default defineComponent({
 
     let lastWorkout = computed(() => (index) => {
       if (plans.value[index].lastWorkout != undefined) {
-        return "last: " + plans.value[index].lastWorkout;
+        return "letztes: " + plans.value[index].lastWorkout;
       } else {
         return "";
       }

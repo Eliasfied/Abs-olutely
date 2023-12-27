@@ -19,6 +19,8 @@ import myPlans from "../components/myPlans.vue";
 import planDecision from "../components/planDecision.vue";
 import prePlans from "../components/prePlans.vue";
 import preWorkouts from "../components/preWorkouts.vue";
+import ProfileLink from "@/components/ProfileLink.vue";
+import { loginStore } from "@/store/loginStore";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -113,18 +115,35 @@ const routes: Array<RouteRecordRaw> = [
     path: "/statistics",
     name: "Statistics",
     component: Statistics,
+    meta: { requiresAuth: true },
   },
-
   {
     path: "/settings",
     name: "SettingsPage",
     component: SettingsPage,
+  },
+  {
+    path: "/profile",
+    name: "ProfileLink",
+    component: ProfileLink,
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const store = loginStore();
+  if (
+    to.matched.some((record) => record.meta.requiresAuth) &&
+    !store.isLoggedIn
+  ) {
+    next({ name: "ProfileLink" });
+  } else {
+    next();
+  }
 });
 
 export default router;

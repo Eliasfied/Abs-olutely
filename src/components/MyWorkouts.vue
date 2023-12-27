@@ -171,19 +171,19 @@ export default defineComponent({
     const handlerMessage = ref();
     async function removeWorkout(index) {
       const alert = await alertController.create({
-        header: "delete workout?",
-        message: "this cant be undone",
+        header: "Workout löschen?",
+        message: "Kann nicht rückgängig gemacht werden!",
         cssClass: "custom-alert",
         buttons: [
           {
-            text: "Yes",
+            text: "Ja",
             cssClass: "alert-button-confirm",
             handler: () => {
               handlerMessage.value = 1;
             },
           },
           {
-            text: "No",
+            text: "Nein",
             cssClass: "alert-button-cancel",
             handler: () => {
               handlerMessage.value = 0;
