@@ -71,7 +71,9 @@
           <ion-card @click="toMyPlans" class="myPlans-card">
             <ion-icon class="add-icon" :icon="readerOutline"></ion-icon>
             <div class="label-flex-div">
-              <ion-label class="create-plan-label-headline">meine Pläne</ion-label>
+              <ion-label class="create-plan-label-headline"
+                >meine Pläne</ion-label
+              >
               <ion-label class="create-plan-label-text"
                 >benutzerdefinierte Pläne</ion-label
               >
@@ -95,7 +97,9 @@
           <ion-card @click="toSettings" class="settings-card">
             <ion-icon class="add-icon" :icon="settingsOutline"></ion-icon>
             <div class="label-flex-div">
-              <ion-label class="create-plan-label-headline">Einstellungen</ion-label>
+              <ion-label class="create-plan-label-headline"
+                >Einstellungen</ion-label
+              >
               <ion-label class="create-plan-label-text"
                 >nehme Einstellungen vor</ion-label
               >
@@ -109,7 +113,7 @@
 
 <script lang="ts">
 import { IonContent, IonPage, IonCard, IonIcon, IonLabel } from "@ionic/vue";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, onMounted } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
 import { useMyPlanStore } from "../store/myPlans";
 import TheFooter from "../components/reusable/TheFooter.vue";
@@ -125,6 +129,7 @@ import {
   arrowForwardCircle,
 } from "ionicons/icons";
 import { useRouter } from "vue-router";
+import { loginStore } from "@/store/loginStore";
 
 export default defineComponent({
   name: "HomePage",
@@ -145,6 +150,15 @@ export default defineComponent({
 
       // BIS AN SIDEMENU WEITERGEBEN UND DORT WATCHEN UND DANN DAS HIER TRIGGERN
       closeMenu.value = true;
+    });
+    const store = loginStore();
+    onMounted(() => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+      if (token) {
+        localStorage.setItem("jwt", token);
+        store.login(token);
+      }
     });
 
     //sideMENÜ LOGIC

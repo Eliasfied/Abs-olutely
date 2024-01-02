@@ -10,6 +10,7 @@
 
         <button type="submit">Register</button>
       </form>
+      <button @click="registerWithGithub">Register with GitHub</button>
       <p>
         {{ responseMessage }}
       </p>
@@ -56,4 +57,10 @@ async function register() {
     password.value = "";
   }
 }
+
+function registerWithGithub() {
+  window.location.href = 'https://github.com/login/oauth/authorize?client_id=0216de7e100fe4a5e1ef&redirect_uri=http://localhost:7070/github';
+}
+
+
 </script>

@@ -1,9 +1,12 @@
 <template>
   <form @submit.prevent="submitForm">
-    <input v-model="username" type="text" placeholder="Username" />
+    <input v-model="email" type="text" placeholder="Email" />
     <input v-model="password" type="password" placeholder="Password" />
     <button type="submit">Log in</button>
   </form>
+  <p></p>
+  <button @click="gitHubLogin">login with github</button>
+  <p></p>
   <button @click="goToRegister">Register</button>
 </template>
 
@@ -14,7 +17,7 @@ import { useRouter } from "vue-router";
 
 export default {
   setup(props: any, context: SetupContext) {
-    const username = ref("");
+    const email = ref("");
     const password = ref("");
 
     const router = useRouter();
@@ -22,7 +25,7 @@ export default {
     async function submitForm() {
       try {
         const response = await axios.post("http://localhost:7070/login", {
-          username: username.value,
+          email: email.value,
           password: password.value,
         });
 
@@ -41,11 +44,17 @@ export default {
       router.push("/register");
     }
 
+    async function gitHubLogin() {
+      window.location.href =
+        "https://github.com/login/oauth/authorize?client_id=0216de7e100fe4a5e1ef&redirect_uri=http://localhost:7070/github";
+    }
+
     return {
-      username,
+      email,
       password,
       submitForm,
       goToRegister,
+      gitHubLogin,
     };
   },
 };
