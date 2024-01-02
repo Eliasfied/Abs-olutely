@@ -21,6 +21,7 @@ import prePlans from "../components/prePlans.vue";
 import preWorkouts from "../components/preWorkouts.vue";
 import ProfileLink from "@/components/ProfileLink.vue";
 import { loginStore } from "@/store/loginStore";
+import RegisterPage from "@/components/RegisterPage.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -126,6 +127,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/profile",
     name: "ProfileLink",
     component: ProfileLink,
+  },
+  {
+    path: "/register",
+    name: "RegisterPage",
+    component: RegisterPage,
   },
 ];
 

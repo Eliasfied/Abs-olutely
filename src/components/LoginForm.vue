@@ -4,16 +4,20 @@
     <input v-model="password" type="password" placeholder="Password" />
     <button type="submit">Log in</button>
   </form>
+  <button @click="goToRegister">Register</button>
 </template>
 
 <script lang="ts">
 import { ref, SetupContext } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
 
 export default {
   setup(props: any, context: SetupContext) {
     const username = ref("");
     const password = ref("");
+
+    const router = useRouter();
 
     async function submitForm() {
       try {
@@ -33,10 +37,15 @@ export default {
       }
     }
 
+    function goToRegister() {
+      router.push("/register");
+    }
+
     return {
       username,
       password,
       submitForm,
+      goToRegister,
     };
   },
 };
