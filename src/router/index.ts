@@ -19,9 +19,11 @@ import myPlans from "../components/myPlans.vue";
 import planDecision from "../components/planDecision.vue";
 import prePlans from "../components/prePlans.vue";
 import preWorkouts from "../components/preWorkouts.vue";
-import ProfileLink from "@/components/ProfileLink.vue";
-import { loginStore } from "@/store/loginStore";
-import RegisterPage from "@/components/RegisterPage.vue";
+import LoginPage from "@/components/authentication/LoginPage.vue";
+import ProfilePage from "@/components/authentication/ProfilePage.vue";
+import RegisterPage from "@/components/authentication/RegisterPage.vue";
+
+import { loginStore } from "@/store/authentication/loginStore";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -124,15 +126,20 @@ const routes: Array<RouteRecordRaw> = [
     component: SettingsPage,
   },
   {
+    path: "/login",
+    name: "LoginPage",
+    component: LoginPage,
+  },
+  {
     path: "/profile",
-    name: "ProfileLink",
-    component: ProfileLink,
+    name: "ProfilePage",
+    component: ProfilePage,
   },
   {
     path: "/register",
     name: "RegisterPage",
     component: RegisterPage,
-  },
+  }
 ];
 
 const router = createRouter({
@@ -146,7 +153,7 @@ router.beforeEach((to, from, next) => {
     to.matched.some((record) => record.meta.requiresAuth) &&
     !store.isLoggedIn
   ) {
-    next({ name: "ProfileLink" });
+    next({ name: "LoginPage" });
   } else {
     next();
   }

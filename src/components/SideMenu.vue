@@ -127,9 +127,9 @@
         </ion-menu-toggle>
 
         <ion-menu-toggle v-else>
-          <ion-item router-link="/profile" color="secondary"
+          <ion-item router-link="/login" color="secondary"
             ><ion-icon
-              :class="{ active: isActive('/profile') }"
+              :class="{ active: isActive('/login') }"
               slot="start"
               :icon="logInOutline"
             ></ion-icon>
@@ -173,8 +173,9 @@ import { ref, watch, onMounted } from "vue";
 import { menuController } from "@ionic/core";
 import { onIonViewWillEnter } from "@ionic/vue";
 import { useRoute, useRouter } from "vue-router";
-import { useTokenValidation } from "./../composables/UseTokenValidation";
-import { loginStore } from "@/store/loginStore";
+import { loginStore } from "@/store//authentication/loginStore";
+import { fireBaseLogout } from "@/services/fireBaseService";
+
 
 export default defineComponent({
   name: "SideMenu",
@@ -222,7 +223,8 @@ export default defineComponent({
     function logout() {
       store.logout();
       isLoggedIn.value = store.isLoggedIn;
-      router.push("/profile");
+      fireBaseLogout();
+      router.push("/login");
     }
 
     return {

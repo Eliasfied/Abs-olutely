@@ -1,4 +1,25 @@
 
+Backend Connection and Use Cases:
+
+-Add plans to DB
+-Add Workouts to DB
+
+Bei jedem Start der App soll localStorage und DB syncrhonisiert werden
+
+1. Internetverbindung prüfen
+2. Laden der Workouts aus LocalStorage (unabhängig von Internetverbindung)
+3. Laden der Workouts aus DB (falls Internetverbindung)
+4. Vergleichen der Versionen (mit Zeitstempel)
+5. Aktualisieren von LocalStorage und DB mit neuster Version
+
+
+
+
+EXERCISES?
+
+-ADD OWN EXERCISES
+-UPLOAD IMAGE FOR EXERCISE
+
 PLAN
 
 different settings:
@@ -79,3 +100,15 @@ BREAK: Tippen zum Überspringen?
 WORKOUT EDITOR
 
 LONG HOLD ON LIST ITEM (EXERCISE) -> possible to move exercises and possible to delete them! //DONE
+
+
+
+FARBEN:
+
+#5798b1
+
+#b2cfd6
+
+#e0e9ec
+
+white

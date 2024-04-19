@@ -129,7 +129,6 @@ import {
   arrowForwardCircle,
 } from "ionicons/icons";
 import { useRouter } from "vue-router";
-import { loginStore } from "@/store/loginStore";
 
 export default defineComponent({
   name: "HomePage",
@@ -151,14 +150,14 @@ export default defineComponent({
       // BIS AN SIDEMENU WEITERGEBEN UND DORT WATCHEN UND DANN DAS HIER TRIGGERN
       closeMenu.value = true;
     });
-    const store = loginStore();
+    //const store = loginStore();
     onMounted(() => {
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get("token");
-      if (token) {
-        localStorage.setItem("jwt", token);
-        store.login(token);
-      }
+      // if (token) {
+      //   localStorage.setItem("jwt", token);
+      //   store.login(token);
+      // }
     });
 
     //sideMENÜ LOGIC
