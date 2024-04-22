@@ -27,6 +27,14 @@ export const loginStore = defineStore({
       localStorage.removeItem("jwt");
       localStorage.removeItem("userId");
     },
+    getUserId() {
+      if (this.userId) {
+        return this.userId;
+      } else { 
+        const userIdStorage = localStorage.getItem("userId");
+        return userIdStorage;
+      }
+    },
     async checkLoginStatus() {
       return new Promise((resolve) => {
         onAuthChange((user: any) => {

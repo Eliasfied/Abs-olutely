@@ -52,9 +52,9 @@
             ></ion-icon>
           </div>
 
-          <div class="safeExercise">
+          <div class="safeWorkout">
             <ion-icon
-              @click="safeExercise"
+              @click="SafeWorkout"
               slot="start"
               :icon="saveOutline"
               size="large"
@@ -177,9 +177,8 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { computed } from "vue";
+<script setup lang="ts">
+import { Ref, computed } from "vue";
 import {
   IonPage,
   IonContent,
@@ -199,367 +198,289 @@ import { ref } from "vue";
 import {
   addCircle,
   trash,
-  barbell,
   saveOutline,
   reorderTwoOutline,
-  arrowBackOutline,
   closeOutline,
   timeOutline,
   clipboardOutline,
   hourglassOutline,
   barbellOutline,
-  ellipsisHorizontalOutline,
   settingsOutline,
 } from "ionicons/icons";
 import { useRoute, useRouter } from "vue-router";
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import ExerciseDetail from "../components/reusable/ExerciseDetail.vue";
 import ExerciseList from "../components/ExerciseList.vue";
-import { getExerciseList } from "../composables/getExerciseList";
 import { getMyWorkout } from "../composables/getMyWorkoutStorage";
 import WorkoutStorage from "@/storage/myWorkoutStorage";
 import WorkoutSelect from "./reusable/WorkoutSelect.vue";
+import { Workout } from "@/models/Workout";
+import { Exercise } from "@/models/Exercise";
+import { ItemReorderCustomEvent } from "@ionic/vue";
+import { addWorkout } from "@/services/workoutsService";
+import { updateWorkout } from "@/services/workoutsService";
+import { loginStore } from "@/store/authentication/loginStore";
 
-export default defineComponent({
-  name: "CreateWorkout",
-  components: {
-    IonPage,
-    IonContent,
-    TheFooter,
-    ExerciseDetail,
-    ExerciseList,
-    IonInput,
-    IonCard,
-    IonCardContent,
-    IonLabel,
-    IonIcon,
-    IonReorderGroup,
-    IonReorder,
-    IonItem,
-    IonFooter,
-    WorkoutSelect,
-  },
-  setup() {
-    //route
-    const route = useRoute();
-    const router = useRouter();
-    const page = route.params.course;
-    console.log("page: ");
-    console.log(page);
+// ...
 
-    //store
-    const store = useMyWorkoutsStore();
-    let list = ref();
+//route
+const route = useRoute();
+const router = useRouter();
+const page = route.params.course;
+console.log("page: ");
+console.log(page);
 
-    let exerciseListStorage = ref();
-    let showExerciseList = ref(false);
-    let showTimeSelect = ref(false);
-    let exerciseArray: any = ref([]);
-    let proplist = ref(exerciseArray.value);
+const logStore = loginStore();
 
-    let noExercises = computed(() => {
-      return exerciseArray.value.length > 0 ? false : true;
-    });
+//store
+const store = useMyWorkoutsStore();
+let list = ref();
 
-    const found = store.workoutList.find((element) => element.name == page);
+let exerciseListStorage = ref();
+let showExerciseList = ref(false);
+let showTimeSelect = ref(false);
+let exerciseArray: Ref<Exercise[]> = ref([]);
+let proplist = ref(exerciseArray.value);
 
-    if (found != undefined) {
-      list.value = store.workoutList.find((element) => element.name == page);
-      proplist.value = list.value.exercises;
-      exerciseArray.value = list.value.exercises;
-      getUIData();
-    }
-
-    //REORDER HANDLER
-    const handleReorder = (event: CustomEvent) => {
-      console.log("Before complete", exerciseArray.value);
-
-      exerciseArray.value = event.detail.complete(exerciseArray.value);
-      proplist.value = exerciseArray.value;
-
-      console.log("After complete", exerciseArray.value);
-      saved.value = false;
-    };
-
-    //GET exerciseList
-    async function getList() {
-      showExerciseList.value = !showExerciseList.value;
-      showTimeSelect.value = false;
-    }
-
-    function closeExerciselist() {
-      showExerciseList.value = false;
-    }
-
-    //EXERCISE DETAIL
-
-    let propIndex = ref(0);
-
-    let showModal = ref(false);
-    function showDetails(index) {
-      console.log("showdetails!");
-      showModal.value = !showModal.value;
-      propIndex.value = index;
-    }
-    function closeModal() {
-      showModal.value = !showModal.value;
-    }
-
-    // UI
-    let workoutName = ref("");
-    let exerciseSelected = ref(1);
-    let breakSelected = ref(1);
-    let exerciseTime = ref(30);
-    let breakTime = ref(30);
-    let inputPlaceholder = "Give your Workout a Name:";
-    let saved = ref(true);
-
-    let currentWorkout = {
-      name: workoutName.value,
-      breakTime: exerciseTime.value,
-      exerciseTime: breakTime.value,
-      exercises: exerciseArray.value,
-    };
-    let workout;
-
-    function updateExerciseTime(value) {
-      exerciseTime.value = value;
-      if (list.value != undefined) {
-        list.value.exerciseTime = value;
-      }
-      saved.value = false;
-      console.log(exerciseTime.value);
-    }
-
-    function updateBreakTime(value) {
-      breakTime.value = value;
-      if (list.value != undefined) {
-        list.value.breakTime = value;
-      }
-      saved.value = false;
-    }
-
-    //DATA
-
-    let exerciseOptions = [20, 30, 35, 40];
-    let breakOptions = [0, 5, 10, 20, 30];
-
-    let timePreview = computed(() => {
-      return Math.round(
-        (exerciseTime.value * exerciseArray.value.length +
-          (breakTime.value * exerciseArray.value.length - breakTime.value)) /
-          60
-      );
-    });
-
-    function updateExercises(exercise) {
-      console.log(exerciseArray.value);
-      exerciseArray.value.push(exercise);
-      proplist.value = JSON.parse(JSON.stringify(exerciseArray.value));
-      saved.value = false;
-    }
-
-    const handlerMessage = ref();
-
-    async function safeExercise() {
-      if (workoutName.value == "") {
-        const alert = await alertController.create({
-          header: "Feher!",
-          message: "Workout Named darf nicht leer sein!",
-          cssClass: "custom-alert",
-          buttons: [
-            {
-              text: "Ok",
-              cssClass: "alert-button-confirm",
-              handler: () => {
-                handlerMessage.value = 1;
-              },
-            },
-          ],
-        });
-
-        await alert.present();
-        await alert.onDidDismiss();
-        return;
-      }
-
-      await WorkoutStorage.keys()
-        .then(async function (keys) {
-          if (keys.includes(workoutName.value) && found == undefined) {
-            const alert = await alertController.create({
-              header: "Invalider Workout Name",
-              message: "Es gibt bereits ein Workout mit diesem Namen",
-              cssClass: "custom-alert",
-              buttons: [
-                {
-                  text: "Ok",
-                  cssClass: "alert-button-confirm",
-                  handler: () => {
-                    handlerMessage.value = 1;
-                  },
-                },
-              ],
-            });
-
-            await alert.present();
-            await alert.onDidDismiss();
-            return;
-          } else {
-            saved.value = true;
-
-            //ALERT HANDLER MAKE COMPOSABLE OUT OF THIS
-
-            if (found == undefined) {
-              currentWorkout.exercises = JSON.parse(
-                JSON.stringify(exerciseArray.value)
-              );
-              currentWorkout.name = workoutName.value;
-              currentWorkout.exerciseTime = exerciseTime.value;
-              currentWorkout.breakTime = breakTime.value;
-              await WorkoutStorage.setItem(workoutName.value, currentWorkout);
-              console.log("bin im safeexercise method");
-              store.addToWorkoutlist(currentWorkout);
-              console.log("workoutlist stored");
-              console.log(store.workoutList);
-              // router.push("/myworkouts");
-              router.go(-1);
-            } else {
-              workout = await getMyWorkout(page);
-              await WorkoutStorage.removeItem(workout.name);
-              workout.exercises = JSON.parse(
-                JSON.stringify(exerciseArray.value)
-              );
-              workout.name = workoutName.value;
-              workout.exerciseTime = exerciseTime.value;
-              workout.breakTime = breakTime.value;
-              console.log("listvalue");
-              console.log(list.value);
-              list.value.name = workoutName.value;
-              console.log("workout");
-              console.log(workout);
-              await WorkoutStorage.setItem(workoutName.value, workout);
-              //store.loadWorkoutsFromStore;
-              // router.push("/myworkouts");
-              router.go(-1);
-            }
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
-
-    async function removeExercise(index) {
-      console.log("removed");
-      console.log(index);
-      exerciseArray.value.splice(index, 1);
-      proplist.value = JSON.parse(JSON.stringify(exerciseArray.value));
-      saved.value = false;
-    }
-
-    async function getUIData() {
-      const workout = await getMyWorkout(page);
-      workoutName.value = workout.name;
-      exerciseTime.value = workout.exerciseTime;
-      breakTime.value = workout.breakTime;
-    }
-
-    async function backToWorkouts() {
-      if (saved.value == false) {
-        const alert = await alertController.create({
-          header: "Workout speichern?",
-          message: "Du hast ungespeicherte Änderungen!",
-          cssClass: "custom-alert",
-          buttons: [
-            {
-              text: "Ja",
-              cssClass: "alert-button-confirm",
-              handler: () => {
-                handlerMessage.value = 1;
-              },
-            },
-            {
-              text: "Nein",
-              cssClass: "alert-button-cancel",
-              handler: () => {
-                handlerMessage.value = 0;
-              },
-            },
-          ],
-        });
-
-        await alert.present();
-        await alert.onDidDismiss();
-
-        if (handlerMessage.value == 0) {
-          console.log("no save");
-          // router.push("/myworkouts");
-          router.go(-1);
-          return;
-        }
-        console.log("saved");
-        safeExercise();
-      } else {
-        // router.push("/myworkouts");
-
-        router.go(-1);
-      }
-    }
-
-    function openTimeeditor() {
-      showTimeSelect.value = !showTimeSelect.value;
-      console.log(showTimeSelect.value);
-    }
-
-    return {
-      workoutName,
-      exerciseSelected,
-      breakSelected,
-      updateExerciseTime,
-      updateBreakTime,
-      addCircle,
-      trash,
-      barbell,
-      saveOutline,
-      list,
-      proplist,
-      propIndex,
-      showModal,
-      showDetails,
-      closeModal,
-      exerciseListStorage,
-      getList,
-      showExerciseList,
-      updateExercises,
-      currentWorkout,
-      exerciseArray,
-      safeExercise,
-      removeExercise,
-      exerciseTime,
-      breakTime,
-      inputPlaceholder,
-      closeExerciselist,
-      exerciseOptions,
-      breakOptions,
-      handleReorder,
-      reorderTwoOutline,
-      arrowBackOutline,
-      closeOutline,
-      timeOutline,
-      clipboardOutline,
-      noExercises,
-      timePreview,
-      backToWorkouts,
-      hourglassOutline,
-      barbellOutline,
-      ellipsisHorizontalOutline,
-      settingsOutline,
-      showTimeSelect,
-      openTimeeditor,
-      saved,
-    };
-  },
+let noExercises = computed(() => {
+  return exerciseArray.value.length > 0 ? false : true;
 });
+
+const found = store.workoutList.find((element) => element.name == page);
+
+if (found != undefined) {
+  list.value = store.workoutList.find((element) => element.name == page);
+  proplist.value = list.value.exercises;
+  exerciseArray.value = list.value.exercises;
+  getUIData();
+}
+
+//REORDER HANDLER
+const handleReorder = (event: ItemReorderCustomEvent) => {
+  exerciseArray.value = event.detail.complete(exerciseArray.value);
+  proplist.value = exerciseArray.value;
+
+  saved.value = false;
+};
+
+//GET exerciseList
+async function getList() {
+  showExerciseList.value = !showExerciseList.value;
+  showTimeSelect.value = false;
+}
+
+function closeExerciselist() {
+  showExerciseList.value = false;
+}
+
+//EXERCISE DETAIL
+
+let propIndex = ref(0);
+
+let showModal = ref(false);
+function showDetails(index) {
+  showModal.value = !showModal.value;
+  propIndex.value = index;
+}
+function closeModal() {
+  showModal.value = !showModal.value;
+}
+
+// UI
+let workoutName = ref("");
+let exerciseTime = ref(30);
+let breakTime = ref(30);
+let saved = ref(true);
+
+let currentWorkout: Workout = {
+  id: "55",
+  name: workoutName.value,
+  userId: logStore.getUserId() as string,
+  breakTime: exerciseTime.value,
+  exerciseTime: breakTime.value,
+  exercises: exerciseArray.value,
+  lastUpdated: new Date(),
+};
+let workout: Workout;
+
+function updateExerciseTime(value) {
+  exerciseTime.value = value;
+  if (list.value != undefined) {
+    list.value.exerciseTime = value;
+  }
+  saved.value = false;
+  console.log(exerciseTime.value);
+}
+
+function updateBreakTime(value) {
+  breakTime.value = value;
+  if (list.value != undefined) {
+    list.value.breakTime = value;
+  }
+  saved.value = false;
+}
+
+//DATA
+
+let exerciseOptions = [20, 30, 35, 40];
+let breakOptions = [0, 5, 10, 20, 30];
+
+let timePreview = computed(() => {
+  return Math.round(
+    (exerciseTime.value * exerciseArray.value.length +
+      (breakTime.value * exerciseArray.value.length - breakTime.value)) /
+      60
+  );
+});
+
+function updateExercises(exercise) {
+  exerciseArray.value.push(exercise);
+  proplist.value = JSON.parse(JSON.stringify(exerciseArray.value));
+  saved.value = false;
+}
+
+async function removeExercise(index) {
+  exerciseArray.value.splice(index, 1);
+  proplist.value = JSON.parse(JSON.stringify(exerciseArray.value));
+  saved.value = false;
+}
+
+function openTimeeditor() {
+  showTimeSelect.value = !showTimeSelect.value;
+}
+
+async function getUIData() {
+  const workout = await getMyWorkout(page);
+  workoutName.value = workout.name;
+  exerciseTime.value = workout.exerciseTime;
+  breakTime.value = workout.breakTime;
+}
+
+async function backToWorkouts() {
+  if (saved.value == false) {
+    const alert = await alertController.create({
+      header: "Workout speichern?",
+      message: "Du hast ungespeicherte Änderungen!",
+      cssClass: "custom-alert",
+      buttons: [
+        {
+          text: "Ja",
+          cssClass: "alert-button-confirm",
+          handler: () => {
+            handlerMessage.value = 1;
+          },
+        },
+        {
+          text: "Nein",
+          cssClass: "alert-button-cancel",
+          handler: () => {
+            handlerMessage.value = 0;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+    await alert.onDidDismiss();
+
+    if (handlerMessage.value == 0) {
+      router.go(-1);
+      return;
+    }
+    SafeWorkout();
+  } else {
+    router.go(-1);
+  }
+}
+
+//save workout handling
+
+const handlerMessage = ref();
+
+async function showAlert(header, message) {
+  const alert = await alertController.create({
+    header: header,
+    message: message,
+    cssClass: "custom-alert",
+    buttons: [
+      {
+        text: "Ok",
+        cssClass: "alert-button-confirm",
+        handler: () => {
+          handlerMessage.value = 1;
+        },
+      },
+    ],
+  });
+
+  await alert.present();
+  await alert.onDidDismiss();
+}
+
+async function handleNewWorkout() {
+  currentWorkout.exercises = JSON.parse(JSON.stringify(exerciseArray.value));
+  currentWorkout.name = workoutName.value;
+  currentWorkout.exerciseTime = exerciseTime.value;
+  currentWorkout.breakTime = breakTime.value;
+
+  await WorkoutStorage.setItem(workoutName.value, currentWorkout);
+  console.log("currentworkout to");
+  console.log(currentWorkout);
+  store.addToWorkoutlist(currentWorkout);
+  try {
+    await addWorkout(currentWorkout);
+  } catch (error) {
+    console.log(error);
+  }
+  router.go(-1);
+}
+
+async function handleExistingWorkout() {
+ 
+
+  workout = await getMyWorkout(page);
+  await WorkoutStorage.removeItem(workout.name);
+  workout.exercises = JSON.parse(JSON.stringify(exerciseArray.value));
+  workout.name = workoutName.value;
+  workout.exerciseTime = exerciseTime.value;
+  workout.breakTime = breakTime.value;
+  list.value.name = workoutName.value;
+  await WorkoutStorage.setItem(workoutName.value, workout);
+  try {
+    let userid = logStore.getUserId();
+    await updateWorkout(workout, userid as string);
+  } catch (error) {
+    console.log(error);
+  }
+  router.go(-1);
+}
+
+async function SafeWorkout() {
+  if (workoutName.value == "") {
+    await showAlert("Feher!", "Workout Name darf nicht leer sein!");
+    return;
+  }
+  await WorkoutStorage.keys()
+    .then(async function (keys) {
+      if (keys.includes(workoutName.value) && found == undefined) {
+        await showAlert(
+          "Invalider Workout Name",
+          "Es gibt bereits ein Workout mit diesem Namen"
+        );
+        return;
+      } else {
+        saved.value = true;
+        if (found == undefined) {
+          await handleNewWorkout();
+        } else {
+          await handleExistingWorkout();
+        }
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
 </script>
 
 <style scoped>
@@ -633,19 +554,19 @@ export default defineComponent({
   vertical-align: bottom;
 }
 
-.safeExercise {
+.SafeWorkout {
   grid-row: row1-start / row1-end;
   grid-column: column2-end / column3-start;
   align-self: center;
   justify-self: start;
 }
 
-.safeExercise ion-icon {
+.SafeWorkout ion-icon {
   color: white;
   vertical-align: middle;
 }
 
-.safeExercise ion-icon:active {
+.SafeWorkout ion-icon:active {
   color: var(--ion-color-success);
 }
 

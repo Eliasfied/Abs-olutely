@@ -70,6 +70,7 @@ import {
 import { ref, onBeforeMount } from "vue";
 import { getExerciseList } from "../composables/getExerciseList";
 import ExerciseDetail from "./reusable/ExerciseDetail.vue";
+import { Exercise } from "@/models/Exercise";
 
 export default defineComponent({
   name: "ExerciseList",
@@ -87,7 +88,7 @@ export default defineComponent({
     const route = useRoute();
     const page = route.params.course.toString();
     console.log(page);
-    let exerciseList: any[] = [];
+    let exerciseList: Exercise[] = [];
     let results = ref();
     async function init() {
       exerciseList = await getExerciseList();
@@ -132,7 +133,7 @@ export default defineComponent({
       exerciseList = JSON.parse(JSON.stringify(results.value));
       console.log(exerciseList);
       exercise = exerciseList[index];
-      exercise.reorderID = Date.now();
+      exercise.reorderID = Math.floor(Math.random() * 100000) + 1;
       console.log(exercise);
       emit("updateExercises", exercise);
     }
