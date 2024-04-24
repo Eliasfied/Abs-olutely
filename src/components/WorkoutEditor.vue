@@ -423,21 +423,20 @@ async function handleNewWorkout() {
   currentWorkout.exerciseTime = exerciseTime.value;
   currentWorkout.breakTime = breakTime.value;
 
-  await WorkoutStorage.setItem(workoutName.value, currentWorkout);
-  console.log("currentworkout to");
-  console.log(currentWorkout);
-  store.addToWorkoutlist(currentWorkout);
   try {
-    await addWorkout(currentWorkout);
+    const responseWorkout = await addWorkout(currentWorkout);
+    console.log("responseWorkout");
+    console.log(responseWorkout);
+    await WorkoutStorage.setItem(responseWorkout.data.id, responseWorkout.data);
+    store.addToWorkoutlist(responseWorkout.data);
   } catch (error) {
     console.log(error);
   }
+
   router.go(-1);
 }
 
 async function handleExistingWorkout() {
- 
-
   workout = await getMyWorkout(page);
   await WorkoutStorage.removeItem(workout.name);
   workout.exercises = JSON.parse(JSON.stringify(exerciseArray.value));
@@ -445,9 +444,11 @@ async function handleExistingWorkout() {
   workout.exerciseTime = exerciseTime.value;
   workout.breakTime = breakTime.value;
   list.value.name = workoutName.value;
+  workout.lastUpdated = new Date();
   await WorkoutStorage.setItem(workoutName.value, workout);
   try {
     let userid = logStore.getUserId();
+    console.log("userid: " + userid);
     await updateWorkout(workout, userid as string);
   } catch (error) {
     console.log(error);

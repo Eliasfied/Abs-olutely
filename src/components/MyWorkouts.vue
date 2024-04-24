@@ -112,6 +112,8 @@ import {
 import { useMyWorkoutsStore } from "../store/myWorkouts";
 import { ref, watch } from "vue";
 import myWorkoutStorage from "../storage/myWorkoutStorage";
+import { deleteWorkout } from "@/services/workoutsService";
+import { loginStore } from "@/store/authentication/loginStore";
 export default defineComponent({
   name: "MyWorkouts",
   components: {
@@ -124,6 +126,12 @@ export default defineComponent({
     IonLabel,
   },
   setup() {
+
+
+    //store
+    const logStore = loginStore();
+
+
     // STORE DATA
 
     let workouts: any = ref([]);
@@ -196,8 +204,12 @@ export default defineComponent({
       await alert.onDidDismiss();
 
       if (handlerMessage.value == 1) {
-        await myWorkoutStorage.removeItem(workouts.value[index].name);
+        console.log(workouts.value[index]);
+        await deleteWorkout(workouts.value[index].id);
+        await myWorkoutStorage.removeItem(workouts.value[index].id);
         workouts.value.splice(index, 1);
+        
+
       }
       if (handlerMessage.value == 0) {
         return;
