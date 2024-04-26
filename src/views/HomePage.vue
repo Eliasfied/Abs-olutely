@@ -129,6 +129,12 @@ import {
   arrowForwardCircle,
 } from "ionicons/icons";
 import { useRouter } from "vue-router";
+import { synchronizeWorkouts } from "@/services/workoutsService";
+import { getWorkouts } from "@/services/workoutsService";
+import { getWorkoutList } from "@/composables/getMyWorkoutList";
+import { loginStore } from "@/store/authentication/loginStore";
+import { Workout } from "@/models/Workout";
+
 
 export default defineComponent({
   name: "HomePage",
@@ -151,13 +157,22 @@ export default defineComponent({
       closeMenu.value = true;
     });
     //const store = loginStore();
-    onMounted(() => {
+     onMounted(async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get("token");
+      
       // if (token) {
       //   localStorage.setItem("jwt", token);
       //   store.login(token);
       // }
+      const logStore = loginStore();
+      var userId = logStore.getUserId();
+      let workouts: Workout[] = await getWorkoutList();
+      await synchronizeWorkouts(workouts, userId as string);
+      //workouts = (await getWorkouts(userId as string)).data;
+      console.log("workouts");
+      console.log(workouts);
+
     });
 
     //sideMENÜ LOGIC
@@ -184,6 +199,8 @@ export default defineComponent({
       advancedWorkoutName.value = list[1].name;
       // champWorkoutName = "champ";
       champWorkoutName.value = list[3].name;
+
+
     }
 
     loadStore();

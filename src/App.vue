@@ -21,11 +21,9 @@ export default defineComponent({
 
   setup() {
     async function setStatusBarColor() {
-    
       await StatusBar.setBackgroundColor({
         color: "#80abca",
       });
-    
     }
     setStatusBarColor();
 

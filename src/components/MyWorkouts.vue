@@ -41,7 +41,7 @@
                     </div>
                     <div class="icon-edit">
                       <router-link
-                        :to="'/myworkouts/editor/' + workouts[index].name"
+                        :to="'/myworkouts/editor/' + workouts[index].id"
                         ><ion-icon :icon="create"></ion-icon
                       ></router-link>
                     </div>
@@ -126,11 +126,8 @@ export default defineComponent({
     IonLabel,
   },
   setup() {
-
-
     //store
     const logStore = loginStore();
-
 
     // STORE DATA
 
@@ -205,11 +202,15 @@ export default defineComponent({
 
       if (handlerMessage.value == 1) {
         console.log(workouts.value[index]);
-        await deleteWorkout(workouts.value[index].id);
+        if (navigator.onLine) {
+          try {
+            await deleteWorkout(workouts.value[index].id);
+          } catch (error) {
+            console.log("Error deleting workout: " + error);
+          }
+        }
         await myWorkoutStorage.removeItem(workouts.value[index].id);
         workouts.value.splice(index, 1);
-        
-
       }
       if (handlerMessage.value == 0) {
         return;

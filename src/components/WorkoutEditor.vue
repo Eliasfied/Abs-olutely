@@ -220,6 +220,7 @@ import { ItemReorderCustomEvent } from "@ionic/vue";
 import { addWorkout } from "@/services/workoutsService";
 import { updateWorkout } from "@/services/workoutsService";
 import { loginStore } from "@/store/authentication/loginStore";
+import { getRandomId } from "@/composables/getRandomId";
 
 // ...
 
@@ -246,10 +247,10 @@ let noExercises = computed(() => {
   return exerciseArray.value.length > 0 ? false : true;
 });
 
-const found = store.workoutList.find((element) => element.name == page);
+const found = store.workoutList.find((element) => element.id == page);
 
 if (found != undefined) {
-  list.value = store.workoutList.find((element) => element.name == page);
+  list.value = store.workoutList.find((element) => element.id == page);
   proplist.value = list.value.exercises;
   exerciseArray.value = list.value.exercises;
   getUIData();
@@ -350,7 +351,11 @@ function openTimeeditor() {
 }
 
 async function getUIData() {
+  console.log("page 2");
+  console.log(page);
   const workout = await getMyWorkout(page);
+  console.log("workout");
+  console.log(workout);
   workoutName.value = workout.name;
   exerciseTime.value = workout.exerciseTime;
   breakTime.value = workout.breakTime;
@@ -423,14 +428,24 @@ async function handleNewWorkout() {
   currentWorkout.exerciseTime = exerciseTime.value;
   currentWorkout.breakTime = breakTime.value;
 
-  try {
-    const responseWorkout = await addWorkout(currentWorkout);
-    console.log("responseWorkout");
-    console.log(responseWorkout);
-    await WorkoutStorage.setItem(responseWorkout.data.id, responseWorkout.data);
-    store.addToWorkoutlist(responseWorkout.data);
-  } catch (error) {
-    console.log(error);
+  if (navigator.onLine) {
+    try {
+      const responseWorkout = await addWorkout(currentWorkout);
+      console.log("responseWorkout");
+      console.log(responseWorkout);
+      await WorkoutStorage.setItem(
+        responseWorkout.data.id,
+        responseWorkout.data
+      );
+      store.addToWorkoutlist(responseWorkout.data);
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    var id = getRandomId(20);
+    currentWorkout.id = id;
+    await WorkoutStorage.setItem(id, currentWorkout);
+    store.addToWorkoutlist(currentWorkout);
   }
 
   router.go(-1);
@@ -438,20 +453,22 @@ async function handleNewWorkout() {
 
 async function handleExistingWorkout() {
   workout = await getMyWorkout(page);
-  await WorkoutStorage.removeItem(workout.name);
+  await WorkoutStorage.removeItem(workout.id as string);
   workout.exercises = JSON.parse(JSON.stringify(exerciseArray.value));
   workout.name = workoutName.value;
   workout.exerciseTime = exerciseTime.value;
   workout.breakTime = breakTime.value;
   list.value.name = workoutName.value;
   workout.lastUpdated = new Date();
-  await WorkoutStorage.setItem(workoutName.value, workout);
-  try {
-    let userid = logStore.getUserId();
-    console.log("userid: " + userid);
-    await updateWorkout(workout, userid as string);
-  } catch (error) {
-    console.log(error);
+  await WorkoutStorage.setItem(workout.id as string, workout);
+  if (navigator.onLine) {
+    try {
+      let userid = logStore.getUserId();
+      console.log("userid: " + userid);
+      await updateWorkout(workout, userid as string);
+    } catch (error) {
+      console.log(error);
+    }
   }
   router.go(-1);
 }

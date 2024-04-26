@@ -204,7 +204,7 @@ export default defineComponent({
     const isLoggedIn = ref(false);
 
     onMounted(async () => {
-      console.log("bin in onMounted drin");
+      console.log("bin in onMounted drin in sidebarr");
       await store.checkLoginStatus();
       isLoggedIn.value = store.isLoggedIn;
     });
