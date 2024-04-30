@@ -51,7 +51,9 @@
             color="warning"
             @click="goToPreview()"
           >
-            <ion-label class="add-label" color="secondary">Plan starten</ion-label>
+            <ion-label class="add-label" color="secondary"
+              >Plan starten</ion-label
+            >
             <ion-icon
               size="large"
               slot="start"
@@ -85,6 +87,7 @@ import {
   barChartOutline,
   barbellOutline,
   build,
+  add,
 } from "ionicons/icons";
 import {
   IonContent,
@@ -100,8 +103,12 @@ import { useRouter } from "vue-router";
 import planStorage from "../storage/myPlanStorage";
 import TheFooter from "../components/reusable/TheFooter.vue";
 import activePlanStorage from "../storage/activePlanStorage";
+import activePlanIdStorage from "@/storage/activePlanIdStorage";
 import BackButton from "./reusable/BackButton.vue";
-
+import { addPlan } from "@/services/planService";
+import { Plan } from "@/models/Plan";
+import { loginStore } from "@/store/authentication/loginStore";
+import { updateActivePlanInStorage } from "@/composables/updateActivePlanInStorage";
 
 export default defineComponent({
   name: "createPlanCustomize",
@@ -112,11 +119,12 @@ export default defineComponent({
     IonIcon,
     IonCard,
     IonFooter,
-    BackButton
+    BackButton,
   },
   setup() {
     let planStore;
     planStore = useMyPlanStore();
+    const logStore = loginStore();
     async function loadStore() {
       await planStore.loadPlansFromStore();
     }
@@ -133,34 +141,51 @@ export default defineComponent({
     let dayArrayFirst = [] as any;
 
     for (let i = 1; i < days + 1; i++) {
-      dayArray.push({ dayInt: i, state: "open", doneDate: "" });
+      dayArray.push({
+        id: "6",
+        dayInt: i,
+        state: "open",
+        doneDate: null,
+      });
     }
 
     for (let i = 1; i < days + 1; i++) {
       if (i == 1) {
-        dayArrayFirst.push({ dayInt: i, state: "today", doneDate: "" });
+        dayArrayFirst.push({
+          id: "6",
+          dayInt: i,
+          state: "today",
+          doneDate: null,
+        });
       } else {
-        dayArrayFirst.push({ dayInt: i, state: "open", doneDate: "" });
+        dayArrayFirst.push({
+          id: "6",
+          dayInt: i,
+          state: "open",
+          doneDate: null,
+        });
       }
     }
 
     for (let i = 1; i < weeks + 1; i++) {
       if (i == 1) {
         planStore.pushArray({
+          id: "5",
           weekInt: i,
           weekWorkout: "leer",
-          array: JSON.parse(JSON.stringify(dayArrayFirst)),
+          days: JSON.parse(JSON.stringify(dayArrayFirst)),
         });
       } else {
         planStore.pushArray({
+          id: "5",
           weekInt: i,
           weekWorkout: "leer",
-          array: JSON.parse(JSON.stringify(dayArray)),
+          days: JSON.parse(JSON.stringify(dayArray)),
         });
       }
     }
 
-    function addWorkout(index) {
+    async function addWorkout(index) {
       index1.value = index;
 
       planStore.setCurrentIndex(index1);
@@ -191,21 +216,34 @@ export default defineComponent({
           return;
         }
       }
-      await activePlanStorage.removeItem("activePlan");
-      await activePlanStorage.setItem("activePlan", { activePlan: name });
+
       let parseArray = JSON.parse(JSON.stringify(weekArray.value));
-      let sendArray = {
+      let userId = await logStore.getUserId();
+      let sendArray: Plan = {
+        id: "60",
+        name: name,
+        userId: userId as string,
+        lastWorkout: null,
+        lastUpdated: new Date(),
         isDefault: false,
-        planName: name,
         currentDay: 0,
         currentWeek: 0,
         totalDays: weeks * days,
         weeks: parseArray,
       };
-      console.log("das ist sendArray" + sendArray);
-      await planStorage.setItem(name, sendArray);
+      console.log("sendArray");
+      console.log(sendArray);
+
+      const planResponse = await addPlan(sendArray as Plan);
+      console.log("das ist planresponse");
+      console.log(planResponse.data);
+      console.log(planResponse.data.id);
+      sendArray.id = planResponse.data.id;
+      await planStorage.setItem(planResponse.data.id, sendArray);
+      updateActivePlanInStorage(name, planResponse.data.id);
+
       await loadStore();
-      router.push("/planPreview/" + name);
+      router.push("/planPreview/" + planResponse.data.id);
     }
 
     let cardIcon = computed(() => (index) => {
@@ -327,7 +365,6 @@ p {
 .icon-weeks {
   font-size: 40px;
   color: var(--ion-color-light);
-
 }
 
 .headline-label {

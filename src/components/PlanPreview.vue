@@ -15,7 +15,7 @@
         </div>
         <div class="plan-name">
           <ion-label class="plan-name-label" color="secondary">
-            {{ weekArray.planName }}
+            {{ weekArray.name }}
           </ion-label>
         </div>
         <div class="progress-bar-div">
@@ -188,14 +188,12 @@ export default defineComponent({
       (mutation, state) => {
         console.log("a change happened in PlanPreview");
         console.log(mutation, state);
-        weekArray = state.planList.concat(state.prePlanList).find((element) => element.planName == page);
-        // weekArray = state.planList.find((element) => element.planName == page);
-        // weekArray = combinedPlans.find((element) => element.planName == page);
+        weekArray = state.planList.concat(state.prePlanList).find((element) => element.id == page);
         console.log("weeekarrray:");
         console.log(weekArray);
         if (weekArray != undefined) {
           workoutsDone.value =
-            weekArray.currentWeek * weekArray.weeks[0].array.length +
+            weekArray.currentWeek * weekArray.weeks[0].days.length +
             weekArray.currentDay;
           totalWorkouts.value = weekArray.totalDays;
           selectedCardIndex.value = weekArray.currentWeek;
@@ -222,7 +220,7 @@ export default defineComponent({
 
     let combinedPlans = planStore.planList.concat(planStore.prePlanList);
 
-    let weekArray = combinedPlans.find((element) => element.planName == page);
+    let weekArray = combinedPlans.find((element) => element.id == page);
     console.log(weekArray);
 
     let selectedDay = ref(0);
@@ -231,7 +229,7 @@ export default defineComponent({
     let selectedDayIndex = ref(0);
 
     let workoutsDone = ref(
-      weekArray.currentWeek * weekArray.weeks[0].array.length +
+      weekArray.currentWeek * weekArray.weeks[0].days.length +
         weekArray.currentDay
     );
     let totalWorkouts = ref(weekArray.totalDays);
@@ -240,13 +238,13 @@ export default defineComponent({
       if (weekArray) {
         return {
           "workout-done":
-            weekArray.weeks[selectedCardIndex.value].array[index].state ==
+            weekArray.weeks[selectedCardIndex.value].days[index].state ==
             "done",
           "workout-today":
-            weekArray.weeks[selectedCardIndex.value].array[index].state ==
+            weekArray.weeks[selectedCardIndex.value].days[index].state ==
             "today",
           "workout-open":
-            weekArray.weeks[selectedCardIndex.value].array[index].state ==
+            weekArray.weeks[selectedCardIndex.value].days[index].state ==
             "open",
         };
       } else {
@@ -258,13 +256,13 @@ export default defineComponent({
       if (weekArray) {
         return {
           "icon-show":
-            weekArray.weeks[selectedCardIndex.value].array[index].doneDate !=
-            "",
+            weekArray.weeks[selectedCardIndex.value].days[index].doneDate !=
+            null,
           "icon-dontshow":
-            weekArray.weeks[selectedCardIndex.value].array[index].doneDate ==
+            weekArray.weeks[selectedCardIndex.value].days[index].doneDate ==
               undefined ||
-            weekArray.weeks[selectedCardIndex.value].array[index].doneDate ==
-              "",
+            weekArray.weeks[selectedCardIndex.value].days[index].doneDate ==
+             null,
         };
       } else {
         return {};
@@ -275,10 +273,10 @@ export default defineComponent({
     let dayDone = computed(() => (index) => {
       if (weekArray) {
         if (
-          weekArray.weeks[selectedCardIndex.value].array[index].doneDate != ""
+          weekArray.weeks[selectedCardIndex.value].days[index].doneDate != null
         ) {
           showFinishedIcon.value = true;
-          return weekArray.weeks[selectedCardIndex.value].array[index].doneDate;
+          return weekArray.weeks[selectedCardIndex.value].days[index].doneDate;
         }
       }
     });
@@ -287,7 +285,7 @@ export default defineComponent({
       console.log("check");
       console.log(weekArray);
       console.log(weekArray.weeks);
-      return weekArray.weeks[selectedDay.value].array;
+      return weekArray.weeks[selectedDay.value].days;
     });
 
     function changeWeek(index) {
@@ -332,16 +330,16 @@ export default defineComponent({
         weekArray.currentDay = 0;
         weekArray.currentWeek = 0;
         selectedCardIndex.value = 0;
-        weekArray.lastWorkout = "";
+        weekArray.lastWorkout = null;
         weekIndex.value = 0;
         console.log(weekArray.weeks.length);
 
         for (let i = 0; i < weekArray.weeks.length; i++) {
-          console.log(weekArray.weeks[i].array.length);
-          for (let y = 0; y < weekArray.weeks[i].array.length; y++) {
+          console.log(weekArray.weeks[i].days.length);
+          for (let y = 0; y < weekArray.weeks[i].days.length; y++) {
             console.log("wo bin ich");
-            console.log(weekArray.weeks[i].array[y].stat);
-            weekArray.weeks[i].array[y].state = "open";
+            console.log(weekArray.weeks[i].days[y].state);
+            weekArray.weeks[i].days[y].state = "open";
           }
         }
 
@@ -380,14 +378,14 @@ export default defineComponent({
       console.log(index2);
       workoutPlanDataStore.weekNumber = selectedCardIndex.value;
       workoutPlanDataStore.dayNumber = index2;
-      workoutPlanDataStore.currentPlanName = page;
+      workoutPlanDataStore.currentPlanName = weekArray.planName;
       let workoutName = weekArray.weeks[index].weekWorkout;
       console.log("in gotoW");
       console.log(weekArray.weeks);
       console.log(selectedCardIndex.value);
       console.log(index2);
       if (
-        weekArray.weeks[selectedCardIndex.value].array[index2].state == "today"
+        weekArray.weeks[selectedCardIndex.value].days[index2].state == "today"
       ) {
         router.push("/preview/" + workoutName);
       } else {

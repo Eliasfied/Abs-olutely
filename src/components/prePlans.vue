@@ -87,6 +87,7 @@ export default defineComponent({
       store = useMyPlanStore();
       await store.loadPlansFromStore();
       plans.value = store.prePlanList;
+      console.log;
     }
 
     function goToPlanPreview(planName: string) {
@@ -109,21 +110,17 @@ export default defineComponent({
       }
     });
 
-
-
-
-
     let planDone = computed(() => (index) => {
-   
-   if (plans.value[index].currentDay == 0) {
-     return "0%";
-   } else {
-     return (
-       Math.round((plans.value[index].currentDay / plans.value[index].totalDays) * 100) + "%"
-     );
-   }
- 
-});
+      if (plans.value[index].currentDay == 0) {
+        return "0%";
+      } else {
+        return (
+          Math.round(
+            (plans.value[index].currentDay / plans.value[index].totalDays) * 100
+          ) + "%"
+        );
+      }
+    });
 
     loadStore();
 

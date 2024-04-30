@@ -1,6 +1,6 @@
 import localForage from "localforage";
 
-const activePlanStorage = localForage.createInstance({ name: "activePlanName" });
+const activePlanIdStorage = localForage.createInstance({ name: "activePlanId" });
 
 async function loadAll() {
   //activePlanStorage.clear();
@@ -9,4 +9,4 @@ loadAll();
 
 //workouts
 
-export default activePlanStorage;
+export default activePlanIdStorage;

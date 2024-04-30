@@ -46,10 +46,14 @@ import { useStatisticsStore } from "../store/statisticsStore";
 import { useMyPlanStore } from "../store/myPlans";
 import planStorage from "../storage/myPlanStorage";
 import defaultPlans from "@/storage/defaultPlanStorage";
-import activePlanStorage from "../storage/activePlanStorage";
 import { useWorkoutPlanData } from "../store/workoutPlanData";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { flag, ribbon, medal, backspace } from "ionicons/icons";
+import { updateActivePlanInStorage } from "@/composables/updateActivePlanInStorage";
+import { Plan } from "@/models/Plan";
+import { updatePlanInDB } from "@/services/planService";
+import { getDateFromParts } from "v-calendar/dist/types/src/utils/date/helpers";
+import { getDateInEasyFormat } from "@/composables/getDateInEasyFormat";
 
 export default defineComponent({
   name: "FinishedPage",
@@ -59,20 +63,16 @@ export default defineComponent({
   setup(props, { emit }) {
     let finishSubtext = props.page + " abgeschlossen!";
     let id = Date.now().toString();
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, "0");
-    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    var yyyy = today.getFullYear();
 
     //routing
     const router = useRouter();
 
     let store = useStatisticsStore();
-
-    let date = dd + "/" + mm + "/" + yyyy;
+    let newDate = new Date();
+    let dateEasyFormat = getDateInEasyFormat(newDate);
     console.log(id);
     console.log("date:");
-    console.log(date);
+    console.log(dateEasyFormat);
 
     let myPlan: any = [];
 
@@ -90,7 +90,11 @@ export default defineComponent({
     async function loadPlanStore() {
       const planStore = useMyPlanStore();
       await planStore.loadPlansFromStore();
+      console.log("currentPlanName");
+      console.log(currentPlanName);
       let combinedPlans = planStore.planList.concat(planStore.prePlanList);
+      console.log("combinedPlans");
+      console.log(combinedPlans);
       myPlan = combinedPlans.find(
         (element) => element.planName == currentPlanName
       );
@@ -102,60 +106,75 @@ export default defineComponent({
       await planStore.loadPlansFromStore();
     }
 
-    async function updatePlan() {
-      console.log("numbers");
-      console.log(weekNumber);
-      console.log(dayNumber);
+    async function updatePlanInDBandLocal() {
+      await loadPlanStore();
+
       if (weekNumber == 500 || weekNumber == 4000) {
         return;
       }
-      await activePlanStorage.removeItem("activePlan");
-      await activePlanStorage.setItem("activePlan", {
-        activePlan: myPlan.planName,
-      });
-      myPlan.weeks[weekNumber].array[dayNumber].state = "done";
-      myPlan.weeks[weekNumber].array[dayNumber].doneDate = date;
+
+      updateActivePlanInStorage(myPlan.name, myPlan.id);
+      myPlan.weeks[weekNumber].days[dayNumber].state = "done";
+      myPlan.weeks[weekNumber].days[dayNumber].doneDate = dateEasyFormat;
 
       //myPlan.weeks[1+1].array[2+1].state = "today";
-      console.log(myPlan.currentWeek);
-      console.log(myPlan.weeks);
+
       if (
         myPlan.currentWeek == myPlan.weeks.length - 1 &&
-        myPlan.currentDay == myPlan.weeks[weekNumber].array.length - 1
+        myPlan.currentDay == myPlan.weeks[weekNumber].days.length - 1
       ) {
         console.log("letzte woche erreicht");
         myPlan.currentDay++;
       } else {
-        if (myPlan.currentDay < myPlan.weeks[weekNumber].array.length - 1) {
+        if (myPlan.currentDay < myPlan.weeks[weekNumber].days.length - 1) {
           myPlan.currentDay++;
         } else {
           myPlan.currentWeek++;
           myPlan.currentDay = 0;
         }
-        myPlan.weeks[myPlan.currentWeek].array[myPlan.currentDay].state =
+        myPlan.weeks[myPlan.currentWeek].days[myPlan.currentDay].state =
           "today";
       }
 
       let parseArray = JSON.parse(JSON.stringify(myPlan.weeks));
-      let lastWorkout = date;
+      let lastWorkout = dateEasyFormat;
 
-      let sendArray = {
+      let sendArray: Plan = {
+        id: myPlan.id,
         isDefault: myPlan.isDefault,
-        planName: myPlan.planName,
+        name: myPlan.name,
+        userId: myPlan.userId,
         currentDay: myPlan.currentDay,
         currentWeek: myPlan.currentWeek,
         totalDays: myPlan.totalDays,
         lastWorkout: lastWorkout,
+        lastUpdated: new Date(),
         weeks: parseArray,
       };
 
       if (sendArray.isDefault == true) {
-        await defaultPlans.removeItem(myPlan.planName);
-        await defaultPlans.setItem(sendArray.planName, sendArray);
+        await defaultPlans.removeItem(myPlan.name);
+        await defaultPlans.setItem(sendArray.name, sendArray);
         await reloadPlanStore();
       } else {
-        await planStorage.removeItem(myPlan.planName);
-        await planStorage.setItem(sendArray.planName, sendArray);
+        await planStorage.removeItem(myPlan.id);
+        await planStorage.setItem(sendArray.id, sendArray);
+        if (navigator.onLine) {
+          sendArray.lastWorkout = newDate;
+          //gehe durch alle weeks durch und überall wo doneDate = dateEasyFormat ist, setze es auf newDate
+          for (let i = 0; i < sendArray.weeks.length; i++) {
+            for (let j = 0; j < sendArray.weeks[i].days.length; j++) {
+              if (sendArray.weeks[i].days[j].doneDate == dateEasyFormat) {
+                sendArray.weeks[i].days[j].doneDate = newDate;
+              }
+            }
+          }
+          console.log("myPlan");
+          console.log(myPlan);
+          console.log("sendArray");
+          console.log(sendArray);
+          await updatePlanInDB(sendArray);
+        }
         await reloadPlanStore();
       }
     }
@@ -163,14 +182,14 @@ export default defineComponent({
     async function workoutToStatistics() {
       statisticStorage.setItem(id, {
         workoutname: props.page,
-        date: date,
-        calendarDate: today,
+        date: dateEasyFormat,
+        calendarDate: newDate,
         minutes: props.proptime,
       });
       await store.addToStatisticsList({
         workoutname: props.page,
-        date: date,
-        calendarDate: today,
+        date: dateEasyFormat,
+        calendarDate: newDate,
         minutes: props.proptime,
       });
     }
@@ -179,7 +198,7 @@ export default defineComponent({
       () => props.isFinished,
       (newValue) => {
         if (newValue == true) {
-          updatePlan();
+          updatePlanInDBandLocal();
           workoutToStatistics();
         }
       },
@@ -201,7 +220,8 @@ export default defineComponent({
       } else {
         workoutPlanDataStore.weekNumber = 500;
         workoutPlanDataStore.dayNumber = 500;
-        router.push({ path: "/planPreview/" + myPlan.planName, replace: true });
+
+        router.push({ path: "/planPreview/" + myPlan.id, replace: true });
         emit("resetAll");
       }
     }
@@ -210,7 +230,7 @@ export default defineComponent({
       props,
       finishSubtext,
       finishedImage,
-      date,
+      dateEasyFormat,
       navigateBack,
       flag,
       ribbon,
@@ -236,7 +256,6 @@ ion-card {
   height: 100%;
   width: 100%;
   margin: 0;
-
 }
 
 .flag-div {

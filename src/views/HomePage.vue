@@ -134,7 +134,9 @@ import { getWorkouts } from "@/services/workoutsService";
 import { getWorkoutList } from "@/composables/getMyWorkoutList";
 import { loginStore } from "@/store/authentication/loginStore";
 import { Workout } from "@/models/Workout";
-
+import { getPlanList } from "@/composables/getMyPlanList";
+import { Plan } from "@/models/Plan";
+import { synchronizePlans } from "@/services/planService";
 
 export default defineComponent({
   name: "HomePage",
@@ -157,22 +159,18 @@ export default defineComponent({
       closeMenu.value = true;
     });
     //const store = loginStore();
-     onMounted(async () => {
+    onMounted(async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get("token");
-      
-      // if (token) {
-      //   localStorage.setItem("jwt", token);
-      //   store.login(token);
-      // }
+
       const logStore = loginStore();
       var userId = logStore.getUserId();
       let workouts: Workout[] = await getWorkoutList();
+      let plans: Plan[] = await getPlanList();
       await synchronizeWorkouts(workouts, userId as string);
-      //workouts = (await getWorkouts(userId as string)).data;
+      await synchronizePlans(plans, userId as string);
       console.log("workouts");
       console.log(workouts);
-
     });
 
     //sideMENÜ LOGIC
@@ -193,14 +191,9 @@ export default defineComponent({
       list = store.workoutList;
       plans.value = planStore.planList;
 
-      // beginnerWorkoutName = "beginner";
       beginnerWorkoutName.value = list[0].name;
-      // advancedWorkoutName = "advanced";
       advancedWorkoutName.value = list[1].name;
-      // champWorkoutName = "champ";
       champWorkoutName.value = list[3].name;
-
-
     }
 
     loadStore();
@@ -214,11 +207,13 @@ export default defineComponent({
     });
 
     let activePlan = computed(() => {
-      return planStore.activePlan;
+      return planStore.activePlanName;
     });
 
     function toActivePlan() {
-      router.push("/planPreview/" + planStore.activePlan);
+      console.log("planStore in homepage");
+      console.log(planStore);
+      router.push("/planPreview/" + planStore.activePlanId);
     }
 
     planStore.$subscribe(

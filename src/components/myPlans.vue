@@ -7,13 +7,13 @@
         <div class="plan-list">
           <ul>
             <li v-for="(plan, index) in plans" :key="plan">
-              <ion-card @click="goToPlanPreview(plan.planName)">
+              <ion-card @click="goToPlanPreview(plan.id)">
                 <div class="grid-style-li">
                   <div class="plan-icon">
                     <ion-icon class="add-icon" :icon="readerOutline"></ion-icon>
                   </div>
                   <div class="label-planname">
-                    <ion-label>{{ plan.planName }}</ion-label>
+                    <ion-label>{{ plan.name }}</ion-label>
                   </div>
                   <div class="label-last-workout">
                     <ion-label>{{ lastWorkout(index) }}</ion-label>
@@ -100,6 +100,7 @@ import planStorage from "../storage/myPlanStorage";
 import { useMyPlanStore } from "../store/myPlans";
 import TheFooter from "../components/reusable/TheFooter.vue";
 import activePlanStorage from "../storage/activePlanStorage";
+import { deletePlanFromDB } from "@/services/planService";
 
 export default defineComponent({
   name: "myPlans",
@@ -122,8 +123,8 @@ export default defineComponent({
       plans.value = store.planList;
     }
 
-    function goToPlanPreview(planName: string) {
-      router.push("/planPreview/" + planName);
+    function goToPlanPreview(id: string) {
+      router.push("/planPreview/" + id);
     }
 
     let routeID;
@@ -163,6 +164,15 @@ export default defineComponent({
       await alert.onDidDismiss();
 
       if (handlerMessage.value == 1) {
+        if (navigator.onLine) {
+          try {
+            console.log("die id des zu löschenden plans ist: ");
+            console.log(plans.value[index].id);
+            await deletePlanFromDB(plans.value[index].id);
+          } catch (error) {
+            console.log(error);
+          }
+        }
         if (plans.value[index].planName == store.activePlan) {
           await activePlanStorage.removeItem("activePlan");
           await activePlanStorage.setItem("activePlan", {
@@ -170,7 +180,7 @@ export default defineComponent({
           });
           store.activePlan = "noPlan";
         }
-        await planStorage.removeItem(plans.value[index].planName);
+        await planStorage.removeItem(plans.value[index].id);
         plans.value.splice(index, 1);
       }
 
