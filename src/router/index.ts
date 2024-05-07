@@ -3,7 +3,7 @@ import { RouteRecordRaw } from "vue-router";
 import HomePage from "../views/HomePage.vue";
 import WorkoutLive from "../components/WorkoutLive.vue";
 import WorkoutPreview from "../components/WorkoutPreview.vue";
-import MyWorkouts from "../components/MyWorkouts.vue";
+import MyWorkouts from "../components/workout/MyWorkouts.vue";
 import WorkoutEditor from "../components/WorkoutEditor.vue";
 import ExerciseListPage from "../components/ExerciseListPage.vue";
 import Statistics from "../components/Statistics.vue";

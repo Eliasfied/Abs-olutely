@@ -69,10 +69,10 @@ export default defineComponent({
 
     let store = useStatisticsStore();
     let newDate = new Date();
-    let dateEasyFormat = getDateInEasyFormat(newDate);
+   // let newDate = getDateInEasyFormat(newDate);
     console.log(id);
     console.log("date:");
-    console.log(dateEasyFormat);
+    console.log(newDate);
 
     let myPlan: any = [];
 
@@ -115,7 +115,7 @@ export default defineComponent({
 
       updateActivePlanInStorage(myPlan.name, myPlan.id);
       myPlan.weeks[weekNumber].days[dayNumber].state = "done";
-      myPlan.weeks[weekNumber].days[dayNumber].doneDate = dateEasyFormat;
+      myPlan.weeks[weekNumber].days[dayNumber].doneDate = newDate;
 
       //myPlan.weeks[1+1].array[2+1].state = "today";
 
@@ -137,7 +137,7 @@ export default defineComponent({
       }
 
       let parseArray = JSON.parse(JSON.stringify(myPlan.weeks));
-      let lastWorkout = dateEasyFormat;
+      let lastWorkout = newDate;
 
       let sendArray: Plan = {
         id: myPlan.id,
@@ -148,7 +148,7 @@ export default defineComponent({
         currentWeek: myPlan.currentWeek,
         totalDays: myPlan.totalDays,
         lastWorkout: lastWorkout,
-        lastUpdated: new Date(),
+        lastUpdated: newDate,
         weeks: parseArray,
       };
 
@@ -161,10 +161,10 @@ export default defineComponent({
         await planStorage.setItem(sendArray.id, sendArray);
         if (navigator.onLine) {
           sendArray.lastWorkout = newDate;
-          //gehe durch alle weeks durch und überall wo doneDate = dateEasyFormat ist, setze es auf newDate
+          //gehe durch alle weeks durch und überall wo doneDate = newDate ist, setze es auf newDate
           for (let i = 0; i < sendArray.weeks.length; i++) {
             for (let j = 0; j < sendArray.weeks[i].days.length; j++) {
-              if (sendArray.weeks[i].days[j].doneDate == dateEasyFormat) {
+              if (sendArray.weeks[i].days[j].doneDate == newDate) {
                 sendArray.weeks[i].days[j].doneDate = newDate;
               }
             }
@@ -182,13 +182,13 @@ export default defineComponent({
     async function workoutToStatistics() {
       statisticStorage.setItem(id, {
         workoutname: props.page,
-        date: dateEasyFormat,
+        date: newDate,
         calendarDate: newDate,
         minutes: props.proptime,
       });
       await store.addToStatisticsList({
         workoutname: props.page,
-        date: dateEasyFormat,
+        date: newDate,
         calendarDate: newDate,
         minutes: props.proptime,
       });
@@ -230,7 +230,7 @@ export default defineComponent({
       props,
       finishSubtext,
       finishedImage,
-      dateEasyFormat,
+      newDate,
       navigateBack,
       flag,
       ribbon,

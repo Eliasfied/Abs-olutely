@@ -129,7 +129,6 @@ import {
   arrowForwardCircle,
 } from "ionicons/icons";
 import { useRouter } from "vue-router";
-import { synchronizeWorkouts } from "@/services/workoutsService";
 import { getWorkouts } from "@/services/workoutsService";
 import { getWorkoutList } from "@/composables/getMyWorkoutList";
 import { loginStore } from "@/store/authentication/loginStore";
@@ -137,6 +136,7 @@ import { Workout } from "@/models/Workout";
 import { getPlanList } from "@/composables/getMyPlanList";
 import { Plan } from "@/models/Plan";
 import { synchronizePlans } from "@/services/planService";
+import { synchronizeWorkouts } from "@/services/workoutsService";
 
 export default defineComponent({
   name: "HomePage",
@@ -160,15 +160,12 @@ export default defineComponent({
     });
     //const store = loginStore();
     onMounted(async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get("token");
-
       const logStore = loginStore();
       var userId = logStore.getUserId();
       let workouts: Workout[] = await getWorkoutList();
       let plans: Plan[] = await getPlanList();
-      await synchronizeWorkouts(workouts, userId as string);
       await synchronizePlans(plans, userId as string);
+      await synchronizeWorkouts(workouts, userId as string);
       console.log("workouts");
       console.log(workouts);
     });

@@ -220,7 +220,6 @@ import { ItemReorderCustomEvent } from "@ionic/vue";
 import { addWorkout } from "@/services/workoutsService";
 import { updateWorkout } from "@/services/workoutsService";
 import { loginStore } from "@/store/authentication/loginStore";
-import { getRandomId } from "@/composables/getRandomId";
 
 // ...
 
@@ -442,8 +441,7 @@ async function handleNewWorkout() {
       console.log(error);
     }
   } else {
-    var id = getRandomId(20);
-    currentWorkout.id = id;
+    var id = page as string;
     await WorkoutStorage.setItem(id, currentWorkout);
     store.addToWorkoutlist(currentWorkout);
   }

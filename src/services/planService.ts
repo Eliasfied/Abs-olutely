@@ -3,7 +3,7 @@ import { Plan } from "@/models/Plan";
 import { getPlanList } from "@/composables/getMyPlanList";
 import { useMyPlanStore } from "../store/myPlans";
 import PlanStorage from "@/storage/myPlanStorage";
-
+import { get } from "@ionic-native/core/decorators/common";
 
 export const addPlan = async (plan: Plan) => {
   return await httpsWithToken.post("/api/plans/add", plan);
@@ -18,37 +18,37 @@ export const getPlans = async (userid: string) => {
   return await httpsWithToken.get("/api/plans/get?userid=" + userid);
 };
 export const synchronizePlans = async (plans: Plan[], userId: string) => {
-  await httpsWithToken.post("/api/plans/synchronize?userid=" + userId, plans);
+  const plansToUpdateLocally = await httpsWithToken.post(
+    "/api/plans/synchronize?userid=" + userId,
+    plans
+  );
   const planStore = useMyPlanStore();
+  const planList = await getPlanList();
+  console.log("plansToUpdateLocally und planlist");
+  console.log(plansToUpdateLocally.data);
+  console.log(planList);
 
-  const plansFromDB = await getPlans(userId);
-  console.log("plansFromDB");
-  console.log(plansFromDB.data);
-  const localPlans = planStore.planList;
-  console.log("localPlans");
-  console.log(localPlans);
-
-  // gehe durch alle newPlans durch und schaue ob es lokal pläne gibt die nicht in der DB sind und lösche diese dann
-  for (let i = 0; i < localPlans.length; i++) {
+  for (let i = 0; i < plansToUpdateLocally.data.length; i++) {
     let found = false;
-    for (let j = 0; j < plansFromDB.data.length; j++) {
-      if (plansFromDB.data[j]) {
-        if (localPlans[i].id === plansFromDB.data[j].id) {
+    for (let j = 0; j < planList.length; j++) {
+      if (planList[j]) {
+        if (plansToUpdateLocally.data[i].name === planList[j].name) {
           found = true;
+          PlanStorage.removeItem(planList[j].id as string);
+          PlanStorage.setItem(
+            plansToUpdateLocally.data[i].id as string,
+            plansToUpdateLocally.data[i] as Plan
+          );
           break;
         }
-      } else {
-        console.log("newPlans.data[j] is undefined at index: ", j);
       }
     }
     if (!found) {
-      await deletePlanFromDB(localPlans[i].id as string);
-      await PlanStorage.removeItem(localPlans[i].id as string);
+      PlanStorage.setItem(
+        plansToUpdateLocally.data[i].id as string,
+        plansToUpdateLocally.data[i] as Plan
+      );
     }
-    planStore.loadPlansFromStore();
-    return plansFromDB.data;
   }
-
-
-
+  planStore.loadPlansFromStore();
 };

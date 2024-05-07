@@ -9,8 +9,8 @@
             <p>keine Workouts hinzugefügt...</p>
           </div>
           <ul>
-            <li v-for="(workout, index) in workouts" :key="workout.name">
-              <router-link class="routerLink" :to="'/preview/' + workout.name">
+            <li v-for="(workout, index) in workouts" :key="workout.id">
+              <router-link class="routerLink" :to="'/preview/' + workout.id">
                 <ion-card>
                   <div class="grid-style-li">
                     <div class="workout-icon">
@@ -84,7 +84,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import TheFooter from "../components/reusable/TheFooter.vue";
+import TheFooter from "@/components/reusable/TheFooter.vue";
 import { useRouter } from "vue-router";
 import {
   IonPage,
@@ -109,11 +109,13 @@ import {
   cafeOutline,
   cafe,
 } from "ionicons/icons";
-import { useMyWorkoutsStore } from "../store/myWorkouts";
+import { useMyWorkoutsStore } from "@/store/myWorkouts";
 import { ref, watch } from "vue";
-import myWorkoutStorage from "../storage/myWorkoutStorage";
+import myWorkoutStorage from "@/storage/myWorkoutStorage";
 import { deleteWorkout } from "@/services/workoutsService";
 import { loginStore } from "@/store/authentication/loginStore";
+import { getRandomId } from "@/composables/getRandomId";
+
 export default defineComponent({
   name: "MyWorkouts",
   components: {
@@ -221,7 +223,7 @@ export default defineComponent({
     const router = useRouter();
     let routeID;
     function newWorkout() {
-      routeID = Math.floor(Math.random() * 1000);
+      routeID = getRandomId(20);
       router.push("/myworkouts/editor/" + routeID);
     }
 

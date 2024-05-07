@@ -175,6 +175,7 @@ export default defineComponent({
     let list;
     let store;
     let proplist;
+    let isDefaultWorkout = false;
     if (
       page == "beginner" ||
       page == "advanced" ||
@@ -182,11 +183,16 @@ export default defineComponent({
       page == "professional"
     ) {
       store = useWorkoutsStore();
+      isDefaultWorkout = true;
     } else {
       store = useMyWorkoutsStore();
     }
     console.log(store);
-    list = store.workoutList.find((element) => element.name == page);
+    if (isDefaultWorkout) {
+      list = store.workoutList.find((element) => element.name == page);
+    } else {
+      list = store.workoutList.find((element) => element.id == page);
+    }
     console.log("LIST: ");
     console.log(list);
     proplist = list.exercises;
@@ -462,7 +468,6 @@ li {
     height: 80%;
   }
 }
-
 
 .title-div {
   align-self: center;
