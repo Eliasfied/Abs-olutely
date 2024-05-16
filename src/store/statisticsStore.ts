@@ -1,19 +1,37 @@
 import { defineStore } from "pinia";
-import { getStatisticsList } from "../composables/getStatisticsList";
+import { getStatisticsFromDb } from "../composables/getStatisticsFromDb";
+import { UserStatistic } from "@/models/userStatistic/UserStatistic";
+import { WorkoutStatistic } from "@/models/userStatistic/WorkoutStatistic";
 
 export const useStatisticsStore = defineStore("statisticsStore", {
   state: () => ({
-    statisticsList: [] as any[],
+    userStatistic: {
+      statisticId: "",
+      userId: "",
+      planStatistics: [],
+      workoutStatistics: [],
+    } as UserStatistic,
   }),
 
   actions: {
-    async loadStatisticsFromStore() {
-      this.statisticsList = await getStatisticsList();
+    async loadStatisticsInStoreFromDB(userId: string) {
+      this.userStatistic = (await getStatisticsFromDb(userId)) as UserStatistic;
+      if (this.userStatistic === undefined) {
+        this.userStatistic = {
+          statisticId: "",
+          userId: userId,
+          planStatistics: [],
+          workoutStatistics: [],
+        } as UserStatistic;
+      }
     },
-    addToStatisticsList(workout) {
-      console.log("bin im STATISTICS store");
-      this.statisticsList.unshift(workout);
-
+    async addWorkoutToStatisticStore(WorkoutStatistic: WorkoutStatistic) {
+      this.userStatistic.workoutStatistics.push(WorkoutStatistic);
+    },
+  },
+  getters: {
+    getUserStatistic(): UserStatistic {
+      return this.userStatistic as UserStatistic;
     },
   },
 });

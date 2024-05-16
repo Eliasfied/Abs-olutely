@@ -1,23 +1,23 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { RouteRecordRaw } from "vue-router";
-import HomePage from "../views/HomePage.vue";
-import WorkoutLive from "../components/WorkoutLive.vue";
-import WorkoutPreview from "../components/WorkoutPreview.vue";
-import MyWorkouts from "../components/workout/MyWorkouts.vue";
-import WorkoutEditor from "../components/WorkoutEditor.vue";
-import ExerciseListPage from "../components/ExerciseListPage.vue";
-import Statistics from "../components/Statistics.vue";
-import SettingsPage from "../components/SettingsPage.vue";
-import createPlanName from "../components/createPlanName.vue";
-import createPlanWeeks from "../components/createPlanWeeks.vue";
-import createPlanDays from "../components/createPlanDays.vue";
-import createPlanCustomize from "../components/createPlanCustomize.vue";
-import WorkoutList from "../components/WorkoutList.vue";
-import PlanPreview from "../components/PlanPreview.vue";
-import myPlans from "../components/myPlans.vue";
-import planDecision from "../components/planDecision.vue";
-import prePlans from "../components/prePlans.vue";
-import preWorkouts from "../components/preWorkouts.vue";
+import HomePage from "@/views/HomePage.vue";
+import WorkoutLive from "@/components/workout/WorkoutLive.vue";
+import WorkoutPreview from "@/components/workout/WorkoutPreview.vue";
+import MyWorkouts from "@/components/workout/MyWorkouts.vue";
+import PreWorkouts from "@/components/workout/PreWorkouts.vue";
+import WorkoutEditor from "@/components/workout/WorkoutEditor.vue";
+import PlanCreateName from "@/components/plan/PlanCreateName.vue";
+import PlanCreateWeeks from "@/components/plan/PlanCreateWeeks.vue";
+import PlanCreateDays from "@/components/plan/PlanCreateDays.vue";
+import PlanCreateCustomize from "@/components/plan/PlanCreateCustomize.vue";
+import MyPlans from "@/components/plan/MyPlans.vue";
+import PrePlans from "@/components/plan/PrePlans.vue";
+import PlanPreview from "@/components/plan/PlanPreview.vue";
+import PlanDecision from "@/components/plan/PlanDecision.vue";
+import PlanAddWorkoutsList from "@/components/plan/PlanAddWorkoutsList.vue";
+import ExerciseListPage from "@/components/exercise/ExerciseListPage.vue";
+import UserStatistics from "@/components/statistics/UserStatistics.vue";
+import UserSettings from "@/components/settings/UserSettings.vue";
 import LoginPage from "@/components/authentication/LoginPage.vue";
 import ProfilePage from "@/components/authentication/ProfilePage.vue";
 import RegisterPage from "@/components/authentication/RegisterPage.vue";
@@ -64,15 +64,15 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/workoutList",
-    name: "workoutList",
-    component: WorkoutList,
+    path: "/planAddWorkoutsList",
+    name: "PlanAddWorkoutsList",
+    component: PlanAddWorkoutsList,
     meta: { requiresAuth: true },
   },
   {
     path: "/myPlans",
-    name: "myPlans",
-    component: myPlans,
+    name: "MyPlans",
+    component: MyPlans,
     meta: { requiresAuth: true },
   },
   {
@@ -83,44 +83,44 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/planDecision",
-    name: "planDecision",
-    component: planDecision,
+    name: "PlanDecision",
+    component: PlanDecision,
     meta: { requiresAuth: true },
   },
   {
     path: "/prePlans",
-    name: "prePlans",
-    component: prePlans,
+    name: "PrePlans",
+    component: PrePlans,
     meta: { requiresAuth: true },
   },
   {
-    path: "/preWorkouts",
-    name: "preWorkouts",
-    component: preWorkouts,
+    path: "/PreWorkouts",
+    name: "PreWorkouts",
+    component: PreWorkouts,
     meta: { requiresAuth: true },
   },
   {
-    path: "/workoutplan/:id/createPlanName",
-    name: "createPlanName",
-    component: createPlanName,
+    path: "/workoutplan/:id/planCreateName",
+    name: "PlanCreateName",
+    component: PlanCreateName,
     meta: { requiresAuth: true },
   },
   {
-    path: "/workoutplan/:id/createPlanWeeks",
-    name: "createPlanWeeks",
-    component: createPlanWeeks,
+    path: "/workoutplan/:id/planCreateWeeks",
+    name: "PlanCreateWeeks",
+    component: PlanCreateWeeks,
     meta: { requiresAuth: true },
   },
   {
-    path: "/workoutplan/:id/createPlanDays",
-    name: "createPlanDays",
-    component: createPlanDays,
+    path: "/workoutplan/:id/planCreateDays",
+    name: "PlanCreateDays",
+    component: PlanCreateDays,
     meta: { requiresAuth: true },
   },
   {
-    path: "/workoutplan/:id/createPlanCustomize",
-    name: "createPlanCustomize",
-    component: createPlanCustomize,
+    path: "/workoutplan/:id/PlanCreateCustomize",
+    name: "PlanCreateCustomize",
+    component: PlanCreateCustomize,
     meta: { requiresAuth: true },
   },
   {
@@ -130,15 +130,15 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/statistics",
-    name: "Statistics",
-    component: Statistics,
+    path: "/userStatistics",
+    name: "UserStatistics",
+    component: UserStatistics,
     meta: { requiresAuth: true },
   },
   {
-    path: "/settings",
-    name: "SettingsPage",
-    component: SettingsPage,
+    path: "/userSettings",
+    name: "UserSettings",
+    component: UserSettings,
     meta: { requiresAuth: true },
   },
   {
@@ -155,7 +155,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/register",
     name: "RegisterPage",
     component: RegisterPage,
-  }
+  },
 ];
 
 const router = createRouter({

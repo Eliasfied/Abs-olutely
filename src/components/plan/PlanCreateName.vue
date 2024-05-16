@@ -54,11 +54,10 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { ref } from "vue";
-import { bookOutline, bookSharp, arrowForwardOutline } from "ionicons/icons";
-import { useRouter, useRoute } from "vue-router";
+import { bookSharp, arrowForwardOutline } from "ionicons/icons";
+import { useRouter } from "vue-router";
 import {
   IonContent,
   IonPage,
@@ -68,35 +67,47 @@ import {
   IonFooter,
   alertController,
 } from "@ionic/vue";
-import { useMyPlanStore } from "../store/myPlans";
-import useRouteId from "../composables/getPlanRouteID";
-import planStorage from "../storage/myPlanStorage";
-import BackButton from "./reusable/BackButton.vue";
+import { useMyPlanStore } from "@/store/myPlans";
+import useRouteId from "@/composables/getPlanRouteID";
+import planStorage from "@/storage/myPlanStorage";
+import BackButton from "@/components/reusable/BackButton.vue";
 
-export default defineComponent({
-  name: "createPlanName",
-  components: {
-    IonContent,
-    IonPage,
-    IonLabel,
-    IonInput,
-    IonIcon,
-    IonFooter,
-    BackButton,
-  },
-  setup() {
-    let router = useRouter();
-    let planStore = useMyPlanStore();
-    let name = ref("") as any;
+let router = useRouter();
+let planStore = useMyPlanStore();
+let name = ref("") as any;
 
-    let routeID = useRouteId();
-    const handlerMessage = ref();
+let routeID = useRouteId();
+const handlerMessage = ref();
 
-    async function goToWeeks() {
-      if (name.value == "") {
+async function goToWeeks() {
+  if (name.value == "") {
+    const alert = await alertController.create({
+      header: "Invalid Plan Name",
+      message: "Plan Name darf nicht leer sein",
+      cssClass: "custom-alert",
+      buttons: [
+        {
+          text: "Ok",
+          cssClass: "alert-button-confirm",
+          handler: () => {
+            handlerMessage.value = 1;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+    await alert.onDidDismiss();
+    return;
+  }
+
+  planStorage
+    .keys()
+    .then(async function (keys) {
+      if (keys.includes(name.value)) {
         const alert = await alertController.create({
-          header: "Invalid plan name",
-          message: "plan name cant be empty",
+          header: "Invalider Plan Name",
+          message: "Ein Plan mit diesem Namen existiert bereits",
           cssClass: "custom-alert",
           buttons: [
             {
@@ -112,53 +123,17 @@ export default defineComponent({
         await alert.present();
         await alert.onDidDismiss();
         return;
-      }
-
-      planStorage
-        .keys()
-        .then(async function (keys) {
-          if (keys.includes(name.value)) {
-            const alert = await alertController.create({
-              header: "Invalid plan name",
-              message: "a plan with that name already exists",
-              cssClass: "custom-alert",
-              buttons: [
-                {
-                  text: "Ok",
-                  cssClass: "alert-button-confirm",
-                  handler: () => {
-                    handlerMessage.value = 1;
-                  },
-                },
-              ],
-            });
-
-            await alert.present();
-            await alert.onDidDismiss();
-            return;
-          } else {
-            planStore.setPlanName(name);
-            router.push({
-              path:
-                "/workoutplan/" + routeID.currentRouteId + "/createPlanWeeks",
-            });
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+      } else {
+        planStore.setPlanName(name);
+        router.push({
+          path: "/workoutplan/" + routeID.currentRouteId + "/planCreateWeeks",
         });
-    }
-
-    return {
-      name,
-      bookOutline,
-      bookSharp,
-      arrowForwardOutline,
-      goToWeeks,
-      planStore,
-    };
-  },
-});
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
 </script>
 
 <style scoped>

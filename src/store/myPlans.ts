@@ -53,10 +53,11 @@ export const useMyPlanStore = defineStore("myPlans", {
     pushArray(week) {
       this.weekArray.push(week);
     },
-    async workoutToArray(index, workoutname) {
+    async workoutToArray(index, workoutId, workoutName) {
       console.log("der index:");
       console.log(index);
-      this.weekArray[index].weekWorkout = workoutname;
+      this.weekArray[index].weekWorkout.id = workoutId;
+      this.weekArray[index].weekWorkout.name = workoutName;
       console.log("this is the array:");
       console.log(this.weekArray);
     },

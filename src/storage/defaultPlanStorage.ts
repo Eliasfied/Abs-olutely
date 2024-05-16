@@ -2,74 +2,15 @@ import localForage from "localforage";
 const defaultPlans = localForage.createInstance({ name: "defaultPlans" });
 
 async function loadAll() {
-
-
-//defaultPlans.clear();
-
-await defaultPlans
-    .getItem("BeginnerPlanx")
-    .then(function (value) {
-      if (value === null) {
-        defaultPlans.setItem("BeginnerPlanx", {
-          planName: "BeginnerPlanx",
-          currentDay: 0,
-          currentWeek: 0,
-          totalDays: 12,
-          isDefault: true,
-          weeks: [
-            {
-              weekInt: 1,
-              weekWorkout: "beginner",
-              array: [
-                { dayInt: 1, state: "today", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
-              ],
-            },
-            {
-              weekInt: 2,
-              weekWorkout: "beginner",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
-              ],
-            },
-            {
-              weekInt: 3,
-              weekWorkout: "advanced",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
-              ],
-            },
-            {
-              weekInt: 4,
-              weekWorkout: "advanced",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
-              ],
-            },
-          ],
-        });
-      } else {
-        console.log("Item ist bereits gesetzt");
-      }
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-
+  //defaultPlans.clear();
 
   await defaultPlans
-    .getItem("BeginnerPlan 4x3")
+    .getItem("yS0qXtofbcUfcXDNBhLJdA7gzVo1")
     .then(function (value) {
       if (value === null) {
-        defaultPlans.setItem("BeginnerPlan 4x3", {
-          planName: "BeginnerPlan 4x3",
+        defaultPlans.setItem("yS0qXtofbcUfcXDNBhLJdA7gzVo1", {
+          id: "yS0qXtofbcUfcXDNBhLJdA7gzVo1",
+          name: "BeginnerPlanx",
           currentDay: 0,
           currentWeek: 0,
           totalDays: 12,
@@ -77,38 +18,39 @@ await defaultPlans
           weeks: [
             {
               weekInt: 1,
-              weekWorkout: "beginner",
-              array: [
-                { dayInt: 1, state: "today", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn31", name: "Beginner"},
+              days: [
+                { dayInt: 1, state: "today", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 2,
-              weekWorkout: "beginner",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn31", name: "Beginner"},
+
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 3,
-              weekWorkout: "advanced",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn32", name: "Advanced"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 4,
-              weekWorkout: "advanced",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn32", name: "Advanced"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
           ],
@@ -122,11 +64,12 @@ await defaultPlans
     });
 
   await defaultPlans
-    .getItem("Advanced 4x3")
+    .getItem("ByS0qXtofbcUfcXDNBhLJdA7gzVo2")
     .then(function (value) {
       if (value === null) {
-        defaultPlans.setItem("Advanced 4x3", {
-          planName: "Advanced 4x3",
+        defaultPlans.setItem("yS0qXtofbcUfcXDNBhLJdA7gzVo2", {
+          id: "yS0qXtofbcUfcXDNBhLJdA7gzVo2",
+          name: "BeginnerPlan 4x3",
           currentDay: 0,
           currentWeek: 0,
           totalDays: 12,
@@ -134,38 +77,38 @@ await defaultPlans
           weeks: [
             {
               weekInt: 1,
-              weekWorkout: "advanced",
-              array: [
-                { dayInt: 1, state: "today", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn31", name: "Beginner"},
+              days: [
+                { dayInt: 1, state: "today", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 2,
-              weekWorkout: "advanced",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn31", name: "Beginner"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 3,
-              weekWorkout: "professional",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn32", name: "Advanced"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 4,
-              weekWorkout: "champ",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn32", name: "Advanced"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
           ],
@@ -179,11 +122,70 @@ await defaultPlans
     });
 
   await defaultPlans
-    .getItem("SixPack Deluxe 5x3")
+    .getItem("yS0qXtofbcUfcXDNBhLJdA7gzVo3")
     .then(function (value) {
       if (value === null) {
-        defaultPlans.setItem("SixPack Deluxe 5x3", {
-          planName: "SixPack Deluxe 5x3",
+        defaultPlans.setItem("yS0qXtofbcUfcXDNBhLJdA7gzVo3", {
+          id: "yS0qXtofbcUfcXDNBhLJdA7gzVo3",
+          name: "Advanced 4x3",
+          currentDay: 0,
+          currentWeek: 0,
+          totalDays: 12,
+          isDefault: true,
+          weeks: [
+            {
+              weekInt: 1,
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn32", name: "Advanced"},
+              days: [
+                { dayInt: 1, state: "today", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
+              ],
+            },
+            {
+              weekInt: 2,
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn32", name: "Advanced"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
+              ],
+            },
+            {
+              weekInt: 3,
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn33", name: "Professional"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
+              ],
+            },
+            {
+              weekInt: 4,
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn34", name: "Champ"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
+              ],
+            },
+          ],
+        });
+      } else {
+        console.log("Item ist bereits gesetzt");
+      }
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+
+  await defaultPlans
+    .getItem("yS0qXtofbcUfcXDNBhLJdA7gzVo4")
+    .then(function (value) {
+      if (value === null) {
+        defaultPlans.setItem("yS0qXtofbcUfcXDNBhLJdA7gzVo4", {
+          id: "yS0qXtofbcUfcXDNBhLJdA7gzVo4",
+          name: "SixPack Deluxe 5x3",
           currentDay: 0,
           currentWeek: 0,
           totalDays: 15,
@@ -191,47 +193,47 @@ await defaultPlans
           weeks: [
             {
               weekInt: 1,
-              weekWorkout: "beginner",
-              array: [
-                { dayInt: 1, state: "today", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn31", name: "Beginner"},
+              days: [
+                { dayInt: 1, state: "today", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 2,
-              weekWorkout: "advanced",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn32", name: "Advanced"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 3,
-              weekWorkout: "advanced",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn32", name: "Advanced"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 4,
-              weekWorkout: "professional",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn33", name: "Professional"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 5,
-              weekWorkout: "professional",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
-                { dayInt: 3, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn33", name: "Professional"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
+                { dayInt: 3, state: "open", doneDate: null },
               ],
             },
           ],
@@ -245,11 +247,12 @@ await defaultPlans
     });
 
   await defaultPlans
-    .getItem("BASIC 8x2")
+    .getItem("yS0qXtofbcUfcXDNBhLJdA7gzVo5")
     .then(function (value) {
       if (value === null) {
-        defaultPlans.setItem("BASIC 8x2", {
-          planName: "BASIC 8x2",
+        defaultPlans.setItem("yS0qXtofbcUfcXDNBhLJdA7gzVo5", {
+          id: "yS0qXtofbcUfcXDNBhLJdA7gzVo5",
+          name: "BASIC 8x2",
           currentDay: 0,
           currentWeek: 0,
           totalDays: 16,
@@ -257,66 +260,66 @@ await defaultPlans
           weeks: [
             {
               weekInt: 1,
-              weekWorkout: "beginner",
-              array: [
-                { dayInt: 1, state: "today", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn31", name: "Beginner"},
+              days: [
+                { dayInt: 1, state: "today", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 2,
-              weekWorkout: "beginner",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn31", name: "Beginner"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 3,
-              weekWorkout: "advanced",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn32", name: "Advanced"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 4,
-              weekWorkout: "advanced",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn32", name: "Advanced"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 5,
-              weekWorkout: "advanced",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn32", name: "Advanced"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 6,
-              weekWorkout: "professional",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn33", name: "Professional"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 7,
-              weekWorkout: "professional",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn33", name: "Professional"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
               ],
             },
             {
               weekInt: 8,
-              weekWorkout: "professional",
-              array: [
-                { dayInt: 1, state: "open", doneDate: "" },
-                { dayInt: 2, state: "open", doneDate: "" },
+              weekWorkout: {id: "HsOB8HzB57hbQeHtwn33", name: "Professional"},
+              days: [
+                { dayInt: 1, state: "open", doneDate: null },
+                { dayInt: 2, state: "open", doneDate: null },
               ],
             },
           ],

@@ -5,12 +5,12 @@
       <div class="grid-style-workouts">
         <div class="quickstart-text-div"><p>Workouts</p></div>
         <div class="workout-list">
-          <div v-if="isEmpty" class="no-workouts-text">
+          <div v-if="isWorkoutsEmpty" class="no-workouts-text">
             <p>No workouts yet...</p>
           </div>
           <ul>
-            <li v-for="(workout, index) in workouts" :key="workout.name">
-              <router-link class="routerLink" :to="'/preview/' + workout.name">
+            <li v-for="(workout, index) in workouts" :key="workout.id">
+              <router-link class="routerLink" :to="'/preview/' + workout.id">
                 <ion-card>
                   <div class="grid-style-li">
                     <div class="workout-icon">
@@ -50,106 +50,49 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import TheFooter from "../components/reusable/TheFooter.vue";
-import { useRouter } from "vue-router";
+<script setup lang="ts">
+import TheFooter from "@/components/reusable/TheFooter.vue";
 import { IonPage, IonContent, IonCard, IonIcon, IonLabel } from "@ionic/vue";
-import {
-  addCircle,
-  clipboardOutline,
-  create,
-  trash,
-  clipboard,
-  hourglassOutline,
-  barbellOutline,
-  timeOutline,
-  receiptOutline,
-  bodyOutline,
-  cafeOutline,
-  cafe,
-} from "ionicons/icons";
+import { barbellOutline, timeOutline, cafe } from "ionicons/icons";
 import { ref, watch } from "vue";
-import { useWorkoutsStore } from "../store/workouts";
+import { useWorkoutsStore } from "@/store/workouts";
 
-export default defineComponent({
-  name: "preWorkouts",
-  components: {
-    TheFooter,
-    IonPage,
-    IonContent,
-    IonCard,
-    IonIcon,
-    IonLabel,
-  },
-  setup() {
-    // STORE DATA
+let workouts: any = ref([]);
+let isWorkoutsEmpty = ref(true);
 
-    let workouts: any = ref([]);
-    let isEmpty = ref(true);
-    let timePreview = ref();
-    let workoutLength = ref();
-
-    watch(
-      workouts.value.length,
-      () => {
-        console.log("geht in watcher rein");
-        if (workouts.value.length > 0) {
-          isEmpty.value = false;
-        } else {
-          isEmpty.value = true;
-        }
-      },
-      { deep: true, immediate: true }
-    );
-
-    async function loadStore() {
-      const store = useWorkoutsStore();
-      await store.loadWorkoutsFromStore();
-      workouts.value = store.workoutList;
-
-      if (workouts.value.length > 0) {
-        isEmpty.value = false;
-      }
+watch(
+  workouts.value.length,
+  () => {
+    if (workouts.value.length > 0) {
+      isWorkoutsEmpty.value = false;
+    } else {
+      isWorkoutsEmpty.value = true;
     }
-    loadStore();
-    console.log("workouts final: ");
-    console.log(workouts);
-
-    function getWorkoutLength(index) {
-      return Math.round(
-        (workouts.value[index].exerciseTime *
-          workouts.value[index].exercises.length +
-          (workouts.value[index].breakTime *
-            workouts.value[index].exercises.length -
-            workouts.value[index].breakTime)) /
-          60
-      );
-    }
-
-    //routing
-
-    return {
-      addCircle,
-      clipboardOutline,
-      create,
-      trash,
-      clipboard,
-      workouts,
-      isEmpty,
-      hourglassOutline,
-      barbellOutline,
-      timeOutline,
-      workoutLength,
-      timePreview,
-      getWorkoutLength,
-      receiptOutline,
-      bodyOutline,
-      cafeOutline,
-      cafe,
-    };
   },
-});
+  { deep: true, immediate: true }
+);
+
+async function loadStore() {
+  const store = useWorkoutsStore();
+  await store.loadWorkoutsFromStore();
+  workouts.value = store.workoutList;
+
+  if (workouts.value.length > 0) {
+    isWorkoutsEmpty.value = false;
+  }
+}
+loadStore();
+
+function getWorkoutLength(index) {
+  return Math.round(
+    (workouts.value[index].exerciseTime *
+      workouts.value[index].exercises.length +
+      (workouts.value[index].breakTime *
+        workouts.value[index].exercises.length -
+        workouts.value[index].breakTime)) /
+      60
+  );
+}
 </script>
 
 <style scoped>

@@ -16,8 +16,9 @@
               <ion-card @click="showDetails(index)">
                 <div class="card-grid">
                   <div class="title-div">
-                    <ion-label color="light">{{  result.number + " " + result.name  }}</ion-label>
-                    
+                    <ion-label color="light">{{
+                      result.number + " " + result.name
+                    }}</ion-label>
                   </div>
                   <div class="img-div">
                     <img
@@ -43,8 +44,7 @@
   ></ion-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import {
   IonContent,
   IonPage,
@@ -52,75 +52,46 @@ import {
   IonCard,
   IonLabel,
 } from "@ionic/vue";
-import TheFooter from "./reusable/TheFooter.vue";
+import TheFooter from "@/components/reusable/TheFooter.vue";
 import { ref, onBeforeMount } from "vue";
-import { getExerciseList } from "../composables/getExerciseList";
-import ExerciseDetail from "./reusable/ExerciseDetail.vue";
+import { getExerciseList } from "@/composables/getExerciseList";
+import ExerciseDetail from "@/components/reusable/ExerciseDetail.vue";
 
-export default defineComponent({
-  name: "ExerciseListPage",
-  components: {
-    IonContent,
-    IonPage,
-    TheFooter,
-    IonSearchbar,
-    IonCard,
-    IonLabel,
-    ExerciseDetail,
-  },
-  setup() {
-    let exerciseList: any[] = [];
-    let results = ref();
-    async function init() {
-      exerciseList = await getExerciseList();
-      results.value = exerciseList;
-      proplist.value = results.value;
-      console.log("result list page");
-      console.log(results.value);
-    }
+let exerciseList: any[] = [];
+let results = ref();
+async function init() {
+  exerciseList = await getExerciseList();
+  results.value = exerciseList;
+  proplist.value = results.value;
+  console.log("result list page");
+  console.log(results.value);
+}
 
-    onBeforeMount(() => init());
+onBeforeMount(() => init());
 
-    //POPUP EXERCISE DETAIL
-    let proplist = ref();
-    let propIndex = ref(0);
-    let showModal = ref(false);
-    function showDetails(index) {
-      console.log("showdetails!");
-      console.log(index);
-      showModal.value = !showModal.value;
-      propIndex.value = index;
-    }
-    function closeModal() {
-      showModal.value = !showModal.value;
-    }
+//POPUP EXERCISE DETAIL
+let proplist = ref();
+let propIndex = ref(0);
+let showModal = ref(false);
+function showDetails(index) {
+  showModal.value = !showModal.value;
+  propIndex.value = index;
+}
+function closeModal() {
+  showModal.value = !showModal.value;
+}
 
-    function handleChange(event) {
-      const query = event.target.value.toLowerCase();
-      results.value = exerciseList.filter(
-        (d) => d.name.toLowerCase().indexOf(query) > -1
-      );
-      proplist.value = results.value;
-    }
+function handleChange(event) {
+  const query = event.target.value.toLowerCase();
+  results.value = exerciseList.filter(
+    (d) => d.name.toLowerCase().indexOf(query) > -1
+  );
+  proplist.value = results.value;
+}
 
-    function getExerciseURL(index) {
-      return require("../assets/exercises/" +
-        results.value[index].name +
-        ".gif");
-    }
-
-    return {
-      results,
-      handleChange,
-      getExerciseURL,
-      showDetails,
-      closeModal,
-      propIndex,
-      showModal,
-      proplist,
-    };
-  },
-});
+function getExerciseURL(index) {
+  return require("@/assets/exercises/" + results.value[index].name + ".gif");
+}
 </script>
 
 <style scoped>
@@ -167,7 +138,6 @@ ion-label {
   align-self: center;
   justify-self: start;
   font-size: large;
-  
 }
 
 .img-div {

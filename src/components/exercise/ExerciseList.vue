@@ -14,38 +14,36 @@
       ></ion-icon>
     </div>
     <div class="exercise-list">
-        <ul>
-          <li v-for="(exercise, index) in results" :key="exercise">
-            <ion-card :class="{ addAnimation: exerciseAdded }">
-              <div class="card-grid">
-                <div class="info-div">
-                  <ion-icon
-                    class="icon-info"
-                    @click="showDetails(index)"
-                    :icon="informationCircleOutline"
-                  ></ion-icon>
-                </div>
-                <div class="add-div">
-                  <ion-icon
-                    class="icon-add"
-                    @click="addExercises(index)"
-                    :icon="addOutline"
-                  ></ion-icon>
-                </div>
-                <div class="title-div">
-                  <ion-label color="light">{{ exercise.number + " " + exercise.name }}</ion-label>
-                </div>
-                <div class="img-div">
-                  <img
-                    class="exercise-img"
-                    :src="getExerciseURL(index)"
-                    alt=""
-                  />
-                </div>
+      <ul>
+        <li v-for="(exercise, index) in results" :key="exercise">
+          <ion-card :class="{ addAnimation: exerciseAdded }">
+            <div class="card-grid">
+              <div class="info-div">
+                <ion-icon
+                  class="icon-info"
+                  @click="showDetails(index)"
+                  :icon="informationCircleOutline"
+                ></ion-icon>
               </div>
-            </ion-card>
-          </li>
-        </ul>
+              <div class="add-div">
+                <ion-icon
+                  class="icon-add"
+                  @click="addExercises(index)"
+                  :icon="addOutline"
+                ></ion-icon>
+              </div>
+              <div class="title-div">
+                <ion-label color="light">{{
+                  exercise.number + " " + exercise.name
+                }}</ion-label>
+              </div>
+              <div class="img-div">
+                <img class="exercise-img" :src="getExerciseURL(index)" alt="" />
+              </div>
+            </div>
+          </ion-card>
+        </li>
+      </ul>
     </div>
     <div v-if="showModal" class="alignCard">
       <exercise-detail
@@ -58,8 +56,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { defineProps, defineEmits } from "vue";
 import { IonCard, IonIcon, IonSearchbar, IonLabel } from "@ionic/vue";
 import { useRoute } from "vue-router";
 import {
@@ -68,108 +66,76 @@ import {
   addOutline,
 } from "ionicons/icons";
 import { ref, onBeforeMount } from "vue";
-import { getExerciseList } from "../composables/getExerciseList";
-import ExerciseDetail from "./reusable/ExerciseDetail.vue";
+import { getExerciseList } from "@/composables/getExerciseList";
+import ExerciseDetail from "@/components/reusable/ExerciseDetail.vue";
 import { Exercise } from "@/models/Exercise";
+import { from } from "rxjs";
 
-export default defineComponent({
-  name: "ExerciseList",
-  props: ["exerciseListStorage", "index", "workoutName", "currentWorkout"],
-  emits: ["updateExercises", "closeExerciselist"],
-  components: {
-    IonCard,
-    IonIcon,
-    IonSearchbar,
-    ExerciseDetail,
-    IonLabel,
-  },
-  setup(props, { emit }) {
-    //ROUTE
-    const route = useRoute();
-    const page = route.params.course.toString();
-    console.log(page);
-    let exerciseList: Exercise[] = [];
-    let results = ref();
-    async function init() {
-      exerciseList = await getExerciseList();
-      console.log("exerciseList:");
-      console.log(exerciseList);
-      results.value = exerciseList;
-      console.log("result list:");
-      console.log(results.value);
-      proplist.value = results.value;
-    }
-
-    let exercise;
-
-    onBeforeMount(() => init());
-
-    let proplist = ref();
-    let propIndex = ref(0);
-    let showModal = ref(false);
-    //ADD AND DELETE ITEMS
-
-    function showDetails(index) {
-      console.log("showdetails!");
-      console.log(index);
-      showModal.value = !showModal.value;
-      propIndex.value = index;
-    }
-
-    function resetAdded() {
-      exerciseAdded.value = false;
-    }
-
-    function closeModal() {
-      showModal.value = !showModal.value;
-    }
-
-    //value for CSS animation
-    let exerciseAdded = ref(false);
-    function addExercises(index) {
-      exerciseAdded.value = true;
-      setTimeout(resetAdded, 500);
-      console.log("addExercises function!");
-      exerciseList = JSON.parse(JSON.stringify(results.value));
-      console.log(exerciseList);
-      exercise = exerciseList[index];
-      exercise.reorderID = Math.floor(Math.random() * 100000) + 1;
-      console.log(exercise);
-      emit("updateExercises", exercise);
-    }
-
-    function getExerciseURL(index) {
-      return require("../assets/exercises/" +
-        results.value[index].name +
-        ".gif");
-    }
-
-    function handleChange(event) {
-      const query = event.target.value.toLowerCase();
-      results.value = exerciseList.filter(
-        (d) => d.name.toLowerCase().indexOf(query) > -1
-      );
-      proplist.value = results.value;
-    }
-
-    return {
-      props,
-      addExercises,
-      closeCircleOutline,
-      handleChange,
-      results,
-      proplist,
-      propIndex,
-      showModal,
-      getExerciseURL,
-      informationCircleOutline,
-      showDetails,
-      closeModal,
-      addOutline,
-      exerciseAdded,
-    };
-  },
+const props = defineProps({
+  exerciseListStorage: Array,
+  index: Number,
+  workoutName: String,
+  currentWorkout: Object,
 });
+
+const emit = defineEmits(["updateExercises", "closeExerciselist"]);
+
+//ROUTE
+const route = useRoute();
+const page = route.params.course.toString();
+console.log(page);
+let exerciseList: Exercise[] = [];
+let results = ref();
+async function init() {
+  exerciseList = await getExerciseList();
+  results.value = exerciseList;
+  proplist.value = results.value;
+}
+
+let exercise;
+
+onBeforeMount(() => init());
+
+let proplist = ref();
+let propIndex = ref(0);
+let showModal = ref(false);
+//ADD AND DELETE ITEMS
+
+function showDetails(index) {
+  showModal.value = !showModal.value;
+  propIndex.value = index;
+}
+
+function resetAdded() {
+  exerciseAdded.value = false;
+}
+
+function closeModal() {
+  showModal.value = !showModal.value;
+}
+
+//value for CSS animation
+let exerciseAdded = ref(false);
+function addExercises(index) {
+  exerciseAdded.value = true;
+  setTimeout(resetAdded, 500);
+  exerciseList = JSON.parse(JSON.stringify(results.value));
+  exercise = exerciseList[index];
+  exercise.reorderID = Math.floor(Math.random() * 100000) + 1;
+  emit("updateExercises", exercise);
+}
+
+function getExerciseURL(index) {
+  return require("@/assets/exercises/" + results.value[index].name + ".gif");
+}
+
+function handleChange(event) {
+  const query = event.target.value.toLowerCase();
+  results.value = exerciseList.filter(
+    (d) => d.name.toLowerCase().indexOf(query) > -1
+  );
+  proplist.value = results.value;
+}
 </script>
 
 <style scoped>
@@ -231,7 +197,6 @@ ul {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-
 }
 
 .icon-info {

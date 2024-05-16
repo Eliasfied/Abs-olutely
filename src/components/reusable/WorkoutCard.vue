@@ -1,5 +1,5 @@
 <template>
-  <router-link class="routerLink" :to="urlprefix + props.workoutName">
+  <router-link class="routerLink" :to="urlprefix + props.workoutId">
     <ion-card
       class="CardImage"
     >
@@ -38,7 +38,7 @@ export default defineComponent({
     
   },
   name: "WorkoutCard",
-  props: ["urlprefix", "workoutName", "imageName", "difficulty"],
+  props: ["urlprefix", "workoutName", "workoutId", "imageName", "difficulty"],
   setup(props) {
     let proptest = "beginner";
     console.log("workoutname props: ");

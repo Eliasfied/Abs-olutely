@@ -83,7 +83,9 @@
                   </div>
                   <div class="label-workoutname">
                     <ion-label color="secondary">
-                      {{ weekArray.weeks[weekIndex].weekWorkout }}</ion-label
+                      {{
+                        weekArray.weeks[weekIndex].weekWorkout.name
+                      }}</ion-label
                     >
                   </div>
                   <div class="day-workout">
@@ -108,8 +110,7 @@
     </ion-content>
   </ion-page>
 </template>
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import {
   IonContent,
   IonPage,
@@ -117,320 +118,227 @@ import {
   IonIcon,
   alertController,
 } from "@ionic/vue";
-import { useMyPlanStore } from "../store/myPlans";
-import { useMyWorkoutsStore } from "../store/myWorkouts";
-import { computed, ref, watch, onMounted } from "vue";
-import TheFooter from "../components/reusable/TheFooter.vue";
+import { useMyPlanStore } from "@/store/myPlans";
+import { useMyWorkoutsStore } from "@/store/myWorkouts";
+import { computed, ref, onMounted } from "vue";
+import TheFooter from "@/components/reusable/TheFooter.vue";
 import { useRoute, useRouter } from "vue-router";
 import { CircleProgressBar } from "vue3-m-circle-progress-bar";
-import { useWorkoutPlanData } from "../store/workoutPlanData";
-import planStorage from "../storage/myPlanStorage";
+import { useWorkoutPlanData } from "@/store/workoutPlanData";
+import planStorage from "@/storage/myPlanStorage";
 import defaultPlans from "@/storage/defaultPlanStorage";
-
-import {
-  addCircle,
-  clipboardOutline,
-  create,
-  trash,
-  clipboard,
-  hourglassOutline,
-  barbellOutline,
-  timeOutline,
-  receiptOutline,
-  bodyOutline,
-  checkmarkDoneOutline,
-  arrowRedo,
-  arrowRedoCircle,
-  reload,
-} from "ionicons/icons";
+import { barbellOutline, checkmarkDoneOutline, reload } from "ionicons/icons";
 import { async } from "rxjs/internal/scheduler/async";
+import { formatDate } from "@/composables/formatDate";
+import { updatePlanInDB } from "@/services/planService";
+import { Plan } from "@/models/Plan";
 
-export default defineComponent({
-  name: "WorkoutPlan",
-  components: {
-    IonContent,
-    IonPage,
-    TheFooter,
-    IonLabel,
-    CircleProgressBar,
-    IonIcon,
-  },
-  setup() {
-    const disabled = ref(false);
+const disabled = ref(false);
 
-    const router = useRouter();
-    const route = useRoute();
-    const page: any = route.params.plan;
-    let workouts: any = ref([]);
-    let isEmpty = ref(true);
+const router = useRouter();
+const route = useRoute();
+const page: any = route.params.plan;
+let workouts: any = ref([]);
+let isEmpty = ref(true);
 
-    //progress-Kreis
-    let colorUnfilled = "#80abca";
-    let colorFilled = "green";
+//progress-Kreis
+let colorUnfilled = "#80abca";
+let colorFilled = "green";
 
-    const workoutPlanDataStore = useWorkoutPlanData();
+let planStore = useMyPlanStore();
+planStore.loadPlansFromStore();
 
-    let planStore = useMyPlanStore();
-    planStore.loadPlansFromStore();
+const workoutPlanDataStore = useWorkoutPlanData();
+let combinedPlans = planStore.planList.concat(planStore.prePlanList);
 
-    async function loadStore() {
-      const store = useMyWorkoutsStore();
-      await store.loadWorkoutsFromStore();
-      workouts.value = store.workoutList;
-      console.log("workouts");
-      console.log(workouts.value);
-    }
-    onMounted(() => {
-      loadStore();
-    });
-
-    planStore.$subscribe(
-      (mutation, state) => {
-        console.log("a change happened in PlanPreview");
-        console.log(mutation, state);
-        weekArray = state.planList.concat(state.prePlanList).find((element) => element.id == page);
-        console.log("weeekarrray:");
-        console.log(weekArray);
-        if (weekArray != undefined) {
-          workoutsDone.value =
-            weekArray.currentWeek * weekArray.weeks[0].days.length +
-            weekArray.currentDay;
-          totalWorkouts.value = weekArray.totalDays;
-          selectedCardIndex.value = weekArray.currentWeek;
-        }
-      },
-      { detached: true }
-    );
-
-    console.log("workouts final: ");
-    console.log(workouts);
-
-    function showWorkoutLength(name) {
-      console.log(workouts.value);
-      const newArray = workouts.value.filter((element) => element.name == name);
-
-      console.log("newArray");
-      console.log(newArray);
-
-      return newArray;
-    }
-
-    console.log(planStore);
-    console.log("page " + page);
-
-    let combinedPlans = planStore.planList.concat(planStore.prePlanList);
-
-    let weekArray = combinedPlans.find((element) => element.id == page);
-    console.log(weekArray);
-
-    let selectedDay = ref(0);
-    let weekIndex = ref(weekArray.currentWeek);
-    let selectedCardIndex = ref(weekArray.currentWeek);
-    let selectedDayIndex = ref(0);
-
-    let workoutsDone = ref(
-      weekArray.currentWeek * weekArray.weeks[0].days.length +
-        weekArray.currentDay
-    );
-    let totalWorkouts = ref(weekArray.totalDays);
-
-    const dayState = computed(() => (index) => {
-      if (weekArray) {
-        return {
-          "workout-done":
-            weekArray.weeks[selectedCardIndex.value].days[index].state ==
-            "done",
-          "workout-today":
-            weekArray.weeks[selectedCardIndex.value].days[index].state ==
-            "today",
-          "workout-open":
-            weekArray.weeks[selectedCardIndex.value].days[index].state ==
-            "open",
-        };
-      } else {
-        return {};
-      }
-    });
-
-    const doneIconShow = computed(() => (index) => {
-      if (weekArray) {
-        return {
-          "icon-show":
-            weekArray.weeks[selectedCardIndex.value].days[index].doneDate !=
-            null,
-          "icon-dontshow":
-            weekArray.weeks[selectedCardIndex.value].days[index].doneDate ==
-              undefined ||
-            weekArray.weeks[selectedCardIndex.value].days[index].doneDate ==
-             null,
-        };
-      } else {
-        return {};
-      }
-    });
-
-    let showFinishedIcon = ref(false);
-    let dayDone = computed(() => (index) => {
-      if (weekArray) {
-        if (
-          weekArray.weeks[selectedCardIndex.value].days[index].doneDate != null
-        ) {
-          showFinishedIcon.value = true;
-          return weekArray.weeks[selectedCardIndex.value].days[index].doneDate;
-        }
-      }
-    });
-
-    let selectedWeek = computed(() => {
-      console.log("check");
-      console.log(weekArray);
-      console.log(weekArray.weeks);
-      return weekArray.weeks[selectedDay.value].days;
-    });
-
-    function changeWeek(index) {
-      selectedCardIndex.value = index;
-      weekIndex.value = index;
-      selectedDay.value = index;
-
-      disabled.value = true;
-      setTimeout(() => {
-        disabled.value = false;
-      }, 1000);
-    }
-
-    const handlerMessage = ref();
-    async function resetPlan() {
-      const alert = await alertController.create({
-        header: "Plan zurücksetzen?",
-        message: "Dein Fortschritt geht verloren.",
-        cssClass: "custom-alert",
-        buttons: [
-          {
-            text: "Yes",
-            cssClass: "alert-button-confirm",
-            handler: () => {
-              handlerMessage.value = 1;
-            },
-          },
-          {
-            text: "No",
-            cssClass: "alert-button-cancel",
-            handler: () => {
-              handlerMessage.value = 0;
-            },
-          },
-        ],
-      });
-
-      await alert.present();
-      await alert.onDidDismiss();
-
-      if (handlerMessage.value == 1) {
-        weekArray.currentDay = 0;
-        weekArray.currentWeek = 0;
-        selectedCardIndex.value = 0;
-        weekArray.lastWorkout = null;
-        weekIndex.value = 0;
-        console.log(weekArray.weeks.length);
-
-        for (let i = 0; i < weekArray.weeks.length; i++) {
-          console.log(weekArray.weeks[i].days.length);
-          for (let y = 0; y < weekArray.weeks[i].days.length; y++) {
-            console.log("wo bin ich");
-            console.log(weekArray.weeks[i].days[y].state);
-            weekArray.weeks[i].days[y].state = "open";
-          }
-        }
-
-        weekArray.weeks[0].array[0].state = "today";
-
-        let parseArray = JSON.parse(JSON.stringify(weekArray.weeks));
-
-        let sendArray = {
-          isDefault: weekArray.isDefault,
-          planName: weekArray.planName,
-          currentDay: weekArray.currentDay,
-          currentWeek: weekArray.currentWeek,
-          totalDays: weekArray.totalDays,
-          lastWorkout: weekArray.lastWorkout,
-          weeks: parseArray,
-        };
-
-        if (sendArray.isDefault == true) {
-          await defaultPlans.removeItem(weekArray.planName);
-          await defaultPlans.setItem(sendArray.planName, sendArray);
-          await planStore.loadPlansFromStore();
-        } else {
-          await planStorage.removeItem(weekArray.planName);
-          await planStorage.setItem(sendArray.planName, sendArray);
-          await planStore.loadPlansFromStore();
-        }
-      }
-
-      if (handlerMessage.value == 0) {
-        return;
-      }
-    }
-
-    function goToWorkout(index, index2) {
-      console.log(weekIndex.value);
-      console.log(index2);
-      workoutPlanDataStore.weekNumber = selectedCardIndex.value;
-      workoutPlanDataStore.dayNumber = index2;
-      workoutPlanDataStore.currentPlanName = weekArray.planName;
-      let workoutName = weekArray.weeks[index].weekWorkout;
-      console.log("in gotoW");
-      console.log(weekArray.weeks);
-      console.log(selectedCardIndex.value);
-      console.log(index2);
-      if (
-        weekArray.weeks[selectedCardIndex.value].days[index2].state == "today"
-      ) {
-        router.push("/preview/" + workoutName);
-      } else {
-        return;
-      }
-    }
-
-    return {
-      weekArray,
-      selectedDay,
-      selectedWeek,
-      resetPlan,
-      changeWeek,
-      weekIndex,
-      selectedCardIndex,
-      goToWorkout,
-      addCircle,
-      clipboardOutline,
-      create,
-      trash,
-      clipboard,
-      hourglassOutline,
-      barbellOutline,
-      timeOutline,
-      receiptOutline,
-      bodyOutline,
-      showWorkoutLength,
-      disabled,
-      colorUnfilled,
-      colorFilled,
-      selectedDayIndex,
-      dayState,
-      workouts,
-      workoutsDone,
-      totalWorkouts,
-      dayDone,
-      showFinishedIcon,
-      checkmarkDoneOutline,
-      doneIconShow,
-      arrowRedo,
-      arrowRedoCircle,
-      reload,
-    };
-  },
+let weekArray: any = combinedPlans.find(
+  (element) => element.id == page || element.name == page
+);
+let workoutsDone = ref();
+async function loadStore() {
+  const store = useMyWorkoutsStore();
+  await store.loadWorkoutsFromStore();
+  workouts.value = store.workoutList;
+}
+onMounted(() => {
+  loadStore();
 });
+
+planStore.$subscribe(
+  (mutation, state) => {
+    weekArray = state.planList
+      .concat(state.prePlanList)
+      .find((element) => element.id == page || element.name == page);
+    if (weekArray != undefined) {
+      workoutsDone.value =
+        weekArray.currentWeek * weekArray.weeks[0].days.length +
+        weekArray.currentDay;
+      totalWorkouts.value = weekArray.totalDays;
+      selectedCardIndex.value = weekArray.currentWeek;
+    } else {
+      // bug wenn man ausloggt und einloggt und vorher im planpreview war
+      weekArray = { weeks: [{ days: [{ state: "open"}] }] };
+    }
+  },
+  { detached: true }
+);
+
+let selectedDay = ref(0);
+let weekIndex = ref(weekArray.currentWeek);
+let selectedCardIndex = ref(weekArray.currentWeek);
+
+let totalWorkouts = ref(weekArray.totalDays);
+
+const dayState = computed(() => (index) => {
+  if (weekArray) {
+    return {
+      "workout-done":
+        weekArray.weeks[selectedCardIndex.value].days[index].state == "done",
+      "workout-today":
+        weekArray.weeks[selectedCardIndex.value].days[index].state == "today",
+      "workout-open":
+        weekArray.weeks[selectedCardIndex.value].days[index].state == "open",
+    };
+  } else {
+    return {};
+  }
+});
+
+const doneIconShow = computed(() => (index) => {
+  if (weekArray) {
+    return {
+      "icon-show":
+        weekArray.weeks[selectedCardIndex.value].days[index].doneDate != null,
+      "icon-dontshow":
+        weekArray.weeks[selectedCardIndex.value].days[index].doneDate ==
+          undefined ||
+        weekArray.weeks[selectedCardIndex.value].days[index].doneDate == null,
+    };
+  } else {
+    return {};
+  }
+});
+
+let showFinishedIcon = ref(false);
+let dayDone = computed(() => (index) => {
+  if (weekArray) {
+    if (weekArray.weeks[selectedCardIndex.value].days[index].doneDate != null) {
+      showFinishedIcon.value = true;
+      return formatDate(
+        weekArray.weeks[selectedCardIndex.value].days[index].doneDate
+      );
+    }
+  }
+});
+
+let selectedWeek = computed(() => {
+  return weekArray.weeks[selectedDay.value].days;
+});
+
+function changeWeek(index) {
+  selectedCardIndex.value = index;
+  weekIndex.value = index;
+  selectedDay.value = index;
+
+  disabled.value = true;
+  setTimeout(() => {
+    disabled.value = false;
+  }, 1000);
+}
+
+const handlerMessage = ref();
+async function resetPlan() {
+  const alert = await alertController.create({
+    header: "Plan zurücksetzen?",
+    message: "Dein Fortschritt geht verloren.",
+    cssClass: "custom-alert",
+    buttons: [
+      {
+        text: "Yes",
+        cssClass: "alert-button-confirm",
+        handler: () => {
+          handlerMessage.value = 1;
+        },
+      },
+      {
+        text: "No",
+        cssClass: "alert-button-cancel",
+        handler: () => {
+          handlerMessage.value = 0;
+        },
+      },
+    ],
+  });
+
+  await alert.present();
+  await alert.onDidDismiss();
+
+  if (handlerMessage.value == 1) {
+    weekArray.currentDay = 0;
+    weekArray.currentWeek = 0;
+    selectedCardIndex.value = 0;
+    weekArray.lastWorkout = null;
+    weekIndex.value = 0;
+    console.log(weekArray.weeks.length);
+
+    for (let i = 0; i < weekArray.weeks.length; i++) {
+      for (let y = 0; y < weekArray.weeks[i].days.length; y++) {
+        weekArray.weeks[i].days[y].state = "open";
+      }
+    }
+
+    weekArray.weeks[0].array[0].state = "today";
+
+    let parseArray = JSON.parse(JSON.stringify(weekArray.weeks));
+
+    let sendArray: Plan = {
+      id: weekArray.id,
+      isDefault: weekArray.isDefault,
+      name: weekArray.name,
+      currentDay: weekArray.currentDay,
+      currentWeek: weekArray.currentWeek,
+      totalDays: weekArray.totalDays,
+      userId: weekArray.userId,
+      lastWorkout: weekArray.lastWorkout,
+      lastUpdated: weekArray.lastUpdated,
+      weeks: parseArray,
+    };
+
+    if (sendArray.isDefault == true) {
+      await defaultPlans.removeItem(weekArray.id);
+      await defaultPlans.setItem(sendArray.id, sendArray);
+      await planStore.loadPlansFromStore();
+    } else {
+      await planStorage.removeItem(weekArray.id);
+      await planStorage.setItem(sendArray.id, sendArray);
+      if (navigator.onLine) {
+        await updatePlanInDB(sendArray);
+      }
+
+      await planStore.loadPlansFromStore();
+    }
+  }
+
+  if (handlerMessage.value == 0) {
+    return;
+  }
+}
+
+function goToWorkout(index, index2) {
+  console.log(weekIndex.value);
+  console.log(index2);
+  workoutPlanDataStore.weekNumber = selectedCardIndex.value;
+  workoutPlanDataStore.dayNumber = index2;
+  workoutPlanDataStore.currentPlanName = weekArray.name;
+  let workoutId = weekArray.weeks[index].weekWorkout.id;
+  console.log("workoutId");
+  console.log(workoutId);
+  if (weekArray.weeks[selectedCardIndex.value].days[index2].state == "today") {
+    router.push("/preview/" + workoutId);
+  } else {
+    return;
+  }
+}
 </script>
 <style scoped>
 .container {
@@ -613,13 +521,10 @@ p {
 }
 .workout-today {
   /* border: 2px solid lightgray; */
- 
 }
 .workout-open {
   /* background-color: var(--ion-color-medium); */
   background-color: #d3e6f0;
-
-
 }
 
 .grid-style-li {

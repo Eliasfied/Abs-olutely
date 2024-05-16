@@ -37,6 +37,7 @@
             <ion-card class="quickWorkout-card"
               ><workout-card
                 :workoutName="beginnerWorkoutName"
+                :workoutId="beginnerWorkoutId"
                 :urlprefix="urlprefix"
                 imageName="beginner"
                 difficulty="1"
@@ -48,6 +49,7 @@
             <ion-card class="quickWorkout-card"
               ><workout-card
                 :workoutName="advancedWorkoutName"
+                :workoutId="advancedWorkoutId"
                 :urlprefix="urlprefix"
                 imageName="advanced"
                 difficulty="2"
@@ -59,6 +61,7 @@
             <ion-card class="quickWorkout-card"
               ><workout-card
                 :workoutName="champWorkoutName"
+                :workoutId="champWorkoutId"
                 :urlprefix="urlprefix"
                 imageName="champ"
                 difficulty="3"
@@ -111,9 +114,9 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { IonContent, IonPage, IonCard, IonIcon, IonLabel } from "@ionic/vue";
-import { computed, defineComponent, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useWorkoutsStore } from "../store/workouts";
 import { useMyPlanStore } from "../store/myPlans";
 import TheFooter from "../components/reusable/TheFooter.vue";
@@ -121,7 +124,6 @@ import { ref } from "vue";
 import { onIonViewWillLeave } from "@ionic/vue";
 import WorkoutCard from "../../src/components/reusable/WorkoutCard.vue";
 import {
-  addSharp,
   bookOutline,
   readerOutline,
   barbellOutline,
@@ -129,7 +131,6 @@ import {
   arrowForwardCircle,
 } from "ionicons/icons";
 import { useRouter } from "vue-router";
-import { getWorkouts } from "@/services/workoutsService";
 import { getWorkoutList } from "@/composables/getMyWorkoutList";
 import { loginStore } from "@/store/authentication/loginStore";
 import { Workout } from "@/models/Workout";
@@ -138,139 +139,109 @@ import { Plan } from "@/models/Plan";
 import { synchronizePlans } from "@/services/planService";
 import { synchronizeWorkouts } from "@/services/workoutsService";
 
-export default defineComponent({
-  name: "HomePage",
-  components: {
-    IonContent,
-    IonPage,
-    TheFooter,
-    IonCard,
-    WorkoutCard,
-    IonIcon,
-    IonLabel,
-  },
+let closeMenu = ref(false);
+onIonViewWillLeave(() => {
+  console.log("Home page did leave");
 
-  setup() {
-    let closeMenu = ref(false);
-    onIonViewWillLeave(() => {
-      console.log("Home page did leave");
-
-      // BIS AN SIDEMENU WEITERGEBEN UND DORT WATCHEN UND DANN DAS HIER TRIGGERN
-      closeMenu.value = true;
-    });
-    //const store = loginStore();
-    onMounted(async () => {
-      const logStore = loginStore();
-      var userId = logStore.getUserId();
-      let workouts: Workout[] = await getWorkoutList();
-      let plans: Plan[] = await getPlanList();
-      await synchronizePlans(plans, userId as string);
-      await synchronizeWorkouts(workouts, userId as string);
-      console.log("workouts");
-      console.log(workouts);
-    });
-
-    //sideMENÜ LOGIC
-
-    //get the workouts that are saved in the store
-    let list;
-    let beginnerWorkoutName = ref("");
-    let advancedWorkoutName = ref("");
-    let champWorkoutName = ref("");
-    let urlprefix = "/preview/";
-    let planStore;
-    const plans: any = ref([]);
-    async function loadStore() {
-      const store = useWorkoutsStore();
-      planStore = useMyPlanStore();
-      await planStore.loadPlansFromStore();
-      await store.loadWorkoutsFromStore();
-      list = store.workoutList;
-      plans.value = planStore.planList;
-
-      beginnerWorkoutName.value = list[0].name;
-      advancedWorkoutName.value = list[1].name;
-      champWorkoutName.value = list[3].name;
-    }
-
-    loadStore();
-
-    let showPlanWorkout = computed(() => {
-      if (plans.value.length >= 0 && planStore.activePlan != "noPlan") {
-        return true;
-      } else {
-        return false;
-      }
-    });
-
-    let activePlan = computed(() => {
-      return planStore.activePlanName;
-    });
-
-    function toActivePlan() {
-      console.log("planStore in homepage");
-      console.log(planStore);
-      router.push("/planPreview/" + planStore.activePlanId);
-    }
-
-    planStore.$subscribe(
-      (mutation, state) => {
-        console.log("a change happened");
-        console.log(mutation, state);
-        plans.value = state.planList;
-      },
-      { detached: true }
-    );
-
-    const router = useRouter();
-
-    function toMyPlans() {
-      router.push("/myPlans");
-    }
-    function toMyWorkouts() {
-      router.push("/myworkouts");
-    }
-    let routeID;
-    function toCreatePlans() {
-      routeID = Math.floor(Math.random() * 1000);
-
-      router.push({
-        path: "/workoutplan/" + routeID + "/createPlanName",
-      });
-    }
-
-    function toPlanDecision() {
-      router.push("/planDecision");
-    }
-
-    function toSettings() {
-      router.push("/settings");
-    }
-
-    return {
-      beginnerWorkoutName,
-      advancedWorkoutName,
-      champWorkoutName,
-      loadStore,
-      closeMenu,
-      urlprefix,
-      showPlanWorkout,
-      addSharp,
-      bookOutline,
-      readerOutline,
-      barbellOutline,
-      toMyWorkouts,
-      toMyPlans,
-      toCreatePlans,
-      settingsOutline,
-      arrowForwardCircle,
-      activePlan,
-      toActivePlan,
-      toPlanDecision,
-      toSettings,
-    };
-  },
+  // BIS AN SIDEMENU WEITERGEBEN UND DORT WATCHEN UND DANN DAS HIER TRIGGERN
+  closeMenu.value = true;
 });
+//const store = loginStore();
+onMounted(async () => {
+  const logStore = loginStore();
+  var userId = logStore.getUserId();
+  let workouts: Workout[] = await getWorkoutList();
+  let plans: Plan[] = await getPlanList();
+  if (navigator.onLine && userId != null) {
+    await synchronizePlans(plans, userId as string);
+    await synchronizeWorkouts(workouts, userId as string);
+  }
+  console.log("workouts");
+  console.log(workouts);
+});
+
+//sideMENÜ LOGIC
+
+//get the workouts that are saved in the store
+let list;
+let beginnerWorkoutName = ref("");
+let advancedWorkoutName = ref("");
+let champWorkoutName = ref("");
+let beginnerWorkoutId = ref("");
+let advancedWorkoutId = ref("");
+let champWorkoutId = ref("");
+let urlprefix = "/preview/";
+let planStore;
+const plans: any = ref([]);
+async function loadStore() {
+  const store = useWorkoutsStore();
+  planStore = useMyPlanStore();
+  await planStore.loadPlansFromStore();
+  await store.loadWorkoutsFromStore();
+  list = store.workoutList;
+  plans.value = planStore.planList;
+
+  beginnerWorkoutName.value = list[0].name;
+  advancedWorkoutName.value = list[1].name;
+  champWorkoutName.value = list[3].name;
+  beginnerWorkoutId.value = list[0].id;
+  advancedWorkoutId.value = list[1].id;
+  champWorkoutId.value = list[3].id;
+}
+
+loadStore();
+
+let showPlanWorkout = computed(() => {
+  if (plans.value.length >= 0 && planStore.activePlan != "noPlan") {
+    return true;
+  } else {
+    return false;
+  }
+});
+
+let activePlan = computed(() => {
+  return planStore.activePlanName;
+});
+
+function toActivePlan() {
+  console.log("planStore in homepage");
+  console.log(planStore);
+  router.push("/planPreview/" + planStore.activePlanId);
+}
+
+planStore.$subscribe(
+  (mutation, state) => {
+    console.log("a change happened");
+    console.log(mutation, state);
+    plans.value = state.planList;
+  },
+  { detached: true }
+);
+
+const router = useRouter();
+
+function toMyPlans() {
+  router.push("/myPlans");
+}
+function toMyWorkouts() {
+  router.push("/myworkouts");
+}
+let routeID;
+function toCreatePlans() {
+  routeID = Math.floor(Math.random() * 1000);
+
+  router.push({
+    path: "/workoutplan/" + routeID + "/createPlanName",
+  });
+}
+
+function toPlanDecision() {
+  router.push("/planDecision");
+}
+
+function toSettings() {
+  router.push("/userSettings");
+}
 </script>
 
 <style scoped>

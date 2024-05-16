@@ -1,19 +1,19 @@
 <template>
   <ion-page>
-    <the-footer title="Pläne"> </the-footer>
+    <the-footer title="personalisierte Pläne"> </the-footer>
     <ion-content :fullscreen="true" color="tertiary">
       <div class="grid-style-plans">
-        <div class="quickstart-text-div"><p>Pläne</p></div>
+        <div class="quickstart-text-div"><p>personalisierte Pläne</p></div>
         <div class="plan-list">
           <ul>
-            <li v-for="(plan, index) in plans" :key="index">
-              <ion-card @click="goToPlanPreview(plan.planName)">
+            <li v-for="(plan, index) in plans" :key="plan">
+              <ion-card @click="goToPlanPreview(plan.id)">
                 <div class="grid-style-li">
                   <div class="plan-icon">
                     <ion-icon class="add-icon" :icon="readerOutline"></ion-icon>
                   </div>
                   <div class="label-planname">
-                    <ion-label>{{ plan.planName }}</ion-label>
+                    <ion-label>{{ plan.name }}</ion-label>
                   </div>
                   <div class="label-last-workout">
                     <ion-label>{{ lastWorkout(index) }}</ion-label>
@@ -33,6 +33,13 @@
                     </ion-label>
                     <ion-icon class="icon-color-weeks" :icon="flag"></ion-icon>
                   </div>
+                  <div class="icon-trash">
+                    <ion-icon
+                      @click.stop="deletePlan(index)"
+                      class="icon-color-trash"
+                      :icon="trash"
+                    ></ion-icon>
+                  </div>
                 </div>
               </ion-card>
             </li>
@@ -40,130 +47,167 @@
         </div>
       </div>
     </ion-content>
+    <ion-footer>
+      <div class="footer-grid">
+        <div class="addExercise">
+          <ion-button
+            class="add-button"
+            shape="round"
+            color="warning"
+            @click="addPlan()"
+            ><ion-icon
+              size="large"
+              slot="start"
+              color="secondary"
+              :icon="addCircle"
+            ></ion-icon
+            ><ion-label color="secondary">Neuer Plan</ion-label></ion-button
+          >
+        </div>
+      </div>
+    </ion-footer>
   </ion-page>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { useRouter } from "vue-router";
-import { IonPage, IonContent, IonCard, IonLabel, IonIcon } from "@ionic/vue";
+import {
+  IonPage,
+  IonContent,
+  IonCard,
+  IonLabel,
+  IonIcon,
+  alertController,
+} from "@ionic/vue";
 import {
   addCircle,
-  clipboardOutline,
-  create,
   trash,
-  clipboard,
-  hourglassOutline,
-  barbellOutline,
-  timeOutline,
-  receiptOutline,
-  bodyOutline,
   readerOutline,
   calendarOutline,
   flag,
 } from "ionicons/icons";
-import { ref, watch } from "vue";
-import planStorage from "../storage/myPlanStorage";
-import { useMyPlanStore } from "../store/myPlans";
-import TheFooter from "../components/reusable/TheFooter.vue";
-import activePlanStorage from "../storage/activePlanStorage";
+import { ref } from "vue";
+import planStorage from "@/storage/myPlanStorage";
+import { useMyPlanStore } from "@/store/myPlans";
+import TheFooter from "@/components/reusable/TheFooter.vue";
+import activePlanStorage from "@/storage/activePlanStorage";
+import { deletePlanFromDB } from "@/services/planService";
+import { formatDate } from "@/composables/formatDate";
 
-export default defineComponent({
-  name: "prePlans",
-  components: {
-    IonPage,
-    IonContent,
-    TheFooter,
-    IonCard,
-    IonLabel,
-    IonIcon,
-  },
-  setup() {
-    const router = useRouter();
-    const plans: any = ref([]);
-    let store;
+const router = useRouter();
+const plans: any = ref([]);
+let store;
 
-    async function loadStore() {
-      store = useMyPlanStore();
-      await store.loadPlansFromStore();
-      plans.value = store.prePlanList;
-      console.log;
-    }
+async function loadStore() {
+  store = useMyPlanStore();
+  await store.loadPlansFromStore();
+  plans.value = store.planList;
+}
 
-    function goToPlanPreview(planName: string) {
-      router.push("/planPreview/" + planName);
-    }
+function goToPlanPreview(id: string) {
+  router.push("/planPreview/" + id);
+}
 
-    let routeID;
-    function addPlan() {
-      routeID = Math.floor(Math.random() * 1000);
-      router.push({
-        path: "/workoutplan/" + routeID + "/createPlanName",
-      });
-    }
+let routeID;
+function addPlan() {
+  routeID = Math.floor(Math.random() * 1000);
+  router.push({
+    path: "/workoutplan/" + routeID + "/planCreateName",
+  });
+}
 
-    let planWeeks = computed(() => (index) => {
-      if (plans.value[index].weeks) {
-        return plans.value[index].weeks.length;
-      } else {
-        return;
-      }
-    });
+const handlerMessage = ref();
 
-    let planDone = computed(() => (index) => {
-      if (plans.value[index].currentDay == 0) {
-        return "0%";
-      } else {
-        return (
-          Math.round(
-            (plans.value[index].currentDay / plans.value[index].totalDays) * 100
-          ) + "%"
-        );
-      }
-    });
-
-    loadStore();
-
-    store.$subscribe(
-      (mutation, state) => {
-        console.log("a change happened in prePlans");
-        console.log(mutation, state);
-        plans.value = state.prePlanList;
+async function deletePlan(index) {
+  const alert = await alertController.create({
+    header: "Plan löschen?",
+    message: "Kann nicht rückgängig gemacht werden!",
+    cssClass: "custom-alert",
+    buttons: [
+      {
+        text: "Ja",
+        cssClass: "alert-button-confirm",
+        handler: () => {
+          handlerMessage.value = 1;
+        },
       },
-      { detached: true }
-    );
+      {
+        text: "Nein",
+        cssClass: "alert-button-cancel",
+        handler: () => {
+          handlerMessage.value = 0;
+        },
+      },
+    ],
+  });
 
-    let lastWorkout = computed(() => (index) => {
-      if (plans.value[index].lastWorkout != undefined) {
-        return "letztes: " + plans.value[index].lastWorkout;
-      } else {
-        return "";
+  await alert.present();
+  await alert.onDidDismiss();
+
+  if (handlerMessage.value == 1) {
+    if (navigator.onLine) {
+      try {
+        console.log("die id des zu löschenden plans ist: ");
+        console.log(plans.value[index].id);
+        await deletePlanFromDB(plans.value[index].id);
+      } catch (error) {
+        console.log(error);
       }
-    });
-    return {
-      plans,
-      goToPlanPreview,
-      addCircle,
-      clipboardOutline,
-      create,
-      trash,
-      clipboard,
-      hourglassOutline,
-      barbellOutline,
-      timeOutline,
-      receiptOutline,
-      bodyOutline,
-      readerOutline,
-      calendarOutline,
-      addPlan,
-      planWeeks,
-      planDone,
-      flag,
-      lastWorkout,
-    };
-  },
+    }
+    if (plans.value[index].planName == store.activePlan) {
+      await activePlanStorage.removeItem("activePlan");
+      await activePlanStorage.setItem("activePlan", {
+        activePlan: "noPlan",
+      });
+      store.activePlan = "noPlan";
+    }
+    await planStorage.removeItem(plans.value[index].id);
+    plans.value.splice(index, 1);
+  }
+
+  if (handlerMessage.value == 0) {
+    return;
+  }
+}
+
+let planWeeks = computed(() => (index) => {
+  if (plans.value[index].weeks) {
+    return plans.value[index].weeks.length;
+  } else {
+    return;
+  }
 });
+
+let planDone = computed(() => (index) => {
+  if (plans.value[index].currentDay == 0) {
+    return "0%";
+  } else {
+    return (
+      Math.round(
+        (plans.value[index].currentDay / plans.value[index].totalDays) * 100
+      ) + "%"
+    );
+  }
+});
+
+let lastWorkout = computed(() => (index) => {
+  if (plans.value[index].lastWorkout != undefined) {
+    return "letztes: " + formatDate(plans.value[index].lastWorkout);
+  } else {
+    return "";
+  }
+});
+
+loadStore();
+store.$subscribe(
+  (mutation, state) => {
+    plans.value = state.planList;
+  },
+  { detached: true }
+);
 </script>
+
 <style scoped>
 .list-container {
   display: flex;
@@ -191,7 +235,7 @@ export default defineComponent({
 
 .grid-style-plans {
   display: grid;
-  height: 90%;
+  height: 97.5%;
   grid-template-rows: [row1-start] 5% [row1-end] 95% [row2-start];
 }
 
@@ -364,6 +408,7 @@ ul {
   height: 100%;
   list-style: none;
   padding: 0;
+  overflow-y: auto;
 }
 
 ion-card {
@@ -437,5 +482,6 @@ ion-footer {
   left: 50%;
   transform: translateX(-50%);
   color: #dbbfdd;
+  width: 50%;
 }
 </style>

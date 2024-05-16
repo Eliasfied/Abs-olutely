@@ -27,7 +27,7 @@
                 <ion-card class="list-card" @click="addWorkout(index)">
                   <div class="card-div">
                     <ion-label :class="labelStyle(index)" color="secondary">{{
-                      week.weekWorkout
+                      week.weekWorkout.name
                     }}</ion-label>
 
                     <ion-icon
@@ -75,19 +75,14 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, computed } from "vue";
 import {
   constructSharp,
-  arrowForwardOutline,
   calendarSharp,
   saveOutline,
   helpOutline,
-  barChartOutline,
   barbellOutline,
-  build,
-  add,
 } from "ionicons/icons";
 import {
   IonContent,
@@ -98,190 +93,148 @@ import {
   IonFooter,
   alertController,
 } from "@ionic/vue";
-import { useMyPlanStore } from "../store/myPlans";
+import { useMyPlanStore } from "@/store/myPlans";
 import { useRouter } from "vue-router";
-import planStorage from "../storage/myPlanStorage";
-import TheFooter from "../components/reusable/TheFooter.vue";
-import activePlanStorage from "../storage/activePlanStorage";
-import activePlanIdStorage from "@/storage/activePlanIdStorage";
-import BackButton from "./reusable/BackButton.vue";
+import planStorage from "@/storage/myPlanStorage";
+import BackButton from "@/components/reusable/BackButton.vue";
 import { addPlan } from "@/services/planService";
 import { Plan } from "@/models/Plan";
 import { loginStore } from "@/store/authentication/loginStore";
 import { updateActivePlanInStorage } from "@/composables/updateActivePlanInStorage";
 
-export default defineComponent({
-  name: "createPlanCustomize",
-  components: {
-    IonContent,
-    IonPage,
-    IonLabel,
-    IonIcon,
-    IonCard,
-    IonFooter,
-    BackButton,
-  },
-  setup() {
-    let planStore;
-    planStore = useMyPlanStore();
-    const logStore = loginStore();
-    async function loadStore() {
-      await planStore.loadPlansFromStore();
-    }
+let planStore;
+planStore = useMyPlanStore();
+const logStore = loginStore();
+async function loadStore() {
+  await planStore.loadPlansFromStore();
+}
 
-    let name = planStore.planName;
-    let days = planStore.planDays;
-    let weeks = planStore.planWeeks;
-    let router = useRouter();
-    let weekArray = ref([]) as any;
-    let dayArray = [] as any;
-    planStore.setArray(weekArray);
-    let index1 = ref(0) as any;
+let name = planStore.planName;
+let days = planStore.planDays;
+let weeks = planStore.planWeeks;
+let router = useRouter();
+let weekArray = ref([]) as any;
+let dayArray = [] as any;
+planStore.setArray(weekArray);
+let index1 = ref(0) as any;
 
-    let dayArrayFirst = [] as any;
+let dayArrayFirst = [] as any;
 
-    for (let i = 1; i < days + 1; i++) {
-      dayArray.push({
-        id: "6",
-        dayInt: i,
-        state: "open",
-        doneDate: null,
+for (let i = 1; i < days + 1; i++) {
+  dayArray.push({
+    id: "6",
+    dayInt: i,
+    state: "open",
+    doneDate: null,
+  });
+}
+
+for (let i = 1; i < days + 1; i++) {
+  if (i == 1) {
+    dayArrayFirst.push({
+      id: "6",
+      dayInt: i,
+      state: "today",
+      doneDate: null,
+    });
+  } else {
+    dayArrayFirst.push({
+      id: "6",
+      dayInt: i,
+      state: "open",
+      doneDate: null,
+    });
+  }
+}
+
+for (let i = 1; i < weeks + 1; i++) {
+  if (i == 1) {
+    planStore.pushArray({
+      id: "5",
+      weekInt: i,
+      weekWorkout: {id: "", name: "leer"},
+      days: JSON.parse(JSON.stringify(dayArrayFirst)),
+    });
+  } else {
+    planStore.pushArray({
+      id: "5",
+      weekInt: i,
+      weekWorkout: {id: "", name: "leer"},
+      days: JSON.parse(JSON.stringify(dayArray)),
+    });
+  }
+}
+
+async function addWorkout(index) {
+  index1.value = index;
+
+  planStore.setCurrentIndex(index1);
+  router.push("/planAddWorkoutsList");
+}
+const handlerMessage = ref();
+async function goToPreview() {
+  for (let i = 0; i < weekArray.value.length; i++) {
+    if (weekArray.value[i].weekWorkout.name == "leer") {
+      console.log("ist empty man");
+      const alert = await alertController.create({
+        header: "Plan speichern nicht möglich!",
+        message: "füge jeder Woche ein Workout hinzu.",
+        cssClass: "custom-alert",
+        buttons: [
+          {
+            text: "Ok",
+            cssClass: "alert-button-confirm",
+            handler: () => {
+              handlerMessage.value = 1;
+            },
+          },
+        ],
       });
+
+      await alert.present();
+      await alert.onDidDismiss();
+      return;
     }
+  }
 
-    for (let i = 1; i < days + 1; i++) {
-      if (i == 1) {
-        dayArrayFirst.push({
-          id: "6",
-          dayInt: i,
-          state: "today",
-          doneDate: null,
-        });
-      } else {
-        dayArrayFirst.push({
-          id: "6",
-          dayInt: i,
-          state: "open",
-          doneDate: null,
-        });
-      }
-    }
+  let parseArray = JSON.parse(JSON.stringify(weekArray.value));
+  let userId = await logStore.getUserId();
+  let sendArray: Plan = {
+    id: "60",
+    name: name,
+    userId: userId as string,
+    lastWorkout: null,
+    lastUpdated: new Date(),
+    isDefault: false,
+    currentDay: 0,
+    currentWeek: 0,
+    totalDays: weeks * days,
+    weeks: parseArray,
+  };
 
-    for (let i = 1; i < weeks + 1; i++) {
-      if (i == 1) {
-        planStore.pushArray({
-          id: "5",
-          weekInt: i,
-          weekWorkout: "leer",
-          days: JSON.parse(JSON.stringify(dayArrayFirst)),
-        });
-      } else {
-        planStore.pushArray({
-          id: "5",
-          weekInt: i,
-          weekWorkout: "leer",
-          days: JSON.parse(JSON.stringify(dayArray)),
-        });
-      }
-    }
+  const planResponse = await addPlan(sendArray as Plan);
+  sendArray.id = planResponse.data.id;
+  await planStorage.setItem(planResponse.data.id, sendArray);
+  updateActivePlanInStorage(name, planResponse.data.id);
 
-    async function addWorkout(index) {
-      index1.value = index;
+  await loadStore();
+  router.push("/planPreview/" + planResponse.data.id);
+}
 
-      planStore.setCurrentIndex(index1);
-      router.push("/workoutList");
-    }
-    const handlerMessage = ref();
-    async function goToPreview() {
-      for (let i = 0; i < weekArray.value.length; i++) {
-        if (weekArray.value[i].weekWorkout == "leer") {
-          console.log("ist empty man");
-          const alert = await alertController.create({
-            header: "Plan speichern nicht möglich!",
-            message: "füge jeder Woche ein Workout hinzu.",
-            cssClass: "custom-alert",
-            buttons: [
-              {
-                text: "Ok",
-                cssClass: "alert-button-confirm",
-                handler: () => {
-                  handlerMessage.value = 1;
-                },
-              },
-            ],
-          });
+let cardIcon = computed(() => (index) => {
+  if (weekArray.value[index].weekWorkout.name == "leer") {
+    return helpOutline;
+  } else {
+    return barbellOutline;
+  }
+});
 
-          await alert.present();
-          await alert.onDidDismiss();
-          return;
-        }
-      }
-
-      let parseArray = JSON.parse(JSON.stringify(weekArray.value));
-      let userId = await logStore.getUserId();
-      let sendArray: Plan = {
-        id: "60",
-        name: name,
-        userId: userId as string,
-        lastWorkout: null,
-        lastUpdated: new Date(),
-        isDefault: false,
-        currentDay: 0,
-        currentWeek: 0,
-        totalDays: weeks * days,
-        weeks: parseArray,
-      };
-      console.log("sendArray");
-      console.log(sendArray);
-
-      const planResponse = await addPlan(sendArray as Plan);
-      console.log("das ist planresponse");
-      console.log(planResponse.data);
-      console.log(planResponse.data.id);
-      sendArray.id = planResponse.data.id;
-      await planStorage.setItem(planResponse.data.id, sendArray);
-      updateActivePlanInStorage(name, planResponse.data.id);
-
-      await loadStore();
-      router.push("/planPreview/" + planResponse.data.id);
-    }
-
-    let cardIcon = computed(() => (index) => {
-      if (weekArray.value[index].weekWorkout == "leer") {
-        return helpOutline;
-      } else {
-        return barbellOutline;
-      }
-    });
-
-    let labelStyle = computed(() => (index) => {
-      if (weekArray.value[index].weekWorkout == "leer") {
-        return "card-label";
-      } else {
-        return "card-label-filled";
-      }
-    });
-
-    return {
-      name,
-      constructSharp,
-      arrowForwardOutline,
-      days,
-      weeks,
-      planStore,
-      weekArray,
-      addWorkout,
-      router,
-      index1,
-      goToPreview,
-      calendarSharp,
-      saveOutline,
-      helpOutline,
-      barChartOutline,
-      cardIcon,
-      labelStyle,
-    };
-  },
+let labelStyle = computed(() => (index) => {
+  if (weekArray.value[index].weekWorkout.name == "leer") {
+    return "card-label";
+  } else {
+    return "card-label-filled";
+  }
 });
 </script>
 

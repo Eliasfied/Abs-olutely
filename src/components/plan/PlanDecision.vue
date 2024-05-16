@@ -3,8 +3,8 @@
     <ion-content>
       <div class="split-page-container">
         <div class="back-button-div">
-        <back-button></back-button>
-      </div>
+          <back-button></back-button>
+        </div>
         <div @click="toCreatePlans" class="split-page-item split-page-left">
           <p>Erstelle</p>
           <p class="split-page-subtext">deinen individuellen Plan</p>
@@ -21,47 +21,28 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
+<script setup lang="ts">
 import { useRouter } from "vue-router";
-import { IonPage, IonContent, IonCard, IonLabel, IonIcon } from "@ionic/vue";
-import { ref, watch } from "vue";
-import BackButton from "./reusable/BackButton.vue";
+import { IonPage, IonContent } from "@ionic/vue";
+import BackButton from "@/components/reusable/BackButton.vue";
 
-export default defineComponent({
-  name: "planDecision",
-  components: {
-    IonPage,
-    IonContent,
-    BackButton
-  },
-  setup() {
-    const router = useRouter();
+const router = useRouter();
 
-    let routeID;
-    function toCreatePlans() {
-      routeID = Math.floor(Math.random() * 1000);
-      router.push({
-        path: "/workoutplan/" + routeID + "/createPlanName",
-      });
-    }
-    function toPrePlans() {
-      router.push({
-        path: "/prePlans",
-      });
-    }
-
-    return {
-      router,
-      toCreatePlans,
-      toPrePlans,
-    };
-  },
-});
+let routeID;
+function toCreatePlans() {
+  routeID = Math.floor(Math.random() * 1000);
+  router.push({
+    path: "/workoutplan/" + routeID + "/createPlanName",
+  });
+}
+function toPrePlans() {
+  router.push({
+    path: "/prePlans",
+  });
+}
 </script>
 
 <style scoped>
-
 .back-button-div {
   background-color: var(--ion-color-warning);
 }

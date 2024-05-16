@@ -2,9 +2,9 @@
   <ion-page>
     <ion-content color="tertiary">
       <div class="grid-page">
-        <div >
-        <back-button></back-button>
-      </div>
+        <div>
+          <back-button></back-button>
+        </div>
         <div class="icon-div">
           <ion-icon :icon="calendarSharp" class="customize-icon"></ion-icon>
         </div>
@@ -27,7 +27,7 @@
         </div>
         <div class="explain-text">
           <ion-label class="explain-label">
-           wie viele Wochen möchtest du trainieren?
+            wie viele Wochen möchtest du trainieren?
           </ion-label>
         </div>
       </div>
@@ -52,7 +52,7 @@
         </div>
         <div class="navigation">
           <ul>
-            <li ></li>
+            <li></li>
             <li class="active"></li>
             <li></li>
             <li></li>
@@ -63,8 +63,7 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { ref } from "vue";
 import { calendarSharp, arrowForwardOutline } from "ionicons/icons";
 import { useRouter } from "vue-router";
@@ -76,38 +75,22 @@ import {
   IonIcon,
   IonFooter,
 } from "@ionic/vue";
-import { useMyPlanStore } from "../store/myPlans";
-import useRouteId from "../composables/getPlanRouteID";
-import BackButton from "./reusable/BackButton.vue";
+import { useMyPlanStore } from "@/store/myPlans";
+import useRouteId from "@/composables/getPlanRouteID";
+import BackButton from "@/components/reusable/BackButton.vue";
 
+let planStore = useMyPlanStore();
+let name = ref("");
+let planDuration = ref(4);
+let routeID = useRouteId();
 
-export default defineComponent({
-  name: "createPlanWeek",
-  components: { IonContent, IonPage, IonLabel, IonRange, IonIcon, IonFooter, BackButton },
-  setup() {
-    let planStore = useMyPlanStore();
-    let name = ref("");
-    let planDuration = ref(4);
-    let routeID = useRouteId();
-
-    let router = useRouter();
-    function goToDays() {
-      planStore.setPlanWeeks(planDuration);
-      console.log(routeID);
-      router.push({
-        path: "/workoutplan/" + routeID.currentRouteId + "/createPlanDays",
-      });
-    }
-
-    return {
-      name,
-      calendarSharp,
-      arrowForwardOutline,
-      planDuration,
-      goToDays,
-    };
-  },
-});
+let router = useRouter();
+function goToDays() {
+  planStore.setPlanWeeks(planDuration);
+  router.push({
+    path: "/workoutplan/" + routeID.currentRouteId + "/planCreateDays",
+  });
+}
 </script>
 
 <style scoped>
@@ -184,7 +167,6 @@ ion-label {
   grid-template-columns: [column1-start] 15% [column1-end] 85% [column2-start];
 }
 
-
 .week-headline-label {
   grid-row: row1-start / row1-end;
   grid-column: column1-start / column2-start;
@@ -228,7 +210,6 @@ ion-range::part(bar-active) {
   font-size: 16px;
   color: grey;
   opacity: 0.7;
-  
 }
 
 .button-div {

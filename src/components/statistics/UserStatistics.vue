@@ -6,16 +6,18 @@
       <div class="grid-style">
         <div class="top-text">
           <ion-card>
-            <div class="list-div-grid">
-              <div class="list-div">
-                <ion-list>
+            <div class="trackedWorkouts-div-grid">
+              <div class="trackedWorkouts-div">
+                <ion-trackedWorkouts>
                   <ion-item>
                     <ion-icon
                       color="success"
                       slot="start"
                       :icon="flagOutline"
                     ></ion-icon>
-                    <p>Abgeschlossene Workouts: {{ list.length }}</p>
+                    <p v-if="trackedWorkouts">
+                      Abgeschlossene Workouts: {{ trackedWorkouts.length }}
+                    </p>
                   </ion-item>
                   <ion-item>
                     <ion-icon
@@ -33,30 +35,38 @@
                     ></ion-icon>
                     <p>Durchschnittliche Workoutzeit: {{ averageTime }} Min.</p>
                   </ion-item>
-                </ion-list>
+                </ion-trackedWorkouts>
               </div>
             </div>
           </ion-card>
         </div>
-        <div class="list-text">
+        <div class="trackedWorkouts-text">
           <ion-label class="text-label"> letzte Workouts...</ion-label>
         </div>
-        <div class="top-list">
+        <div class="top-trackedWorkouts">
           <ul>
-            <li v-for="(item, index) in list" :key="item.index">
+            <li v-for="(item, index) in trackedWorkouts" :key="item.workoutId">
               <ion-card color="medium">
                 <div class="grid-style-li">
                   <div class="workout-name">
-                    <ion-label color="secondary">{{ item.workoutname }}</ion-label>
+                    <ion-label color="secondary">{{
+                      item.workoutName
+                    }}</ion-label>
                   </div>
                   <div class="workout-time">
-                    <ion-icon color="secondary" class="style-time" :icon="timeOutline"></ion-icon>
+                    <ion-icon
+                      color="secondary"
+                      class="style-time"
+                      :icon="timeOutline"
+                    ></ion-icon>
                     <ion-label class="style-label"
-                      >{{ item.minutes }} Min.</ion-label
+                      >{{ item.workoutTime }} Min.</ion-label
                     >
                   </div>
                   <div class="workout-date">
-                    <ion-label color="danger">{{ item.date }}</ion-label>
+                    <ion-label color="danger">{{
+                      formatDate(item.date.toString())
+                    }}</ion-label>
                   </div>
                   <div class="workout-start">
                     <ion-icon
@@ -78,120 +88,105 @@
   ></ion-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import {
   IonContent,
   IonPage,
   IonCard,
   IonLabel,
   IonIcon,
-  IonList,
   IonItem,
 } from "@ionic/vue";
 import {
   timeOutline,
   play,
   flagOutline,
-  ribbonOutline,
   stopwatchOutline,
   hourglassOutline,
 } from "ionicons/icons";
-import TheFooter from "./reusable/TheFooter.vue";
-import { ref, computed, reactive } from "vue";
-import { getStatisticsList } from "@/composables/getStatisticsList";
+import TheFooter from "@/components/reusable/TheFooter.vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useWorkoutsStore } from "../store/workouts";
-import { useMyWorkoutsStore } from "../store/myWorkouts";
-import { useStatisticsStore } from "../store/statisticsStore";
+import { useStatisticsStore } from "@/store/statisticsStore";
+import { formatDate } from "@/composables/formatDate";
+import { loginStore } from "@/store/authentication/loginStore";
+import { UserStatistic } from "@/models/userStatistic/UserStatistic";
+import { WorkoutStatistic } from "@/models/userStatistic/WorkoutStatistic";
 
-export default defineComponent({
-  name: "CalendarPage",
-  components: {
-    IonContent,
-    IonPage,
-    TheFooter,
-    IonCard,
-    IonLabel,
-    IonIcon,
-    IonList,
-    IonItem,
-  },
-  setup() {
-    //fill store
+//fill store
 
-    const statsStore = useStatisticsStore();
+const statsStore = useStatisticsStore();
 
-    //router
-    let router = useRouter();
+//router
+let router = useRouter();
 
-    //CALENDAR
-    let attrs: any = ref([]);
-
-    //data
-    let list: any = ref([]);
-    let totalTime = ref();
-    let averageTime = ref();
-    let id = 445;
-
-    //initialisieren und aus Storage laden
-    async function getData() {
-      await statsStore.loadStatisticsFromStore();
-      list.value = statsStore.statisticsList;
-      list.value.reverse();
-      totalTime.value = computed(() => {
-        let total = 0;
-        for (var i = 0; i < list.value.length; i++) {
-          total = total + list.value[i].minutes;
-        }
-        return total;
-      });
-      averageTime.value = computed(() => {
-        let total = 0;
-        for (var i = 0; i < list.value.length; i++) {
-          total = total + list.value[i].minutes;
-        }
-        return Math.round(total / list.value.length);
-      });
-
-      attrs.value = list.value.map((item) => ({
-        key: id++,
-        highlight: {
-          color: "blue",
-          fillMode: "solid",
-          contentClass: "italic",
-        },
-        dates: [item.calendarDate],
-        popover: {
-          label: item.workoutname,
-        },
-      }));
-    }
-
-    getData();
-
-    function goToWorkout(item, index) {
-      console.log("lets go");
-      console.log(item);
-      console.log(index);
-      router.push("/preview/" + item.workoutname);
-    }
-
-    return {
-      list,
-      timeOutline,
-      play,
-      flagOutline,
-      ribbonOutline,
-      stopwatchOutline,
-      hourglassOutline,
-      totalTime,
-      averageTime,
-      attrs,
-      goToWorkout,
-    };
-  },
+onMounted(async () => {
+  await getData();
 });
+
+//CALENDAR
+let attrs: any = ref([]);
+
+//data
+let trackedWorkouts = ref<WorkoutStatistic[]>([]);
+let totalTime = ref();
+let averageTime = ref();
+let id = 445;
+
+let userStatistic = ref<UserStatistic | null>(null);
+
+//let userStatistic = ref()
+
+const logStore = loginStore();
+const userId = logStore.getUserId();
+
+//initialisieren und aus Storage laden
+async function getData() {
+  await statsStore.loadStatisticsInStoreFromDB(userId as string);
+  userStatistic.value = statsStore.getUserStatistic;
+  trackedWorkouts.value = userStatistic.value
+    .workoutStatistics as WorkoutStatistic[];
+  console.log(userStatistic.value);
+  console.log(trackedWorkouts.value);
+  if (trackedWorkouts.value != null) {
+    trackedWorkouts.value.reverse();
+  }
+  totalTime.value = computed(() => {
+    if (trackedWorkouts.value == null) return 0;
+    let total = 0;
+    for (var i = 0; i < trackedWorkouts.value.length; i++) {
+      total = total + trackedWorkouts.value[i].workoutTime;
+    }
+    return total;
+  });
+  averageTime.value = computed(() => {
+    if (trackedWorkouts.value == null) return 0;
+    let total = 0;
+    for (var i = 0; i < trackedWorkouts.value.length; i++) {
+      total = total + trackedWorkouts.value[i].workoutTime;
+    }
+    return Math.round(total / trackedWorkouts.value.length);
+  });
+
+  if (trackedWorkouts.value != null) {
+    attrs.value = trackedWorkouts.value.map((item) => ({
+      key: id++,
+      highlight: {
+        color: "blue",
+        fillMode: "solid",
+        contentClass: "italic",
+      },
+      dates: [item.date],
+      popover: {
+        label: item.workoutName,
+      },
+    }));
+  }
+}
+
+function goToWorkout(item, index) {
+  router.push("/preview/" + item.workoutId);
+}
 </script>
 
 <style scoped>
@@ -211,7 +206,7 @@ export default defineComponent({
   font-weight: bold;
 }
 
-.list-text {
+.trackedWorkouts-text {
   background-color: var(--ion-color-tertiary);
   border-radius: 40px;
   grid-row: row1-end / row2-start;
@@ -219,7 +214,7 @@ export default defineComponent({
   justify-self: center;
 }
 
-.top-list {
+.top-trackedWorkouts {
   grid-row: row2-start / row2-end;
 }
 
@@ -227,19 +222,19 @@ export default defineComponent({
   height: 100%;
 }
 
-.list-div-grid {
+.trackedWorkouts-div-grid {
   height: 100%;
   display: grid;
   grid-template-rows: [row1-start] 100% [row1-end];
 }
 
-.list-div {
+.trackedWorkouts-div {
   align-self: center;
 }
 
 ul {
   height: 90%;
-  list-style: none;
+  trackedworkouts-style: none;
   margin: 0;
   padding: 0;
   overflow-y: auto;

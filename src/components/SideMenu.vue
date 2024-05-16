@@ -55,13 +55,13 @@
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
-          <ion-item router-link="/statistics" color="secondary"
+          <ion-item router-link="/userStatistics" color="secondary"
             ><ion-icon
-              :class="{ active: isActive('/statistics') }"
+              :class="{ active: isActive('/userStatistics') }"
               slot="start"
               :icon="analyticsOutline"
             ></ion-icon>
-            <p :class="{ active: isActive('/statistics') }">
+            <p :class="{ active: isActive('/userStatistics') }">
               Statistiken
             </p></ion-item
           >
@@ -94,13 +94,13 @@
           >
         </ion-menu-toggle>
         <ion-menu-toggle>
-          <ion-item router-link="/settings" color="secondary"
+          <ion-item router-link="/userSettings" color="secondary"
             ><ion-icon
-              :class="{ active: isActive('/settings') }"
+              :class="{ active: isActive('/userSettings') }"
               slot="start"
               :icon="settingsOutline"
             ></ion-icon>
-            <p :class="{ active: isActive('/settings') }">
+            <p :class="{ active: isActive('/userSettings') }">
               Einstellungen
             </p></ion-item
           >
@@ -118,10 +118,7 @@
             <p :class="{ active: isActive('/profile') }">Profil</p>
           </ion-item>
           <ion-item @click="logout" color="secondary"
-            ><ion-icon
-              slot="start"
-              :icon="logOutOutline"
-            ></ion-icon>
+            ><ion-icon slot="start" :icon="logOutOutline"></ion-icon>
             <p>Logout</p>
           </ion-item>
         </ion-menu-toggle>
@@ -141,8 +138,8 @@
   </ion-menu>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { defineProps } from "vue";
 import {
   IonMenu,
   IonHeader,
@@ -158,7 +155,6 @@ import {
   homeOutline,
   barbellOutline,
   listCircleOutline,
-  calendarOutline,
   settingsOutline,
   analyticsOutline,
   readerOutline,
@@ -171,81 +167,45 @@ import {
 
 import { ref, watch, onMounted } from "vue";
 import { menuController } from "@ionic/core";
-import { onIonViewWillEnter } from "@ionic/vue";
 import { useRoute, useRouter } from "vue-router";
 import { loginStore } from "@/store//authentication/loginStore";
 import { fireBaseLogout } from "@/services/fireBaseService";
 
+const props = defineProps(["closeMenu"]);
 
-export default defineComponent({
-  name: "SideMenu",
-  props: ["closeMenu"],
-
-  components: {
-    IonMenu,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonList,
-    IonItem,
-    IonContent,
-    IonIcon,
-    IonMenuToggle,
-  },
-  setup(props) {
-    watch(props.closeMenu, (newValue) => {
-      if (props.closeMenu == true) {
-        menuController.close();
-      }
-    });
-
-    const store = loginStore();
-    const router = useRouter();
-    const isLoggedIn = ref(false);
-
-    onMounted(async () => {
-      console.log("bin in onMounted drin in sidebarr");
-      await store.checkLoginStatus();
-      isLoggedIn.value = store.isLoggedIn;
-    });
-    const route = useRoute();
-    const isActive = (path) => {
-      return path === route.fullPath;
-    };
-
-    watch(
-      () => store.isLoggedIn,
-      (newIsLoggedIn) => {
-        isLoggedIn.value = newIsLoggedIn;
-      }
-    );
-
-    function logout() {
-      store.logout();
-      isLoggedIn.value = store.isLoggedIn;
-      fireBaseLogout();
-      router.push("/login");
-    }
-
-    return {
-      homeOutline,
-      barbellOutline,
-      listCircleOutline,
-      calendarOutline,
-      settingsOutline,
-      analyticsOutline,
-      readerOutline,
-      readerSharp,
-      barbellSharp,
-      personOutline,
-      logInOutline,
-      logOutOutline,
-      isLoggedIn,
-      isActive,
-      logout,
-    };
-  },
+watch(props.closeMenu, (newValue) => {
+  if (props.closeMenu == true) {
+    menuController.close();
+  }
 });
+
+const store = loginStore();
+const router = useRouter();
+const isLoggedIn = ref(false);
+
+onMounted(async () => {
+  console.log("bin in onMounted drin in sidebarr");
+  await store.checkLoginStatus();
+  isLoggedIn.value = store.isLoggedIn;
+});
+const route = useRoute();
+const isActive = (path) => {
+  return path === route.fullPath;
+};
+
+watch(
+  () => store.isLoggedIn,
+  (newIsLoggedIn) => {
+    isLoggedIn.value = newIsLoggedIn;
+  }
+);
+
+function logout() {
+  store.logout();
+  isLoggedIn.value = store.isLoggedIn;
+  fireBaseLogout();
+  router.push("/login");
+}
 </script>
 
 <style scoped>

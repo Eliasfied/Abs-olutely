@@ -82,8 +82,7 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import TheFooter from "@/components/reusable/TheFooter.vue";
 import { useRouter } from "vue-router";
 import {
@@ -97,168 +96,114 @@ import {
 } from "@ionic/vue";
 import {
   addCircle,
-  clipboardOutline,
   create,
   trash,
-  clipboard,
-  hourglassOutline,
   barbellOutline,
   timeOutline,
-  receiptOutline,
-  bodyOutline,
-  cafeOutline,
   cafe,
 } from "ionicons/icons";
 import { useMyWorkoutsStore } from "@/store/myWorkouts";
 import { ref, watch } from "vue";
 import myWorkoutStorage from "@/storage/myWorkoutStorage";
 import { deleteWorkout } from "@/services/workoutsService";
-import { loginStore } from "@/store/authentication/loginStore";
 import { getRandomId } from "@/composables/getRandomId";
 
-export default defineComponent({
-  name: "MyWorkouts",
-  components: {
-    TheFooter,
-    IonPage,
-    IonContent,
-    IonCard,
-    IonIcon,
-    IonFooter,
-    IonLabel,
+// STORE DATA
+let workouts: any = ref([]);
+let isEmpty = ref(true);
+
+watch(
+  workouts.value.length,
+  () => {
+    if (workouts.value.length > 0) {
+      isEmpty.value = false;
+    } else {
+      isEmpty.value = true;
+    }
   },
-  setup() {
-    //store
-    const logStore = loginStore();
+  { deep: true, immediate: true }
+);
+let store;
+async function loadStore() {
+  store = useMyWorkoutsStore();
+  await store.loadWorkoutsFromStore();
+  workouts.value = store.workoutList;
 
-    // STORE DATA
+  if (workouts.value.length > 0) {
+    isEmpty.value = false;
+  }
+}
+loadStore();
 
-    let workouts: any = ref([]);
-    let isEmpty = ref(true);
-    let timePreview = ref();
-    let workoutLength = ref();
-
-    watch(
-      workouts.value.length,
-      () => {
-        console.log("geht in watcher rein");
-        if (workouts.value.length > 0) {
-          isEmpty.value = false;
-        } else {
-          isEmpty.value = true;
-        }
-      },
-      { deep: true, immediate: true }
-    );
-    let store;
-    async function loadStore() {
-      store = useMyWorkoutsStore();
-      await store.loadWorkoutsFromStore();
-      workouts.value = store.workoutList;
-
-      if (workouts.value.length > 0) {
-        isEmpty.value = false;
-      }
-    }
-    loadStore();
-    console.log("workouts final: ");
-    console.log(workouts);
-
-    function getWorkoutLength(index) {
-      return Math.round(
-        (workouts.value[index].exerciseTime *
-          workouts.value[index].exercises.length +
-          (workouts.value[index].breakTime *
-            workouts.value[index].exercises.length -
-            workouts.value[index].breakTime)) /
-          60
-      );
-    }
-
-    const handlerMessage = ref();
-    async function removeWorkout(index) {
-      const alert = await alertController.create({
-        header: "Workout löschen?",
-        message: "Kann nicht rückgängig gemacht werden!",
-        cssClass: "custom-alert",
-        buttons: [
-          {
-            text: "Ja",
-            cssClass: "alert-button-confirm",
-            handler: () => {
-              handlerMessage.value = 1;
-            },
-          },
-          {
-            text: "Nein",
-            cssClass: "alert-button-cancel",
-            handler: () => {
-              handlerMessage.value = 0;
-            },
-          },
-        ],
-      });
-
-      await alert.present();
-      await alert.onDidDismiss();
-
-      if (handlerMessage.value == 1) {
-        console.log(workouts.value[index]);
-        if (navigator.onLine) {
-          try {
-            await deleteWorkout(workouts.value[index].id);
-          } catch (error) {
-            console.log("Error deleting workout: " + error);
-          }
-        }
-        await myWorkoutStorage.removeItem(workouts.value[index].id);
-        workouts.value.splice(index, 1);
-      }
-      if (handlerMessage.value == 0) {
-        return;
-      }
-    }
-
-    //routing
-    const router = useRouter();
-    let routeID;
-    function newWorkout() {
-      routeID = getRandomId(20);
-      router.push("/myworkouts/editor/" + routeID);
-    }
-
-    store.$subscribe(
-      (mutation, state) => {
-        console.log("a change happened in myWorkouts");
-        console.log(mutation, state);
-        workouts.value = state.workoutList;
-      },
-      { detached: true }
-    );
-
-    return {
-      addCircle,
-      clipboardOutline,
-      create,
-      trash,
-      clipboard,
-      workouts,
-      removeWorkout,
-      isEmpty,
-      newWorkout,
-      hourglassOutline,
-      barbellOutline,
-      timeOutline,
-      workoutLength,
-      timePreview,
-      getWorkoutLength,
-      receiptOutline,
-      bodyOutline,
-      cafeOutline,
-      cafe,
-    };
+store.$subscribe(
+  (mutation, state) => {
+    workouts.value = state.workoutList;
   },
-});
+  { detached: true }
+);
+
+//workout functions
+function getWorkoutLength(index) {
+  return Math.round(
+    (workouts.value[index].exerciseTime *
+      workouts.value[index].exercises.length +
+      (workouts.value[index].breakTime *
+        workouts.value[index].exercises.length -
+        workouts.value[index].breakTime)) /
+      60
+  );
+}
+const handlerMessage = ref();
+async function removeWorkout(index) {
+  const alert = await alertController.create({
+    header: "Workout löschen?",
+    message: "Kann nicht rückgängig gemacht werden!",
+    cssClass: "custom-alert",
+    buttons: [
+      {
+        text: "Ja",
+        cssClass: "alert-button-confirm",
+        handler: () => {
+          handlerMessage.value = 1;
+        },
+      },
+      {
+        text: "Nein",
+        cssClass: "alert-button-cancel",
+        handler: () => {
+          handlerMessage.value = 0;
+        },
+      },
+    ],
+  });
+
+  await alert.present();
+  await alert.onDidDismiss();
+
+  if (handlerMessage.value == 1) {
+    console.log(workouts.value[index]);
+    if (navigator.onLine) {
+      try {
+        await deleteWorkout(workouts.value[index].id);
+      } catch (error) {
+        console.log("Error deleting workout: " + error);
+      }
+    }
+    await myWorkoutStorage.removeItem(workouts.value[index].id);
+    workouts.value.splice(index, 1);
+  }
+  if (handlerMessage.value == 0) {
+    return;
+  }
+}
+
+//routing
+const router = useRouter();
+let routeID;
+function newWorkout() {
+  routeID = getRandomId(20);
+  router.push("/myworkouts/editor/" + routeID);
+}
 </script>
 
 <style scoped>

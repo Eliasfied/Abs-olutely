@@ -123,7 +123,7 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {
   IonContent,
   IonPage,
@@ -135,169 +135,112 @@ import {
   IonFooter,
   IonLabel,
 } from "@ionic/vue";
-import { defineComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { computed } from "vue";
-import { useWorkoutsStore } from "../store/workouts";
-import { useMyWorkoutsStore } from "../store/myWorkouts";
+import { useWorkoutsStore } from "@/store/workouts";
+import { useMyWorkoutsStore } from "@/store/myWorkouts";
 import { ref } from "vue";
 import {
   play,
   barbellOutline,
   timeOutline,
   arrowBackOutline,
-  cafe,
 } from "ionicons/icons";
-import ExerciseDetail from "../components/reusable/ExerciseDetail.vue";
-import WorkoutSelect from "./reusable/WorkoutSelect.vue";
+import ExerciseDetail from "@/components/reusable/ExerciseDetail.vue";
+import WorkoutSelect from "@/components/reusable/WorkoutSelect.vue";
 
-export default defineComponent({
-  name: "WorkoutPreview",
-  components: {
-    IonContent,
-    IonPage,
-    IonCard,
-    ExerciseDetail,
-    IonIcon,
-    IonButton,
-    WorkoutSelect,
-    IonCardHeader,
-    IonCardTitle,
-    IonFooter,
-    IonLabel,
-  },
-  setup() {
-    const router = useRouter();
-    const route = useRoute();
-    const page = route.params.course;
-    console.log("page");
-    console.log(page);
-    let list;
-    let store;
-    let proplist;
-    let isDefaultWorkout = false;
-    if (
-      page == "beginner" ||
-      page == "advanced" ||
-      page == "champ" ||
-      page == "professional"
-    ) {
-      store = useWorkoutsStore();
-      isDefaultWorkout = true;
-    } else {
-      store = useMyWorkoutsStore();
-    }
-    console.log(store);
-    if (isDefaultWorkout) {
-      list = store.workoutList.find((element) => element.name == page);
-    } else {
-      list = store.workoutList.find((element) => element.id == page);
-    }
-    console.log("LIST: ");
-    console.log(list);
-    proplist = list.exercises;
+const router = useRouter();
+const route = useRoute();
+const page = route.params.course;
+console.log("page");
+console.log(page);
+let list;
+let store;
+let proplist;
+if (
+  page == "HsOB8HzB57hbQeHtwn31" ||
+  page == "HsOB8HzB57hbQeHtwn32" ||
+  page == "HsOB8HzB57hbQeHtwn33" ||
+  page == "HsOB8HzB57hbQeHtwn34"
+) {
+  store = useWorkoutsStore();
+} else {
+  store = useMyWorkoutsStore();
+}
 
-    function getImgUrl() {
-      if (page == "beginner" || page == "advanced" || page == "champ") {
-        return require("../assets/HomePageWorkoutImages/" + page + ".png");
-      } else {
-        return require("../assets/HomePageWorkoutImages/beginner.png");
-      }
-    }
+list = store.workoutList.find((element) => element.id == page);
 
-    function getExerciseURL(index) {
-      return require("../assets/exercises/" +
-        list.exercises[index].name +
-        ".gif");
-    }
+console.log("LIST: ");
+console.log(list);
+proplist = list.exercises;
 
-    function startWorkout() {
-      router.push("/workout/" + page);
-    }
+// function getImgUrl() {
+//   if (page == "beginner" || page == "advanced" || page == "champ") {
+//     return require("@/assets/HomePageWorkoutImages/" + page + ".png");
+//   } else {
+//     return require("@/assets/HomePageWorkoutImages/beginner.png");
+//   }
+// }
 
-    //POPUP EXERCISE DETAIL
-    let propIndex = ref(0);
-    let showModal = ref(false);
-    function showDetails(index) {
-      console.log("showdetails!");
-      console.log(index);
-      showModal.value = !showModal.value;
-      propIndex.value = index;
-    }
-    function closeModal() {
-      showModal.value = !showModal.value;
-    }
+function getExerciseURL(index) {
+  return require("@/assets/exercises/" + list.exercises[index].name + ".gif");
+}
 
-    function backToMenu() {
-      router.go(-1);
-    }
+function startWorkout() {
+  router.push("/workout/" + page);
+}
 
-    //UI DATA
+//POPUP EXERCISE DETAIL
+let propIndex = ref(0);
+let showModal = ref(false);
+function showDetails(index) {
+  console.log("showdetails!");
+  console.log(index);
+  showModal.value = !showModal.value;
+  propIndex.value = index;
+}
+function closeModal() {
+  showModal.value = !showModal.value;
+}
 
-    let exerciseOptions = [20, 30, 35, 40];
-    let breakOptions = [0, 5, 10, 20, 30];
-    let exerciseTime = ref(list?.exerciseTime);
-    let breakTime = ref(list?.breakTime);
-    let quantityExercises = ref(list?.exercises?.length);
-    let totalTime = computed(() => {
-      return breakTime.value != undefined &&
-        exerciseTime.value != undefined &&
-        quantityExercises.value != undefined
-        ? Math.round(
-            (exerciseTime.value * quantityExercises.value +
-              (breakTime.value * quantityExercises.value - breakTime.value)) /
-              60
-          )
-        : undefined;
-    });
+function backToMenu() {
+  router.go(-1);
+}
 
-    // ion-select break and exerise length options
-    const exerciseSelected = ref(1);
-    function updateExerciseTime(value) {
-      exerciseTime.value = value;
-      if (list?.exerciseTime != undefined) {
-        list.exerciseTime = exerciseTime.value;
-      }
-    }
-    const breakSelected = ref(1);
-    function updateBreakTime(value) {
-      breakTime.value = value;
-      if (list?.breakTime != undefined) {
-        list.breakTime = breakTime.value;
-      }
-    }
+//UI DATA
 
-    return {
-      route,
-      page,
-      list,
-      exerciseTime,
-      breakTime,
-      totalTime,
-      quantityExercises,
-      updateExerciseTime,
-      updateBreakTime,
-      exerciseSelected,
-      breakSelected,
-      getImgUrl,
-      play,
-      showModal,
-      showDetails,
-      proplist,
-      propIndex,
-      closeModal,
-      exerciseOptions,
-      breakOptions,
-      getExerciseURL,
-      startWorkout,
-      barbellOutline,
-      timeOutline,
-      arrowBackOutline,
-      backToMenu,
-      cafe,
-    };
-  },
+let exerciseOptions = [20, 30, 35, 40];
+let breakOptions = [0, 5, 10, 20, 30];
+let exerciseTime = ref(list?.exerciseTime);
+let breakTime = ref(list?.breakTime);
+let quantityExercises = ref(list?.exercises?.length);
+let totalTime = computed(() => {
+  return breakTime.value != undefined &&
+    exerciseTime.value != undefined &&
+    quantityExercises.value != undefined
+    ? Math.round(
+        (exerciseTime.value * quantityExercises.value +
+          (breakTime.value * quantityExercises.value - breakTime.value)) /
+          60
+      )
+    : undefined;
 });
+
+// ion-select break and exerise length options
+const exerciseSelected = ref(1);
+function updateExerciseTime(value) {
+  exerciseTime.value = value;
+  if (list?.exerciseTime != undefined) {
+    list.exerciseTime = exerciseTime.value;
+  }
+}
+const breakSelected = ref(1);
+function updateBreakTime(value) {
+  breakTime.value = value;
+  if (list?.breakTime != undefined) {
+    list.breakTime = breakTime.value;
+  }
+}
 </script>
 
 <style scoped>

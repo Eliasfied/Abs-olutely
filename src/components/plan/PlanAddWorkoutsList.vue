@@ -32,7 +32,7 @@
                     <ion-icon
                       class="icon-add"
                       :icon="addOutline"
-                      @click="addWorkout(index, workout.name)"
+                      @click="addWorkout(index, workout.id, workout.name)"
                     ></ion-icon>
                   </div>
                 </div>
@@ -63,7 +63,7 @@
                     <ion-icon
                       class="icon-add"
                       :icon="addOutline"
-                      @click="addWorkout(index, workout.name)"
+                      @click="addWorkout(index, workout.id, workout.name)"
                     ></ion-icon>
                   </div>
                 </div>
@@ -95,8 +95,8 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { defineEmits } from "vue";
 import {
   IonCard,
   IonIcon,
@@ -105,111 +105,75 @@ import {
   IonContent,
   IonButton,
 } from "@ionic/vue";
-import { useRoute } from "vue-router";
 import {
   closeCircleOutline,
-  informationCircleOutline,
   addOutline,
   barbellOutline,
   build,
 } from "ionicons/icons";
 import { ref, onBeforeMount } from "vue";
 import { getWorkoutList } from "@/composables/getMyWorkoutList";
-import { useMyPlanStore } from "../store/myPlans";
+import { useMyPlanStore } from "@/store/myPlans";
 import { useRouter } from "vue-router";
 import { useMyWorkoutsStore } from "@/store/myWorkouts";
 import { async } from "rxjs/internal/scheduler/async";
 import { useWorkoutsStore } from "@/store/workouts";
 
-export default defineComponent({
-  name: "WorkoutList",
-  emits: ["closeWorkoutList"],
-  components: {
-    IonCard,
-    IonIcon,
-    IonLabel,
-    IonPage,
-    IonContent,
-    IonButton,
+const emits = defineEmits(["closeWorkoutList"]);
+
+//ROUTE
+let planStore = useMyPlanStore();
+let workoutStore = useMyWorkoutsStore();
+let preWorkoutStore = useWorkoutsStore();
+let currentIndex = planStore.currentIndex;
+
+let workoutList: any = ref([]);
+let preWorkoutList: any = ref([]);
+let results = ref();
+let results2 = ref();
+async function init() {
+  workoutList.value = [];
+  workoutList.value = await getWorkoutList();
+  results.value = workoutList.value;
+  await preWorkoutStore.loadWorkoutsFromStore();
+  preWorkoutList.value = preWorkoutStore.workoutList;
+  results2.value = preWorkoutList.value;
+
+  proplist.value = results.value;
+}
+
+onBeforeMount(() => init());
+
+workoutStore.$subscribe(
+  (mutation, state) => {
+    console.log("a change happened in workoutstore");
+    console.log(mutation, state);
+    workoutList.value = state.workoutList;
+    results.value = workoutList.value;
+    proplist.value = results.value;
   },
-  setup(props, { emit }) {
-    //ROUTE
-    let planStore = useMyPlanStore();
-    let workoutStore = useMyWorkoutsStore();
-    let preWorkoutStore = useWorkoutsStore();
-    let currentIndex = planStore.currentIndex;
+  { detached: true }
+);
 
-    let workoutList: any = ref([]);
-    let preWorkoutList: any = ref([]);
-    let results = ref();
-    let results2 = ref();
-    async function init() {
-      workoutList.value = [];
-      workoutList.value = await getWorkoutList();
-      results.value = workoutList.value;
-      await preWorkoutStore.loadWorkoutsFromStore();
-      console.log("workoutlist normal");
-      console.log(preWorkoutStore.workoutList);
-      preWorkoutList.value = preWorkoutStore.workoutList;
-      results2.value = preWorkoutList.value;
-      console.log(results2);
+let proplist = ref();
+let propIndex = ref(0);
+let showModal = ref(false);
+//ADD AND DELETE ITEMS
+let router = useRouter();
 
-      proplist.value = results.value;
-    }
+function closeList() {
+  router.go(-1);
+}
 
-    onBeforeMount(() => init());
-
-    workoutStore.$subscribe(
-      (mutation, state) => {
-        console.log("a change happened in workoutstore");
-        console.log(mutation, state);
-        workoutList.value = state.workoutList;
-        results.value = workoutList.value;
-        proplist.value = results.value;
-      },
-      { detached: true }
-    );
-
-    let proplist = ref();
-    let propIndex = ref(0);
-    let showModal = ref(false);
-    //ADD AND DELETE ITEMS
-    let router = useRouter();
-
-    function closeList() {
-      router.go(-1);
-    }
-
-    async function addWorkout(index, workoutname) {
-      await planStore.workoutToArray(currentIndex, workoutname);
-      router.go(-1);
-    }
-    let routeID;
-    function goToWorkout() {
-      routeID = Math.floor(Math.random() * 1000);
-      router.push("/myworkouts/editor/" + routeID);
-    }
-
-    //value for CSS animation
-
-    return {
-      props,
-      closeCircleOutline,
-      results,
-      results2,
-      proplist,
-      propIndex,
-      showModal,
-      informationCircleOutline,
-      closeList,
-      addOutline,
-      addWorkout,
-      barbellOutline,
-      build,
-      goToWorkout,
-    };
-  },
-});
+async function addWorkout(index, workoutId, workoutName) {
+  await planStore.workoutToArray(currentIndex, workoutId, workoutName);
+  router.go(-1);
+}
+let routeID;
+function goToWorkout() {
+  routeID = Math.floor(Math.random() * 1000);
+  router.push("/myworkouts/editor/" + routeID);
+}
 </script>
 
 <style scoped>
@@ -379,7 +343,6 @@ ion-card {
 .add-div:active {
   color: var(--ion-color-success);
 }
-
 
 ion-footer {
   height: 10%;

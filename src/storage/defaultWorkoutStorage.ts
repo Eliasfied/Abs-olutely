@@ -19,7 +19,7 @@ let KneeToAbs;
 let crossCrunches;
 async function loadAll() {
 
- // await defaultWorkouts.clear();
+ //await defaultWorkouts.clear();
   
 
   plank = await getExercise("Plank");
@@ -38,7 +38,8 @@ async function loadAll() {
   KneeToAbs = await getExercise("Knee to Abs");
   crossCrunches = await getExercise("Cross Crunches");
 
-  await defaultWorkouts.setItem("beginner", {
+  await defaultWorkouts.setItem("HsOB8HzB57hbQeHtwn31", {
+    id: "HsOB8HzB57hbQeHtwn31",
     name: "beginner",
     breakTime: 30,
     exerciseTime: 20,
@@ -54,7 +55,8 @@ async function loadAll() {
     ],
   });
   
-  await defaultWorkouts.setItem("advanced", {
+  await defaultWorkouts.setItem("HsOB8HzB57hbQeHtwn32", {
+    id: "HsOB8HzB57hbQeHtwn32",
     name: "advanced",
     breakTime: 30,
     exerciseTime: 30,
@@ -71,7 +73,8 @@ async function loadAll() {
       plank,
     ],
   });
-  await defaultWorkouts.setItem("professional", {
+  await defaultWorkouts.setItem("HsOB8HzB57hbQeHtwn33", {
+    id: "HsOB8HzB57hbQeHtwn33",
     name: "professional",
     breakTime: 20,
     exerciseTime: 30,
@@ -90,7 +93,8 @@ async function loadAll() {
       VUp,
     ],
   });
-  await defaultWorkouts.setItem("champ", {
+  await defaultWorkouts.setItem("HsOB8HzB57hbQeHtwn34", {
+    id: "HsOB8HzB57hbQeHtwn34",
     name: "champ",
     breakTime: 10,
     exerciseTime: 40,

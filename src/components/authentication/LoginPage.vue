@@ -23,7 +23,7 @@
         <ion-text class="grey-text" slot="end">Forgot password?</ion-text>
       </ion-item>
       <ion-button color="light" expand="full" @click="login">
-      <ion-text color="secondary">Login</ion-text>
+        <ion-text color="secondary">Login</ion-text>
       </ion-button>
       <ion-row class="center-text">
         <ion-col class="line"></ion-col>
@@ -84,6 +84,15 @@ import {
   signInWithGoogle,
   signInWithFacebook,
 } from "@/services/fireBaseService";
+import { useMyPlanStore } from "@/store/myPlans";
+import { useMyWorkoutsStore } from "@/store/myWorkouts";
+
+import { synchronizePlans } from "@/services/planService";
+import { synchronizeWorkouts } from "@/services/workoutsService";
+import { Workout } from "@/models/Workout";
+import { getWorkoutList } from "@/composables/getMyWorkoutList";
+import { Plan } from "@/models/Plan";
+import { getPlanList } from "@/composables/getMyPlanList";
 
 //firebase
 
@@ -128,6 +137,14 @@ const login = async () => {
       .catch(handleError);
     email.value = "";
     password.value = "";
+    const logStore = loginStore();
+    var userId = logStore.getUserId();
+    let planStore = useMyPlanStore();
+    await planStore.loadPlansFromStore();
+    let workouts: Workout[] = await getWorkoutList();
+    let plans: Plan[] = await getPlanList();
+    await synchronizePlans(plans, userId as string);
+    await synchronizeWorkouts(workouts, userId as string);
     router.push(urlAfterLogin);
   } catch (error) {
     handleError(error);

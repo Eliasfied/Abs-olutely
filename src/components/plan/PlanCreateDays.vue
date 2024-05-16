@@ -63,14 +63,9 @@
   </ion-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { ref } from "vue";
-import {
-  todaySharp,
-  arrowForwardOutline,
-  calendarNumber,
-} from "ionicons/icons";
+import { todaySharp, arrowForwardOutline } from "ionicons/icons";
 import { useRouter } from "vue-router";
 import {
   IonContent,
@@ -80,45 +75,22 @@ import {
   IonIcon,
   IonFooter,
 } from "@ionic/vue";
-import { useMyPlanStore } from "../store/myPlans";
-import useRouteId from "../composables/getPlanRouteID";
-import BackButton from "./reusable/BackButton.vue";
+import { useMyPlanStore } from "@/store/myPlans";
+import useRouteId from "@/composables/getPlanRouteID";
+import BackButton from "@/components/reusable/BackButton.vue";
 
-export default defineComponent({
-  name: "createPlanDays",
-  components: {
-    IonContent,
-    IonPage,
-    IonLabel,
-    IonRange,
-    IonIcon,
-    IonFooter,
-    BackButton,
-  },
-  setup() {
-    let planStore = useMyPlanStore();
-    let name = ref("");
-    let workoutsWeek = ref(3);
-    let routeID = useRouteId();
+let planStore = useMyPlanStore();
+let name = ref("");
+let workoutsWeek = ref(3);
+let routeID = useRouteId();
 
-    let router = useRouter();
-    function goToCustomize() {
-      planStore.setPlanDays(workoutsWeek);
-      router.push({
-        path: "/workoutplan/" + routeID.currentRouteId + "/createPlanCustomize",
-      });
-    }
-
-    return {
-      name,
-      todaySharp,
-      workoutsWeek,
-      goToCustomize,
-      arrowForwardOutline,
-      calendarNumber,
-    };
-  },
-});
+let router = useRouter();
+function goToCustomize() {
+  planStore.setPlanDays(workoutsWeek);
+  router.push({
+    path: "/workoutplan/" + routeID.currentRouteId + "/planCreateCustomize",
+  });
+}
 </script>
 
 <style scoped>

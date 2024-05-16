@@ -193,7 +193,7 @@ import {
   IonFooter,
   alertController,
 } from "@ionic/vue";
-import TheFooter from "../components/reusable/TheFooter.vue";
+import TheFooter from "@/components/reusable/TheFooter.vue";
 import { ref } from "vue";
 import {
   addCircle,
@@ -208,12 +208,12 @@ import {
   settingsOutline,
 } from "ionicons/icons";
 import { useRoute, useRouter } from "vue-router";
-import { useMyWorkoutsStore } from "../store/myWorkouts";
-import ExerciseDetail from "../components/reusable/ExerciseDetail.vue";
-import ExerciseList from "../components/ExerciseList.vue";
-import { getMyWorkout } from "../composables/getMyWorkoutStorage";
+import { useMyWorkoutsStore } from "@/store/myWorkouts";
+import ExerciseDetail from "@/components/reusable/ExerciseDetail.vue";
+import ExerciseList from "@/components/exercise/ExerciseList.vue";
+import { getMyWorkout } from "@/composables/getMyWorkoutStorage";
 import WorkoutStorage from "@/storage/myWorkoutStorage";
-import WorkoutSelect from "./reusable/WorkoutSelect.vue";
+import WorkoutSelect from "@/components/reusable/WorkoutSelect.vue";
 import { Workout } from "@/models/Workout";
 import { Exercise } from "@/models/Exercise";
 import { ItemReorderCustomEvent } from "@ionic/vue";
