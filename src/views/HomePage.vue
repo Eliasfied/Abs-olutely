@@ -138,6 +138,7 @@ import { getPlanList } from "@/composables/getMyPlanList";
 import { Plan } from "@/models/Plan";
 import { synchronizePlans } from "@/services/planService";
 import { synchronizeWorkouts } from "@/services/workoutsService";
+import getDefaultWorkoutIds from "@/composables/getDefaultWorkoutIds";
 
 let closeMenu = ref(false);
 onIonViewWillLeave(() => {
@@ -181,12 +182,14 @@ async function loadStore() {
   list = store.workoutList;
   plans.value = planStore.planList;
 
-  beginnerWorkoutName.value = list[0].name;
-  advancedWorkoutName.value = list[1].name;
-  champWorkoutName.value = list[3].name;
-  beginnerWorkoutId.value = list[0].id;
-  advancedWorkoutId.value = list[1].id;
-  champWorkoutId.value = list[3].id;
+  let defaultWorkouts = await getDefaultWorkoutIds();
+
+  beginnerWorkoutName.value = defaultWorkouts[0].name;
+  advancedWorkoutName.value = defaultWorkouts[1].name;
+  champWorkoutName.value = defaultWorkouts[3].name;
+  beginnerWorkoutId.value = defaultWorkouts[0].id;
+  advancedWorkoutId.value = defaultWorkouts[1].id;
+  champWorkoutId.value = defaultWorkouts[3].id;
 }
 
 loadStore();
