@@ -21,6 +21,7 @@ import UserSettings from "@/components/settings/UserSettings.vue";
 import LoginPage from "@/components/authentication/LoginPage.vue";
 import ProfilePage from "@/components/authentication/ProfilePage.vue";
 import RegisterPage from "@/components/authentication/RegisterPage.vue";
+import NotificationsIncomingPage from "@/components/notifications/NotificationsIncomingPage.vue";
 
 import { loginStore } from "@/store/authentication/loginStore";
 const routes: Array<RouteRecordRaw> = [
@@ -139,6 +140,12 @@ const routes: Array<RouteRecordRaw> = [
     path: "/userSettings",
     name: "UserSettings",
     component: UserSettings,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/notificationsIncoming",
+    name: "notificationsIncoming",
+    component: NotificationsIncomingPage,
     meta: { requiresAuth: true },
   },
   {
