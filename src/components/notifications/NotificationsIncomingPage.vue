@@ -74,7 +74,7 @@ onMounted(async () => {
   await getNotifications();
 
   const signalRService = getSignalRService();
-  signalRService.sharedShoppingListListener(async () => {
+  signalRService.sharedWorkoutListener(async () => {
     await getNotifications();
   });
 });

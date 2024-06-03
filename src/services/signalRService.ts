@@ -32,13 +32,7 @@ export class SignalRService {
     }
   }
 
-  public addUpdateShoppingListListener(
-    updateShoppingListCallback: (updatedShoppingList: any) => void
-  ) {
-    this.connection.on("ShoppingListUpdated", updateShoppingListCallback);
-  }
-
-  public sharedShoppingListListener(sharedShoppingListCallback: () => void) {
-    this.connection.on("ShoppingListShared", sharedShoppingListCallback);
+  public sharedWorkoutListener(sharedSWorkoutCallback: () => void) {
+    this.connection.on("WorkoutShared", sharedSWorkoutCallback);
   }
 }

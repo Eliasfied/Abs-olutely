@@ -93,8 +93,40 @@ import { Workout } from "@/models/Workout";
 import { getWorkoutList } from "@/composables/getMyWorkoutList";
 import { Plan } from "@/models/Plan";
 import { getPlanList } from "@/composables/getMyPlanList";
+import useNotifications from "@/composables/notifications/useNotifications";
+import { getSignalRService } from "@/composables/notifications/signalRInstance";
+import { getAllNotifications } from "@/services/notificationService";
 
 //firebase
+
+
+
+//notifications
+
+//signalR notifications
+
+const { setHasUnreadNotifications } = useNotifications();
+
+
+const initializeSignalRService = async () => {
+  const signalRService = getSignalRService();
+  await signalRService.startConnection();
+  signalRService.sharedWorkoutListener(() => {
+    setHasUnreadNotifications(true);
+  });
+};
+
+const checkNotifications = async (userId: string) => {
+  const response = await getAllNotifications(userId as string);
+  const filteredResponse = response.data.filter(
+    (notification: any) => notification.isAcknowledged === false
+  );
+  if (filteredResponse.length > 0) {
+    setHasUnreadNotifications(true);
+  } else {
+    setHasUnreadNotifications(false);
+  }
+};
 
 //routing
 const router = useRouter();
@@ -143,6 +175,8 @@ const login = async () => {
     await planStore.loadPlansFromStore();
     let workouts: Workout[] = await getWorkoutList();
     let plans: Plan[] = await getPlanList();
+    await initializeSignalRService();
+    await checkNotifications(userId as string);
     await synchronizePlans(plans, userId as string);
     await synchronizeWorkouts(workouts, userId as string);
     router.push(urlAfterLogin);
@@ -163,6 +197,14 @@ const googleLogin = async () => {
         credentials.userEmail as string
       );
     }
+    let planStore = useMyPlanStore();
+    await planStore.loadPlansFromStore();
+    let workouts: Workout[] = await getWorkoutList();
+    let plans: Plan[] = await getPlanList();
+    await initializeSignalRService();
+    await checkNotifications(credentials.userId as string);
+    await synchronizePlans(plans, credentials.userId as string);
+    await synchronizeWorkouts(workouts, credentials.userId as string);
     router.push(urlAfterLogin);
   } catch (error) {
     handleError(error);

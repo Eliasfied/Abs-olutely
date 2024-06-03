@@ -2,25 +2,39 @@ import { Workout } from "@/models/Workout";
 import httpsWithToken from "./httpsWithToken";
 import { getWorkoutList } from "@/composables/getMyWorkoutList";
 import WorkoutStorage from "@/storage/myWorkoutStorage";
-import  {useMyWorkoutsStore} from "@/store/myWorkouts";
+import { useMyWorkoutsStore } from "@/store/myWorkouts";
+
 export const addWorkout = async (workout: Workout) => {
   return await httpsWithToken.post("/api/workouts/add", workout);
 };
 
+export const getWorkoutById = async (workoutId: string) => {
+  return await httpsWithToken.get(
+    "/api/workouts/getWorkoutById?workoutId=" + workoutId
+  );
+};
+
 export const updateWorkout = async (workout: Workout, userid: string) => {
-  return await httpsWithToken.put("/api/workouts/update?userid=" + userid, workout);
+  return await httpsWithToken.put(
+    "/api/workouts/update?userid=" + userid,
+    workout
+  );
 };
 
 export const deleteWorkout = async (workoutId: string) => {
-  return await httpsWithToken.delete("/api/workouts/delete?workoutId=" + workoutId);
+  return await httpsWithToken.delete(
+    "/api/workouts/delete?workoutId=" + workoutId
+  );
 };
 
 export const getWorkouts = async (userid: string) => {
   return await httpsWithToken.get("/api/workouts/get?userid=" + userid);
 };
 
-
-export const synchronizeWorkouts = async (workouts: Workout[], userId: string) => {
+export const synchronizeWorkouts = async (
+  workouts: Workout[],
+  userId: string
+) => {
   const workoutsToUpdateLocally = await httpsWithToken.post(
     "/api/workouts/synchronize?userid=" + userId,
     workouts
@@ -55,4 +69,18 @@ export const synchronizeWorkouts = async (workouts: Workout[], userId: string) =
     }
   }
   workoutStore.loadWorkoutsFromStore();
+};
+
+export const shareWorkout = async (
+  SenderName: string,
+  ReceiverEmail: string,
+  workoutId: string,
+  workoutName: string
+) => {
+  return await httpsWithToken.post("/api/Workouts/share", {
+    SenderName,
+    ReceiverEmail,
+    workoutId,
+    workoutName,
+  });
 };

@@ -31,6 +31,12 @@
                         {{ getWorkoutLength(index) }} Min.</ion-label
                       >
                     </div>
+                    <div class="icon-share">
+                      <ion-icon
+                        @click.prevent="openShareDialog(index)"
+                        :icon="shareOutline"
+                      ></ion-icon>
+                    </div>
                     <div class="exercise-time">
                       <ion-icon :icon="barbellOutline"></ion-icon>
                       <ion-label>{{ workout.exerciseTime }}s</ion-label>
@@ -101,12 +107,14 @@ import {
   barbellOutline,
   timeOutline,
   cafe,
+  shareOutline,
 } from "ionicons/icons";
 import { useMyWorkoutsStore } from "@/store/myWorkouts";
 import { ref, watch } from "vue";
 import myWorkoutStorage from "@/storage/myWorkoutStorage";
-import { deleteWorkout } from "@/services/workoutsService";
+import { deleteWorkout, shareWorkout } from "@/services/workoutsService";
 import { getRandomId } from "@/composables/getRandomId";
+import { loginStore } from "@/store/authentication/loginStore";
 
 // STORE DATA
 let workouts: any = ref([]);
@@ -124,10 +132,12 @@ watch(
   { deep: true, immediate: true }
 );
 let store;
+let logStore;
 async function loadStore() {
   store = useMyWorkoutsStore();
   await store.loadWorkoutsFromStore();
   workouts.value = store.workoutList;
+  logStore = loginStore();
 
   if (workouts.value.length > 0) {
     isEmpty.value = false;
@@ -141,6 +151,52 @@ store.$subscribe(
   },
   { detached: true }
 );
+
+//share
+
+const selectedIndex = ref<number | null>(null);
+const openShareDialog = async (index: number) => {
+  selectedIndex.value = index;
+
+  const alert = await alertController.create({
+    header: "Share Workout",
+    inputs: [
+      {
+        name: "email",
+        type: "text",
+        placeholder: "Enter Email",
+      },
+    ],
+    buttons: [
+      {
+        text: "Cancel",
+        role: "cancel",
+        cssClass: "secondary",
+      },
+      {
+        text: "Share",
+        handler: (data) => share(data.email),
+      },
+    ],
+  });
+
+  await alert.present();
+};
+
+const share = async (receiverEmail: string) => {
+  console.log("share");
+  console.log(logStore.displayName);
+  console.log(receiverEmail);
+  console.log(workouts.value[selectedIndex.value as number].id as string);
+  console.log(workouts.value);
+  console.log(selectedIndex.value as number);
+  shareWorkout(
+    logStore.displayName as string,
+    receiverEmail as string,
+    workouts.value[selectedIndex.value as number].id as string,
+    workouts.value[selectedIndex.value as number].name as string,
+  );
+};
 
 //workout functions
 function getWorkoutLength(index) {
@@ -280,6 +336,14 @@ p {
 
 .icon-color-trash {
   color: red;
+}
+
+.icon-share {
+  grid-row: row1-end / row2-start;
+  grid-column: column1-end / column2-start;
+  align-self: center;
+  justify-self: right;
+  padding: 5%;
 }
 
 .style-time {

@@ -42,6 +42,7 @@
             </p></ion-item
           >
         </ion-menu-toggle>
+
         <ion-menu-toggle>
           <ion-item router-link="/exerciseList" color="secondary"
             ><ion-icon
@@ -90,6 +91,21 @@
             ></ion-icon>
             <p :class="{ active: isActive('/myworkouts') }">
               personalisierte Workouts
+            </p></ion-item
+          >
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item
+            router-link="/sharedItems"
+            class="list-item"
+            color="secondary"
+            ><ion-icon
+              :class="{ active: isActive('/sharedItems') }"
+              slot="start"
+              :icon="shareOutline"
+            ></ion-icon>
+            <p :class="{ active: isActive('/sharedItems') }">
+              Shared Items
             </p></ion-item
           >
         </ion-menu-toggle>
@@ -163,6 +179,7 @@ import {
   personOutline,
   logInOutline,
   logOutOutline,
+  shareOutline,
 } from "ionicons/icons";
 
 import { ref, watch, onMounted } from "vue";

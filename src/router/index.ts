@@ -22,6 +22,7 @@ import LoginPage from "@/components/authentication/LoginPage.vue";
 import ProfilePage from "@/components/authentication/ProfilePage.vue";
 import RegisterPage from "@/components/authentication/RegisterPage.vue";
 import NotificationsIncomingPage from "@/components/notifications/NotificationsIncomingPage.vue";
+import SharedItemsPage from "@/components/SharedItems/SharedItemsPage.vue";
 
 import { loginStore } from "@/store/authentication/loginStore";
 const routes: Array<RouteRecordRaw> = [
@@ -146,6 +147,12 @@ const routes: Array<RouteRecordRaw> = [
     path: "/notificationsIncoming",
     name: "notificationsIncoming",
     component: NotificationsIncomingPage,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/sharedItems",
+    name: "sharedItemsPage",
+    component: SharedItemsPage,
     meta: { requiresAuth: true },
   },
   {

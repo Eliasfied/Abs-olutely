@@ -75,13 +75,13 @@ ion-title {
 }
 
 ion-icon {
-  font-size: 42px;
-  color: var(--ion-color-tertiary);
+  font-size: 32px;
+  color: var(--ion-color-light);
   margin: 12px;
 }
 
 ion-icon.no-notifications {
-  color: var(--ion-color-primary);
+  color: var(--ion-color-light);
 }
 
 ion-icon.has-notifications::after {

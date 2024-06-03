@@ -139,6 +139,10 @@ import { Plan } from "@/models/Plan";
 import { synchronizePlans } from "@/services/planService";
 import { synchronizeWorkouts } from "@/services/workoutsService";
 import getDefaultWorkoutIds from "@/composables/getDefaultWorkoutIds";
+import { getSignalRService } from "@/composables/notifications/signalRInstance";
+import useNotifications from "@/composables/notifications/useNotifications";
+import { getAllNotifications } from "@/services/notificationService";
+
 
 let closeMenu = ref(false);
 onIonViewWillLeave(() => {
@@ -154,12 +158,40 @@ onMounted(async () => {
   let workouts: Workout[] = await getWorkoutList();
   let plans: Plan[] = await getPlanList();
   if (navigator.onLine && userId != null) {
+    await initializeSignalRService();
+    await checkNotifications(userId as string);
     await synchronizePlans(plans, userId as string);
     await synchronizeWorkouts(workouts, userId as string);
   }
   console.log("workouts");
   console.log(workouts);
 });
+
+
+//signalR notifications
+
+const { setHasUnreadNotifications } = useNotifications();
+
+
+const initializeSignalRService = async () => {
+  const signalRService = getSignalRService();
+  await signalRService.startConnection();
+  signalRService.sharedWorkoutListener(() => {
+    setHasUnreadNotifications(true);
+  });
+};
+
+const checkNotifications = async (userId: string) => {
+  const response = await getAllNotifications(userId as string);
+  const filteredResponse = response.data.filter(
+    (notification: any) => notification.isAcknowledged === false
+  );
+  if (filteredResponse.length > 0) {
+    setHasUnreadNotifications(true);
+  } else {
+    setHasUnreadNotifications(false);
+  }
+};
 
 //sideMENÜ LOGIC
 
