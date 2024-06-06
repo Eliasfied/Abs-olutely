@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <HeaderComponent title="Shared Items" />
+    <TheFooter title="Shared Items" />
     <ion-content color="tertiary">
       <ion-card v-for="(sharedItem, index) in sharedItems" :key="index">
         <ion-card-content class="sharedItem-card">
@@ -44,8 +44,13 @@ import { loginStore } from "@/store/authentication/loginStore";
 import { getWorkoutById } from "@/services/workoutsService";
 import { addWorkout } from "@/services/workoutsService";
 import { Workout } from "@/models/Workout";
+import TheFooter from "../reusable/TheFooter.vue";
+import { synchronizeWorkouts } from "@/services/workoutsService";
+import { useMyWorkoutsStore } from "@/store/myWorkouts";
 
 //store
+const workoutsStore = useMyWorkoutsStore();
+const workouts = workoutsStore.workoutList;
 const logStore = loginStore();
 const userId = logStore.getUserId() as string;
 
@@ -58,6 +63,8 @@ onMounted(async () => {
   console.log(sharedItems.value);
 });
 
+
+//dynamischer noch gesalten nicht für "nur workout"
 const accept = async (sharedItem: SharedItem) => {
   let workout = {} as Workout;
   var response = await getWorkoutById(sharedItem.workoutId);
@@ -66,6 +73,9 @@ const accept = async (sharedItem: SharedItem) => {
   console.log("workout to add");
   console.log(workout);
   await addWorkout(workout);
+  console.log("workouts");
+  console.log(workouts);
+  await synchronizeWorkouts(workouts, userId as string);
   await deletePendingSharedWorkout(sharedItem.workoutId, userId);
   sharedItems.value = sharedItems.value.filter(
     (item: SharedItem) => item.id !== sharedItem.id

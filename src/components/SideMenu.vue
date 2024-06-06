@@ -99,15 +99,19 @@
             router-link="/sharedItems"
             class="list-item"
             color="secondary"
-            ><ion-icon
+          >
+            <ion-icon
               :class="{ active: isActive('/sharedItems') }"
               slot="start"
               :icon="shareOutline"
             ></ion-icon>
             <p :class="{ active: isActive('/sharedItems') }">
               Shared Items
-            </p></ion-item
-          >
+              <span v-if="sharedItemsCount > 0" class="notification-count"
+                >({{ sharedItemsCount }})</span
+              >
+            </p>
+          </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item router-link="/userSettings" color="secondary"
@@ -187,8 +191,27 @@ import { menuController } from "@ionic/core";
 import { useRoute, useRouter } from "vue-router";
 import { loginStore } from "@/store//authentication/loginStore";
 import { fireBaseLogout } from "@/services/fireBaseService";
+import { getPendingSharedWorkouts } from "@/services/PendingSharedWorkoutService";
+
 
 const props = defineProps(["closeMenu"]);
+
+const logStore = loginStore();
+const userId = logStore.getUserId() as string;
+const sharedItemsCount = ref<number>(0);
+
+onMounted(async () => {
+  var response = await getPendingSharedWorkouts(userId);
+  sharedItemsCount.value = response.data.length;
+});
+
+watch(
+  () => getPendingSharedWorkouts(userId),
+  async (newValPromise) => {
+    const newVal = await newValPromise;
+    sharedItemsCount.value = newVal.data.length;
+  }
+);
 
 watch(props.closeMenu, (newValue) => {
   if (props.closeMenu == true) {
@@ -254,5 +277,9 @@ ion-toolbar {
   position: absolute;
   bottom: 0;
   width: 100%;
+}
+
+.notification-count {
+  color: red;
 }
 </style>

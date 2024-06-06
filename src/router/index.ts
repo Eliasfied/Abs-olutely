@@ -22,7 +22,7 @@ import LoginPage from "@/components/authentication/LoginPage.vue";
 import ProfilePage from "@/components/authentication/ProfilePage.vue";
 import RegisterPage from "@/components/authentication/RegisterPage.vue";
 import NotificationsIncomingPage from "@/components/notifications/NotificationsIncomingPage.vue";
-import SharedItemsPage from "@/components/SharedItems/SharedItemsPage.vue";
+import SharedItemsPage from "@/components/sharedItems/SharedItemsPage.vue";
 
 import { loginStore } from "@/store/authentication/loginStore";
 const routes: Array<RouteRecordRaw> = [

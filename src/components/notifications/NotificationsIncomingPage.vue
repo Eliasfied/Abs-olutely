@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <HeaderComponent title="Notifications" />
+    <TheFooter title="Notifications" />
     <ion-content color="tertiary">
       <ion-card
         @click="acknowledge(notification)"
@@ -38,6 +38,7 @@ import useNotificationActions from "@/composables/notifications/useNotificationA
 import { useRouter } from "vue-router";
 import { getSignalRService } from "@/composables/notifications/signalRInstance";
 import { useMyWorkoutsStore } from "@/store/myWorkouts";
+import TheFooter from "../reusable/TheFooter.vue";
 
 //loginStore
 const router = useRouter();
@@ -56,6 +57,7 @@ const acknowledge = async (notificationValue: any) => {
     if (notifications.value.length === 0) {
       setHasUnreadNotifications(false);
     }
+    console.log(notificationValue);
     await performNotificationAction(
       notificationValue,
       router,

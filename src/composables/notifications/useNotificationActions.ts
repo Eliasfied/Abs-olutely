@@ -1,13 +1,14 @@
-
 export default function useNotificationActions() {
-  const performNotificationAction = async (notification: any, router: any, shopStore: any, logStore: any) => {
-    let response;
+  const performNotificationAction = async (
+    notification: any,
+    router: any,
+    store: any,
+    logStore: any
+  ) => {
     switch (notification.type) {
       case "sharedWorkout":
         console.log("Shared Workout");
-        // response = await getShoppingLists(logStore.userId);
-        // shopStore.shoppingLists = response.data;
-        // router.push(`/liveShoppinglist/${notification.data.shoppingListId}`);
+        router.push("sharedItems");
         break;
     }
   };
