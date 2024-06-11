@@ -2,6 +2,7 @@
   <ion-page>
     <ion-content class="ion-padding">
       <ion-title class="login-title">Login</ion-title>
+      <ion-text>{{ errorMessage }}</ion-text>
       <ion-input
         v-model="email"
         type="text"
@@ -96,14 +97,28 @@ import { getPlanList } from "@/composables/getMyPlanList";
 import useNotifications from "@/composables/notifications/useNotifications";
 import { getSignalRService } from "@/composables/notifications/signalRInstance";
 import { getAllNotifications } from "@/services/notificationService";
-
+import { Http } from '@capacitor-community/http';
 //firebase
 
+//error message
 
+let errorMessage = ref("");
 
 //notifications
 
 //signalR notifications
+
+const loginTest = async () => {
+  const options = {
+    url: 'https://absolutelybackend.azurewebsites.net/api/authentication/login',
+    headers: { 'Content-Type': 'application/json' },
+    data: { email: email.value, password: password.value},
+  };
+
+  const response = await Http.post(options);
+  errorMessage.value = response.data;
+  router.push(urlAfterLogin);
+};
 
 const { setHasUnreadNotifications } = useNotifications();
 
@@ -153,6 +168,7 @@ const handleFirebaseSignIn = (userCredential: any) => {
 };
 
 const handleError = (error: any) => {
+  errorMessage.value = error.message;
   console.error(error);
 };
 
@@ -170,7 +186,7 @@ const login = async () => {
     email.value = "";
     password.value = "";
     const logStore = loginStore();
-    var userId = logStore.getUserId();
+    let userId = logStore.getUserId();
     let planStore = useMyPlanStore();
     await planStore.loadPlansFromStore();
     let workouts: Workout[] = await getWorkoutList();
