@@ -2,7 +2,7 @@ import httpsWithToken from "./httpsWithToken";
 
 export const getPendingSharedWorkouts = async (userId: string) => {
   return await httpsWithToken.get(
-    "/api/pendingSharedWorkouts/getPendingSharedWorkouts?userId=" + userId
+    "/api/pendingSharedWorkouts?userId=" + userId
   );
 };
 
@@ -11,7 +11,7 @@ export const deletePendingSharedWorkout = async (
   userId: string
 ) => {
   return await httpsWithToken.delete(
-    "/api/pendingSharedWorkouts/deletePendingSharedWorkout?workoutId=" +
+    "/api/pendingSharedWorkouts?workoutId=" +
       workoutId +
       "&userId=" +
       userId

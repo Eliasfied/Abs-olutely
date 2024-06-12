@@ -10,25 +10,25 @@ export const addWorkout = async (workout: Workout) => {
 
 export const getWorkoutById = async (workoutId: string) => {
   return await httpsWithToken.get(
-    "/api/workouts/getWorkoutById?workoutId=" + workoutId
+    "/api/workouts?workoutId=" + workoutId
   );
 };
 
 export const updateWorkout = async (workout: Workout, userid: string) => {
   return await httpsWithToken.put(
-    "/api/workouts/update?userid=" + userid,
+    "/api/workouts?userid=" + userid,
     workout
   );
 };
 
 export const deleteWorkout = async (workoutId: string) => {
   return await httpsWithToken.delete(
-    "/api/workouts/delete?workoutId=" + workoutId
+    "/api/workouts?workoutId=" + workoutId
   );
 };
 
 export const getWorkouts = async (userid: string) => {
-  return await httpsWithToken.get("/api/workouts/get?userid=" + userid);
+  return await httpsWithToken.get("/api/workouts?userid=" + userid);
 };
 
 export const synchronizeWorkouts = async (
@@ -77,7 +77,7 @@ export const shareWorkout = async (
   workoutId: string,
   workoutName: string
 ) => {
-  return await httpsWithToken.post("/api/Workouts/share", {
+  return await httpsWithToken.post("/api/workouts/share", {
     SenderName,
     ReceiverEmail,
     workoutId,
