@@ -6,20 +6,20 @@ import PlanStorage from "@/storage/myPlanStorage";
 import { get } from "@ionic-native/core/decorators/common";
 
 export const addPlan = async (plan: Plan) => {
-  return await httpsWithToken.post("/api/plans", plan);
+  return await httpsWithToken.post("/plans", plan);
 };
 export const updatePlanInDB = async (plan: Plan) => {
-  return await httpsWithToken.put("/api/plans/update", plan);
+  return await httpsWithToken.put("/plans/update", plan);
 };
 export const deletePlanFromDB = async (planId: string) => {
-  return await httpsWithToken.delete("/api/plans?planId=" + planId);
+  return await httpsWithToken.delete("/plans?planId=" + planId);
 };
 export const getPlans = async (userid: string) => {
-  return await httpsWithToken.get("/api/plans?userid=" + userid);
+  return await httpsWithToken.get("/plans?userid=" + userid);
 };
 export const synchronizePlans = async (plans: Plan[], userId: string) => {
   const plansToUpdateLocally = await httpsWithToken.post(
-    "/api/plans/synchronize?userid=" + userId,
+    "/plans/synchronize?userid=" + userId,
     plans
   );
   const planStore = useMyPlanStore();

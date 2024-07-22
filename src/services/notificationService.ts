@@ -1,9 +1,9 @@
 import httpswithToken from "./httpsWithToken";
 
 export const getAllNotifications = async (userid: string) => {
-  return await httpswithToken.get("/api/notifications?userId=" + userid);
+  return await httpswithToken.get("/notifications?userId=" + userid);
 }
 
 export const acknowledgeNotification = async (notificationId: string) => {
-  return await httpswithToken.post("/api/notifications/acknowledge?notificationId=" + notificationId);
+  return await httpswithToken.post("/notifications/acknowledge?notificationId=" + notificationId);
 }

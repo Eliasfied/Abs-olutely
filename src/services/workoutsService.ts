@@ -5,30 +5,30 @@ import WorkoutStorage from "@/storage/myWorkoutStorage";
 import { useMyWorkoutsStore } from "@/store/myWorkouts";
 
 export const addWorkout = async (workout: Workout) => {
-  return await httpsWithToken.post("/api/workouts/add", workout);
+  return await httpsWithToken.post("/workouts/add", workout);
 };
 
 export const getWorkoutById = async (workoutId: string) => {
   return await httpsWithToken.get(
-    "/api/workouts?workoutId=" + workoutId
+    "/workouts?workoutId=" + workoutId
   );
 };
 
 export const updateWorkout = async (workout: Workout, userid: string) => {
   return await httpsWithToken.put(
-    "/api/workouts?userid=" + userid,
+    "/workouts?userid=" + userid,
     workout
   );
 };
 
 export const deleteWorkout = async (workoutId: string) => {
   return await httpsWithToken.delete(
-    "/api/workouts?workoutId=" + workoutId
+    "/workouts?workoutId=" + workoutId
   );
 };
 
 export const getWorkouts = async (userid: string) => {
-  return await httpsWithToken.get("/api/workouts?userid=" + userid);
+  return await httpsWithToken.get("/workouts?userid=" + userid);
 };
 
 export const synchronizeWorkouts = async (
@@ -36,7 +36,7 @@ export const synchronizeWorkouts = async (
   userId: string
 ) => {
   const workoutsToUpdateLocally = await httpsWithToken.post(
-    "/api/workouts/synchronize?userid=" + userId,
+    "/workouts/synchronize?userid=" + userId,
     workouts
   );
   const workoutStore = useMyWorkoutsStore();
@@ -77,7 +77,7 @@ export const shareWorkout = async (
   workoutId: string,
   workoutName: string
 ) => {
-  return await httpsWithToken.post("/api/workouts/share", {
+  return await httpsWithToken.post("/workouts/share", {
     SenderName,
     ReceiverEmail,
     workoutId,
